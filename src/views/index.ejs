@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node.JS 기본 구조</title>
+  <style>
+    body {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  
+  <h1>메인페이지</h1>
+  <%- include('components/header') %> 
+
+  <% if (locals.components === 'test/a') { %> 
+    <%- include('test/a') %> 
+  <% } else { %>
+    <%- include('components/section') %> 
+  <% }%>
+
+  <%- include('components/footer') %> 
+
+  <!-- https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=hadaboni80&logNo=221704704219 -->
+</body>
+</html>
