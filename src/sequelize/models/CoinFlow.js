@@ -12,9 +12,8 @@ module.exports = (sequelize, DataTypes) => {
   CoinFlow.init({
     customerId: DataTypes.INTEGER,
     orderId: DataTypes.INTEGER,
-    changedAmount: DataTypes.INTEGER,
-    remainedAmount: DataTypes.INTEGER,
-    changedReason: DataTypes.STRING
+    amount: DataTypes.INTEGER,
+    reason: DataTypes.STRING
   }, {
     timestamps: true,
     createdAt: true,
