@@ -5,7 +5,12 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon bin/www.js",
-    "format": "prettier --write \"**/*.js\""
+    "format": "prettier --write \"**/*.js\"",
+    "test": "jest --forceExit",
+    "test:silent": "jest --silent --forceExit",
+    "test:coverage": "jest --coverage --forceExit",
+    "test:unit": "jest __tests__/unit --forceExit",
+    "test:integration": "jest __tests__/integration --forceExit"
   },
   "keywords": [],
   "author": "",
