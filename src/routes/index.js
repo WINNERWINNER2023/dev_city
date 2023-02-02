@@ -5,9 +5,9 @@ const router = express.Router();
 
 const SampleController = require('../controllers/SampleController');
 const sampleController = new SampleController();
-const sampleMiddleware = require('../middlewares/SampleMiddleware');
+const authMiddleware = require('../middlewares/AuthMiddleware');
 
-router.get('/api/sample', sampleMiddleware, sampleController.seonghun);
+router.get('/api/sample', authMiddleware, sampleController.seonghun);
 
 const outputRouter = require('./OutputRouter');
 router.use('/', outputRouter);
