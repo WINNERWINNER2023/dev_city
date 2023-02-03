@@ -5,7 +5,7 @@ const { Admin } = require('../sequelize/models');
 
 const { encryptPassword, comparePasswordForLogin } = require('../utils/bcryptUtil');
 const { createAccessToken, createRefreshToken } = require('../utils/TokenUtil');
-const redisClient = require('../utils/RedisUtil');
+const RedisUtil = require('../utils/RedisUtil');
 
 class AdminsService {
   adminsRepository = new AdminsRepository(Admin);
@@ -39,10 +39,8 @@ class AdminsService {
         throw new Error('token 생성 실패');
       }
 
-      await redisClient.set(refreshToken, admin.id);
-      const TTL = parseInt(process.env.REDIS_REFRESH_TTL);
-      await redisClient.expire(refreshToken, TTL);
-      await redisClient.disconnect();
+      const redisUtil = new RedisUtil();
+      await redisUtil.set(refreshToken, admin.id);
 
       return { code: 200, accessToken, refreshToken, message: '로그인 성공' };
     } catch (err) {
