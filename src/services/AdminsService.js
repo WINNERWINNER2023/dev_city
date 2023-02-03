@@ -9,6 +9,7 @@ const RedisUtil = require('../utils/RedisUtil');
 
 class AdminsService {
   adminsRepository = new AdminsRepository(Admin);
+  redisUtil = new RedisUtil();
 
   createAdmin = async (adminInfo) => {
     try {
@@ -39,11 +40,11 @@ class AdminsService {
         throw new Error('token 생성 실패');
       }
 
-      const redisUtil = new RedisUtil();
-      await redisUtil.set(refreshToken, admin.id);
+      await this.redisUtil.set(refreshToken, admin.id);
 
       return { code: 200, accessToken, refreshToken, message: '로그인 성공' };
     } catch (err) {
+      console.log(err);
       return { code: 500, message: '로그인 실패' };
     }
   }
