@@ -2,14 +2,19 @@ require('dotenv').config();
 const AdminsService = require('../../../src/services/AdminsService');
 const { encryptPassword } = require('../../../src/utils/bcryptUtil');
 // const { createAccessToken, createRefreshToken } = require('../../../src/utils/TokenUtil');
-const redisClient = require('../../../src/utils/RedisUtil');
+const RedisUtil = require('../../../src/utils/RedisUtil');
 
 const mockAdminsRepository = {
   createAdmin: jest.fn(),
   findOneByAccount: jest.fn(),
 };
+const mockRedisUtil = {
+  set: jest.fn(),
+  get: jest.fn(),
+}
 const adminsService = new AdminsService();
 adminsService.adminsRepository = mockAdminsRepository;
+adminsService.redisUtil = mockRedisUtil;
 
 const mockAdminInfo = {
   id: 1,
@@ -130,8 +135,7 @@ describe('AdminsService Unit Test', () => {
       return findOneByAccountResult;
     });
 
-    redisClient.set = jest.fn(() => {});
-    redisClient.expire = jest.fn(() => {});
+    mockRedisUtil.set = jest.fn(() => {});
 
     const response = await adminsService.login(AdminInfo.account, AdminInfo.password);
 
@@ -140,7 +144,7 @@ describe('AdminsService Unit Test', () => {
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
   });
 
-  test(`login Method fail - error (1)`, async () => {
+  test(`login Method fail - redisUtil.set() Error`, async () => {
     const AdminInfo = { ...mockAdminInfo };
 
     const afterPassword = await encryptPassword(AdminInfo.password);
@@ -149,8 +153,7 @@ describe('AdminsService Unit Test', () => {
       return findOneByAccountResult;
     });
 
-    redisClient.set = jest.fn(() => {});
-    redisClient.expire = jest.fn(() => {
+    mockRedisUtil.set = jest.fn(() => {
       throw new Error();
     });
 
@@ -161,27 +164,7 @@ describe('AdminsService Unit Test', () => {
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
   });
 
-  test(`login Method fail - error (2)`, async () => {
-    const AdminInfo = { ...mockAdminInfo };
-
-    const afterPassword = await encryptPassword(AdminInfo.password);
-    const findOneByAccountResult = { id: 1, password: afterPassword };
-    mockAdminsRepository.findOneByAccount = jest.fn(() => {
-      return findOneByAccountResult;
-    });
-
-    redisClient.set = jest.fn(() => {
-      throw new Error();
-    });
-
-    const response = await adminsService.login(AdminInfo.account, AdminInfo.password);
-
-    expect(response).toEqual({ code: 500, message: '로그인 실패' });
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
-  });
-
-  // test(`login Method fail - error (3)`, async () => {
+  // test(`login Method fail - createRefreshToken Error`, async () => {
   //   const AdminInfo = { ...mockAdminInfo };
 
   //   const afterPassword = await encryptPassword(AdminInfo.password);
@@ -204,7 +187,7 @@ describe('AdminsService Unit Test', () => {
   //   expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
   // });
 
-  // test(`login Method fail - error (4)`, async () => {
+  // test(`login Method fail - createAccessToken Error`, async () => {
   //   const AdminInfo = { ...mockAdminInfo };
 
   //   const afterPassword = await encryptPassword(AdminInfo.password);
@@ -224,7 +207,7 @@ describe('AdminsService Unit Test', () => {
   //   expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
   // });
 
-  test(`login Method fail - error (5)`, async () => {
+  test(`login Method fail - findOneByAccount Error`, async () => {
     const AdminInfo = { ...mockAdminInfo };
 
     mockAdminsRepository.findOneByAccount = jest.fn(() => {

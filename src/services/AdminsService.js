@@ -44,7 +44,6 @@ class AdminsService {
 
       return { code: 200, accessToken, refreshToken, message: '로그인 성공' };
     } catch (err) {
-      console.log(err);
       return { code: 500, message: '로그인 실패' };
     }
   }
