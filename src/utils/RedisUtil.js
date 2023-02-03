@@ -13,11 +13,10 @@ class RedisUtil {
     this.redisClient.on('error', () => {
       console.log('Redis 연결 실패');
     });
-
-    this.redisClient.connect();
   }
-
+  
   set = async (key, value) => {
+    this.redisClient.connect();
     await this.redisClient.set(key, value);
     const TTL = parseInt(process.env.REDIS_REFRESH_TTL);
     await this.redisClient.expire(key, TTL);
@@ -25,6 +24,7 @@ class RedisUtil {
   }
 
   get = async (key) => {
+    this.redisClient.connect();
     const value = await this.redisClient.get(key);
     await this.redisClient.disconnect();
     return value;
