@@ -1,23 +1,19 @@
 'use strict';
 
 class AdminsRepository {
-  constructor(Admin) {
-    this.Admin = Admin;
+  constructor(model) {
+    this.model = model;
   }
 
   createAdmin = async (adminInfo) => {
-    await this.Admin.create({
+    await this.model.create({
       account: adminInfo.account,
       password: adminInfo.password,
     });
   };
 
   findOneByAccount = async (account) => {
-    return await this.Admin.findOne({ where: { account } });
-  }
-
-  findOneById = async (id) => {
-    return await this.Admin.findByPk(id);
+    return await this.model.findOne({ where: { account } });
   }
 }
 

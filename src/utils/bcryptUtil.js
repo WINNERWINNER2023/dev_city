@@ -8,11 +8,11 @@ const encryptPassword = async (password) => {
   return await bcrypt.hash(password, saltRounds);
 };
 
-const checkPassword = async (beforePassword, afterPassword) => {
+const comparePasswordForLogin = async (beforePassword, afterPassword) => {
   return await bcrypt.compare(beforePassword, afterPassword);
 };
 
 module.exports = {
   encryptPassword,
-  checkPassword,
+  comparePasswordForLogin,
 };
