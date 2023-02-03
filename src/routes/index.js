@@ -3,13 +3,10 @@
 const express = require('express');
 const router = express.Router();
 
-const SampleController = require('../controllers/SampleController');
-const sampleController = new SampleController();
-const authMiddleware = require('../middlewares/AuthMiddleware');
-
-router.get('/api/sample', authMiddleware, sampleController.seonghun);
-
+const AdminsRouter = require('./AdminsRouter');
 const outputRouter = require('./OutputRouter');
+
+router.use('/api/admin', AdminsRouter);
 router.use('/', outputRouter);
 
 module.exports = router;
