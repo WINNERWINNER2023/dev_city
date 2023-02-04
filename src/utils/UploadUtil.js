@@ -4,7 +4,7 @@ const multer = require('multer');
 const moment = require('moment');
 const fs = require('fs');
 
-class UploadManager {
+class UploadUtil {
   constructor(path) {
     this.path = path;
     this.multer = multer;
@@ -23,4 +23,4 @@ class UploadManager {
   });
 }
 
-module.exports = UploadManager;
+module.exports = UploadUtil;
