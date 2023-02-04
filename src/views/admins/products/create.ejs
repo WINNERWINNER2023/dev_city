@@ -1,10 +1,11 @@
+<script src="/public/js/admins/products/create.js" defer></script>
+
 <div style="width: 80vw; margin: auto;">
   <div class="mb-3 row">
     <label for="category" class="col-sm-2 col-form-label">카테고리</label>
     <div class="col-sm-10">
-      <!-- <input type="text" class="form-control-plaintext" id="category"> -->
-      <select class="form-select">
-        <option selected>캐릭터</option>
+      <select class="form-select" id="category">
+        <option value="character" selected>캐릭터</option>
       </select>
     </div>
   </div>
@@ -15,22 +16,31 @@
     </div>
   </div>
   <div class="mb-3 row">
-    <label for="name" class="col-sm-2 col-form-label">상품 가격</label>
+    <label for="contents" class="col-sm-2 col-form-label">상품 설명</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="name">
+      <input type="text" class="form-control" id="contents">
     </div>
   </div>
   <div class="mb-3 row">
-    <label for="name" class="col-sm-2 col-form-label">사용 일자</label>
+    <label for="price" class="col-sm-2 col-form-label">상품 가격</label>
     <div class="col-sm-10">
-      <input type="date" class="form-control" id="date">
+      <div class="input-group">
+        <input type="text" class="form-control" id="price">
+        <span class="input-group-text">dev</span>
+      </div>
     </div>
   </div>
   <div class="mb-3 row">
-    <label for="name" class="col-sm-2 col-form-label">상품 사진</label>
+    <label for="useableDate" class="col-sm-2 col-form-label">사용 일자</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="name">
+      <input type="date" class="form-control" id="useableDate">
     </div>
   </div>
-  <button type="button" class="btn btn-primary" style="float: right;">상품 등록</button>
+  <div class="mb-3 row">
+    <label for="imagePath" class="col-sm-2 col-form-label">상품 사진</label>
+    <div class="col-sm-10">
+      <input type="file" class="form-control" id="imagePath">
+    </div>
+  </div>
+  <button onclick="createProduct()" type="button" class="btn btn-primary" style="float: right;">상품 등록</button>
 </div>
