@@ -12,9 +12,9 @@ class UploadUtil {
 
   storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const upload_path = this.path;
-      fs.mkdirSync(upload_path, { recursive: true });
-      cb(null, upload_path);
+      const uploadPath = this.path;
+      fs.mkdirSync(uploadPath, { recursive: true });
+      cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
       file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8');

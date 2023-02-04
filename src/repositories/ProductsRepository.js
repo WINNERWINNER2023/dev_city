@@ -1,6 +1,11 @@
 'use strict';
 
+require('dotenv').config();
+const { sequelize } = require('../sequelize/models/index');
+
 class ProductsRepository {
+  pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
+
   constructor(model) {
     this.model = model;
   }
@@ -17,10 +22,21 @@ class ProductsRepository {
     });
   };
 
-  getProducts = async () => {
+  adminGetProducts = async (page) => {
     return await this.model.findAll({
       raw: true,
       order: [['id', 'DESC']],
+      offset: (page - 1) * this.pageLimit,
+      limit: this.pageLimit,
+    });
+  }
+
+  adminGetProductsCountAll = async () => {
+    return await this.model.findOne({
+      raw: true,
+      attributes: [ 
+        [sequelize.fn('COUNT', sequelize.col('*')), 'countAll'], 
+      ]
     });
   }
 }

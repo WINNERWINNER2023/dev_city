@@ -4,7 +4,12 @@ require('dotenv').config();
 const ProductsRepository = require('../repositories/ProductsRepository');
 const { Product } = require('../sequelize/models');
 
+const PaginationUtil = require('../utils/PaginationUtil');
+
 class ProductsService {
+  pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
+  sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
+  
   productsRepository = new ProductsRepository(Product);
 
   createProduct = async (productInfo) => {
@@ -16,15 +21,21 @@ class ProductsService {
     }
   }
 
-  getProducts = async (host) => {
+  adminGetProducts = async (host, page) => {
     try {
-      const products = (await this.productsRepository.getProducts()).map((product) => {
+      const products = (await this.productsRepository.adminGetProducts(page)).map((product) => {
         product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
         return product;
       })
-      return { code: 200, data: products };
+      if (products.length === 0) {
+        return { code: 404, message: '해당하는 상품 목록 없음' };
+      }
+
+      const productsCountAll = await this.productsRepository.adminGetProductsCountAll();
+      const paginationUtil = new PaginationUtil(page, productsCountAll.countAll, this.pageLimit, this.sectionLimit);
+      return { code: 200, data: products, pagination: paginationUtil.render() };
     } catch (err) {
-      return { code: 500, meesage: '상품 목록 조회 실패' };
+      return { code: 500, message: '상품 목록 조회 실패' };
     }
   }
 }

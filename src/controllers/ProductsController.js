@@ -21,9 +21,13 @@ class ProductsController {
     return res.status(response.code).json({ message: response.message });
   }
 
-  getProducts = async (req, res) => {
-    const response = await this.productsService.getProducts(req.get('Host'));
-    return res.status(response.code).json(response.data ? { data: response.data } : { message: response.message });
+  adminGetProducts = async (req, res) => {
+    const page = parseInt(req.query.p || 1);
+    const response = await this.productsService.adminGetProducts(req.get('Host'), page);
+    return res.status(response.code).json(
+      response.code === 200 ? 
+      { data: response.data, pagination: response.pagination } : 
+      { message: response.message });
   }
 }
 

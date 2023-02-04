@@ -27,17 +27,17 @@ const checkInputValue = async () => {
     return false;
   }
   if (!imagePath.value) {
-    alert('빈 입력값이 있습니다.');
+    alert('상품 사진이 필요합니다.');
     imagePath.focus();
     return false;
   }
   if (isNaN(price.value)) {
-    alert('숫자만 입력 가능합니다.');
+    alert('상품 가격은 숫자만 입력 가능합니다.');
     price.focus();
     return false;
   }
   if (imagePath.files.length > 1) {
-    alert('이미지 파일은 하나만 등록 가능합니다.');
+    alert('상품 사진은 하나만 등록 가능합니다.');
     imagePath.focus();
     return false;
   }
