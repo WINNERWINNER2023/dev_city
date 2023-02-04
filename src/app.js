@@ -13,7 +13,6 @@ app.set('views', __dirname + '/views');
 app.use('/public', express.static(__dirname + '/public'));
 
 const router = require('./routes');
-
 app.use('/', router);
 app.get('/*', (req, res) => res.redirect('/'));
 
