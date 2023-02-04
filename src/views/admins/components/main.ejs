@@ -5,8 +5,11 @@
     </div>
     
     <div class="card-body">
-    <%- include('../products/list') -%>
-     <!-- include('../products/create')  -->
+      <% if (locals.components === 'products/list') { %>
+      <%- include('../products/list') %>
+      <% } else if (locals.components === 'products/create') { %>
+      <%- include('../products/create') %>
+      <% } %>
     </div>
   </div>
 </div>

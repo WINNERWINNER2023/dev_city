@@ -6,7 +6,7 @@ class ProductsController {
   productsService = new ProductsService();
 
   createProduct = async (req, res) => {
-    const { name, contents, price, count, startUse, endUse } = req.body;
+    const { name, contents, startUse, endUse, price, count } = req.body;
     const imagePath = req.files.length > 0 ? req.files[0].filename : null;
     const productInfo = {
       name,
@@ -14,8 +14,8 @@ class ProductsController {
       startUse,
       endUse,
       imagePath,
-      price: parseInt(price),
-      count: parseInt(count),
+      price: price,
+      count: count,
     }
     const response = await this.productsService.createProduct(productInfo);
     return res.status(response.code).json({ message: response.message });

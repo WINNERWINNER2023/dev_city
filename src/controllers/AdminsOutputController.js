@@ -18,6 +18,18 @@ class OutputController {
       components: 'login',
     });
   };
+
+  productsList = (req, res) => {
+    res.render('admins/index', {
+      components: 'products/list',
+    });
+  };
+
+  productsCreate = (req, res) => {
+    res.render('admins/index', {
+      components: 'products/create',
+    });
+  };
 }
 
 module.exports = OutputController;
