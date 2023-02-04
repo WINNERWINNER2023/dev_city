@@ -13,7 +13,7 @@ describe('ProductsRepository Unit Test', () => {
     jest.resetAllMocks();
   });
 
-  test('createProduct Method success', async () => {
+  test('createProduct Method Success', async () => {
     mockProduct.create = jest.fn(() => {
       return 'test';
     });
@@ -41,7 +41,7 @@ describe('ProductsRepository Unit Test', () => {
     });
   });
 
-  test('adminGetProducts Method success', async () => {
+  test('adminGetProducts Method Success', async () => {
     mockProduct.findAll = jest.fn(() => {
       return 'test';
     });
@@ -58,7 +58,7 @@ describe('ProductsRepository Unit Test', () => {
     });
   });
 
-  test('adminGetProductsCountAll Method success', async () => {
+  test('adminGetProductsCountAll Method Success', async () => {
     mockProduct.findOne = jest.fn(() => {
       return 'test';
     });
