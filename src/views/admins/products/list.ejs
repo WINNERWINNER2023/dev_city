@@ -1,3 +1,5 @@
+<script src="/public/js/admins/products/list.js" defer></script>
+
 <!-- 검색 시작 -->
 <form class="row g-3">
   <div class="col-auto">
@@ -15,20 +17,16 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">카테고리</th>
       <th scope="col">상품명</th>
+      <th scope="col">사용가능일</th>
       <th scope="col">가격</th>
+      <th scope="col">개수</th>
       <th scope="col">등록일</th>
+      <th scope="col">수정일</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>AAA</td>
-      <td>BBB</td>
-      <td>CCC</td>
-      <td>DDD</td>
-    </tr>
-  </tbody>
+  <tbody id="products"></tbody>
 </table>
 <!-- 목록 끝 -->
+
+<%- include('../components/pagination') -%>
