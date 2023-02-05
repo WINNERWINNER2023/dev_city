@@ -1,0 +1,15 @@
+<div class="align-self-center" style="width: 100vw;">
+  <div class="card text-center" style="height: 100vh;">
+    <div class="card-header">
+    <%- include('header') %>
+    </div>
+    
+    <div class="card-body">
+      <% if (locals.components === 'products/list') { %>
+      <%- include('../products/list') %>
+      <% } else if (locals.components === 'products/create') { %>
+      <%- include('../products/create') %>
+      <% } %>
+    </div>
+  </div>
+</div>

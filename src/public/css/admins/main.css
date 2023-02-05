@@ -1,0 +1,12 @@
+.admin-bg {
+  background-color: dimgray;
+  height: 100vh;
+}
+
+.admin-form {
+  width: 24rem; 
+  margin: auto; 
+  padding: 3rem; 
+  border-radius: 20px; 
+  background-color: white;
+}

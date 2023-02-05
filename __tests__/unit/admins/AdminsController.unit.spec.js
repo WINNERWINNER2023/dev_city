@@ -26,7 +26,7 @@ describe('AdminsController Unit Test', () => {
     });
   });
 
-  test('register Method success', async () => {
+  test('register Method Success', async () => {
     const requestBody = {
       account: 'account',
       password: 'password',
@@ -102,7 +102,7 @@ describe('AdminsController Unit Test', () => {
     });
   });
 
-  test('login Method success', async () => {
+  test('login Method Success', async () => {
     const requestBody = {
       account: 'account',
       password: 'password',
