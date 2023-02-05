@@ -83,6 +83,12 @@ class ProductsRepository {
     product.count = productInfo.count;
     await product.save();
   };
+
+  deleteProduct = async (productId) => {
+    await this.model.destroy({
+      where: { id: productId },
+    });
+  };
 }
 
 module.exports = ProductsRepository;

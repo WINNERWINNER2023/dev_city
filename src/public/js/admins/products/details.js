@@ -111,8 +111,27 @@ const updateProduct = async () =>{
     });
 };
 
-const removeProduct = async () =>{
-  alert('삭제 준비중');
+const deleteProduct = async () =>{
+  await fetch(`/api/admins/products/${productId}`, {
+    method: 'DELETE',
+  })
+    .then(async (res) => {
+      const code = res.status;
+
+      res = await res.json();
+
+      if (res.message) {
+        alert(res.message);
+      }
+
+      // if (code === 204) {
+      if (code === 200) {
+        location.href = `/admins/products`;
+      }
+    })
+    .catch((err) => {
+      console.log('err: ', err);
+    });
 };
 
 const previewImg = (e) => {

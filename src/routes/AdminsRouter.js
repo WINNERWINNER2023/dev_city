@@ -20,5 +20,6 @@ router.post('/products', uploadUtil.multer({ storage: uploadUtil.storage }).arra
 
 router.get('/products/:productId', productsController.adminGetProduct);
 router.put('/products/:productId', uploadUtil.multer({ storage: uploadUtil.storage }).array('files'), productsController.updateProduct);
+router.delete('/products/:productId', productsController.deleteProduct);
 
 module.exports = router;

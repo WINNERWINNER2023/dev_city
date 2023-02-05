@@ -8,6 +8,7 @@ const mockProductsService = {
   adminGetProducts: jest.fn(),
   adminGetProduct: jest.fn(),
   updateProduct: jest.fn(),
+  deleteProduct: jest.fn(),
 };
 
 const mockRequest = {
@@ -389,6 +390,45 @@ describe('ProductsController Unit Test', () => {
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       message: updateProductResult.message,
+    });
+  });
+
+  test('deleteProduct Method Fail - wrong productId', async () => {
+    const mockRequestParams = {
+      productId: 'wrong',
+    };
+    mockRequest.params = mockRequestParams;
+    await productsController.deleteProduct(mockRequest, mockResponse);
+
+    expect(mockProductsService.deleteProduct).toHaveBeenCalledTimes(0);
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(400);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: '잘못된 요청',
+    });
+  });
+
+  test('deleteProduct Method Success', async () => {
+    const mockRequestParams = {
+      productId: 1,
+    };
+    mockRequest.params = mockRequestParams;
+
+    const deleteProductResult = { code: 200, message: '상품 삭제 완료' };
+    mockProductsService.deleteProduct = jest.fn(() => {
+      return deleteProductResult;
+    });
+
+    await productsController.deleteProduct(mockRequest, mockResponse);
+
+    expect(mockProductsService.deleteProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsService.deleteProduct).toHaveBeenCalledWith(mockRequestParams.productId);
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(deleteProductResult.code);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: deleteProductResult.message,
     });
   });
 });

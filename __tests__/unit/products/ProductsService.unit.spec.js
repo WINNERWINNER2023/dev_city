@@ -10,6 +10,7 @@ const mockProductsRepository = {
   adminGetProductsCountAll: jest.fn(),
   adminGetProduct: jest.fn(),
   updateProduct: jest.fn(),
+  deleteProduct: jest.fn(),
 };
 const productsService = new ProductsService();
 productsService.productsRepository = mockProductsRepository;
@@ -206,5 +207,29 @@ describe('ProductsService Unit Test', () => {
     expect(response).toEqual({ code: 500, message: '상품 수정 실패' });
     expect(mockProductsRepository.updateProduct).toHaveBeenCalledTimes(1);
     expect(mockProductsRepository.updateProduct).toHaveBeenCalledWith(productInfo);
+  });
+
+  test('deleteProduct Method Success', async () => {
+    mockProductsRepository.deleteProduct = jest.fn(() => {
+      return 'test';
+    });
+    const productId = 1;
+    const response = await productsService.deleteProduct(productId);
+
+    expect(response).toEqual({ code: 200, message: '상품 삭제 완료' });
+    expect(mockProductsRepository.deleteProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsRepository.deleteProduct).toHaveBeenCalledWith(productId);
+  });
+
+  test('deleteProduct Method Error', async () => {
+    mockProductsRepository.deleteProduct = jest.fn(() => {
+      throw new Error();
+    });
+    const productId = 1;
+    const response = await productsService.deleteProduct(productId);
+
+    expect(response).toEqual({ code: 500, message: '상품 삭제 실패' });
+    expect(mockProductsRepository.deleteProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsRepository.deleteProduct).toHaveBeenCalledWith(productId);
   });
 });

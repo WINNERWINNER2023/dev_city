@@ -5,6 +5,7 @@ const mockProduct = {
   findAll: jest.fn(),
   findOne: jest.fn(),
   findByPk: jest.fn(),
+  destroy: jest.fn(),
 };
 
 const productsRepository = new ProductsRepository(mockProduct);
@@ -153,5 +154,18 @@ describe('ProductsRepository Unit Test', () => {
       expect(mockProduct.findByPk).toHaveBeenCalledWith(productInfo.id);
       expect(err.message).toEqual('해당하는 상품 없음');
     }
+  });
+
+  test('deleteProduct Method Success', async () => {
+    mockProduct.destroy = jest.fn(() => {
+      return 'test';
+    });
+    const productId = 1;
+    await productsRepository.deleteProduct(productId);
+
+    expect(mockProduct.destroy).toHaveBeenCalledTimes(1);
+    expect(mockProduct.destroy).toHaveBeenCalledWith({
+      where: { id: productId }
+    });
   });
 });

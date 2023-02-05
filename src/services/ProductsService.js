@@ -88,6 +88,16 @@ class ProductsService {
       };
     }
   };
+
+  deleteProduct = async (productId) => {
+    try {
+      await this.productsRepository.deleteProduct(productId);
+      // return { code: 204, message: '상품 삭제 완료' }; // 클라이언트에서 결과를 받지 못하는 현상 때문에 200으로 사용
+      return { code: 200, message: '상품 삭제 완료' };
+    } catch (err) {
+      return { code: 500, message: '상품 삭제 실패' };
+    }
+  };
 }
 
 module.exports = ProductsService;

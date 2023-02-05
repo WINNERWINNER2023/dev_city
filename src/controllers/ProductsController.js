@@ -80,6 +80,15 @@ class ProductsController {
     const response = await this.productsService.updateProduct(productInfo);
     return res.status(response.code).json({ message: response.message });
   };
+
+  deleteProduct = async (req, res) => {
+    const { productId } = req.params;
+    if (isNaN(productId)) {
+      return res.status(400).json({ message: '잘못된 요청' });
+    }
+    const response = await this.productsService.deleteProduct(parseInt(productId));
+    return res.status(response.code).json({ message: response.message });
+  };
 }
 
 module.exports = ProductsController;
