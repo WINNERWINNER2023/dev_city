@@ -8,6 +8,7 @@ const mockProductsRepository = {
   createProduct: jest.fn(),
   adminGetProducts: jest.fn(),
   adminGetProductsCountAll: jest.fn(),
+  adminGetProduct: jest.fn(),
 };
 const productsService = new ProductsService();
 productsService.productsRepository = mockProductsRepository;
@@ -36,6 +37,7 @@ describe('ProductsService Unit Test', () => {
     expect(mockProductsRepository.getRandomProducts).toHaveBeenCalledTimes(1);
     expect(randomProducts).toEqual('get random products');
   });
+
   test('product.service get products list success', async () => {
     mockProductsRepository.getProductsList = jest.fn(() => {
       return 'get products list';
@@ -45,6 +47,7 @@ describe('ProductsService Unit Test', () => {
     expect(mockProductsRepository.getProductsList).toHaveBeenCalledTimes(1);
     expect(productsList).toEqual('get products list');
   });
+  
   test('product.service get product details success', async () => {
     mockProductsRepository.getProduct = jest.fn(() => {
       return 'get product details';
@@ -140,5 +143,41 @@ describe('ProductsService Unit Test', () => {
     expect(mockProductsRepository.adminGetProducts).toHaveBeenCalledWith(page);
     expect(mockProductsRepository.adminGetProductsCountAll).toHaveBeenCalledTimes(1);
     expect(mockProductsRepository.adminGetProductsCountAll).toHaveBeenCalledWith();
+  });
+
+  test('adminGetProduct Method Fail - get nothing', async () => {
+    mockProductsRepository.adminGetProduct = jest.fn(() => {
+      return null;
+    });
+    const productId = 1;
+    const response = await productsService.adminGetProduct('host', productId);
+
+    expect(response).toEqual({ code: 404, message: '해당하는 상품 없음' });
+    expect(mockProductsRepository.adminGetProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsRepository.adminGetProduct).toHaveBeenCalledWith(productId);
+  });
+
+  test('adminGetProduct Method Fail - adminGetProduct Error', async () => {
+    mockProductsRepository.adminGetProduct = jest.fn(() => {
+      throw new Error();
+    });
+    const productId = 1;
+    const response = await productsService.adminGetProduct('host', productId);
+
+    expect(response).toEqual({ code: 500, message: '상품 상세 조회 실패' });
+    expect(mockProductsRepository.adminGetProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsRepository.adminGetProduct).toHaveBeenCalledWith(productId);
+  });
+
+  test('adminGetProduct Method Success', async () => {
+    mockProductsRepository.adminGetProduct = jest.fn(() => {
+      return { imagePath: '1' };
+    });
+    const productId = 1;
+    const response = await productsService.adminGetProduct('host', productId);
+
+    expect(response).toEqual({ code: 200, data: expect.anything() });
+    expect(mockProductsRepository.adminGetProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsRepository.adminGetProduct).toHaveBeenCalledWith(productId);
   });
 });

@@ -4,6 +4,7 @@ const mockProduct = {
   create: jest.fn(),
   findAll: jest.fn(),
   findOne: jest.fn(),
+  findByPk: jest.fn(),
 };
 
 const productsRepository = new ProductsRepository(mockProduct);
@@ -23,6 +24,7 @@ describe('ProductsRepository Unit Test', () => {
     expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
     expect(randomProducts).toEqual('findAll Result');
   });
+  
   test('product.repostory get products success', async () => {
     mockProduct.findAll = jest.fn(() => {
       return 'findAll Result';
@@ -32,6 +34,7 @@ describe('ProductsRepository Unit Test', () => {
     expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
     expect(productsList).toEqual('findAll Result');
   });
+
   test('product.repostory get product success', async () => {
     mockProduct.findOne = jest.fn(() => {
       return 'findOne Result';
@@ -95,5 +98,17 @@ describe('ProductsRepository Unit Test', () => {
 
     expect(result).toEqual('test');
     expect(mockProduct.findOne).toHaveBeenCalledTimes(1);
+  });
+
+  test('adminGetProduct Method Success', async () => {
+    mockProduct.findByPk = jest.fn(() => {
+      return 'test';
+    });
+    const productId = 1;
+    const result = await productsRepository.adminGetProduct(productId);
+
+    expect(result).toEqual('test');
+    expect(mockProduct.findByPk).toHaveBeenCalledTimes(1);
+    expect(mockProduct.findByPk).toHaveBeenCalledWith(productId);
   });
 });

@@ -6,6 +6,7 @@ const mockProductsService = {
   getProductDetails: jest.fn(),
   createProduct: jest.fn(),
   adminGetProducts: jest.fn(),
+  adminGetProduct: jest.fn(),
 };
 
 const mockRequest = {
@@ -260,6 +261,79 @@ describe('ProductsController Unit Test', () => {
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       message: adminGetProductsResult.message,
+    });
+  });
+
+  test('adminGetProduct Method Success', async () => {
+    const mockRequestParams = {
+      productId: 1,
+    };
+    mockRequest.params = mockRequestParams;
+    mockRequest.get = jest.fn(() => {
+      return 'test';
+    });
+
+    const adminGetProductResult = { code: 200, data: 'data' };
+    mockProductsService.adminGetProduct = jest.fn(() => {
+      return adminGetProductResult;
+    });
+    await productsController.adminGetProduct(mockRequest, mockResponse);
+
+    expect(mockProductsService.adminGetProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsService.adminGetProduct).toHaveBeenCalledWith(mockRequest.get(), mockRequestParams.productId);
+
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(adminGetProductResult.code);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      data: adminGetProductResult.data,
+    });
+  });
+
+  test('adminGetProduct Method Success - productId is wrong type', async () => {
+    const mockRequestParams = {
+      productId: 'wrong',
+    };
+    mockRequest.params = mockRequestParams;
+    mockRequest.get = jest.fn(() => {
+      return 'test';
+    });
+
+    await productsController.adminGetProduct(mockRequest, mockResponse);
+
+    expect(mockProductsService.adminGetProduct).toHaveBeenCalledTimes(0);
+
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(400);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: '잘못된 요청',
+    });
+  });
+
+  test('adminGetProduct Method Fail - response code not 200', async () => {
+    const mockRequestParams = {
+      productId: 1,
+    };
+    mockRequest.params = mockRequestParams;
+    mockRequest.get = jest.fn(() => {
+      return 'test';
+    });
+
+    const adminGetProductResult = { code: 404, message: '해당하는 상품 없음' };
+    mockProductsService.adminGetProduct = jest.fn(() => {
+      return adminGetProductResult;
+    });
+    await productsController.adminGetProduct(mockRequest, mockResponse);
+
+    expect(mockProductsService.adminGetProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsService.adminGetProduct).toHaveBeenCalledWith(mockRequest.get(), mockRequestParams.productId);
+
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(adminGetProductResult.code);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: adminGetProductResult.message,
     });
   });
 });

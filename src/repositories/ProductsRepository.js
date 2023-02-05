@@ -60,6 +60,10 @@ class ProductsRepository {
       attributes: [[sequelize.fn('COUNT', sequelize.col('*')), 'countAll']],
     });
   };
+
+  adminGetProduct = async (productId) => {
+    return await this.model.findByPk(productId);
+  };
 }
 
 module.exports = ProductsRepository;

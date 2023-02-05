@@ -48,6 +48,17 @@ class ProductsController {
       .status(response.code)
       .json(response.code === 200 ? { data: response.data, pagination: response.pagination } : { message: response.message });
   };
+
+  adminGetProduct = async (req, res) => {
+    const { productId } = req.params;
+    if (isNaN(productId)) {
+      return res.status(400).json({ message: '잘못된 요청' });
+    }
+    const response = await this.productsService.adminGetProduct(req.get('Host'), parseInt(productId));
+    return res
+      .status(response.code)
+      .json(response.code === 200 ? { data: response.data } : { message: response.message });
+  };
 }
 
 module.exports = ProductsController;
