@@ -10,7 +10,8 @@ router.get('/', adminsOutputController.main);
 router.get('/register', adminsOutputController.register);
 router.get('/login', adminsOutputController.login);
 
-router.get('/products/create', adminsOutputController.productsCreate)
-router.get('/products/list', adminsOutputController.productsList)
+router.get('/products/', adminsOutputController.productsList);
+router.get('/products/create', adminsOutputController.productsCreate);
+router.get('/products/:productId', adminsOutputController.productsDetail);
 
 module.exports = router;

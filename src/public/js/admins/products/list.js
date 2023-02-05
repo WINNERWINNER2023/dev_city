@@ -21,7 +21,7 @@ const getProducts = async (p) => {
         const products = res.data;
         products.forEach((product) => {
           const temp = `
-            <tr>
+            <tr onclick="location.href='/admins/products/${product.id}'">
               <th scope="row">${product.id}</th>
               <td>${product.name}</td>
               <td>${new Date(product.startUse).toLocaleDateString()}</td>
@@ -32,6 +32,16 @@ const getProducts = async (p) => {
             </tr>
           `;
           document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+        });
+
+        // 테이블 tr 마우스 오버 시 하이라이트 효과
+        document.querySelectorAll("#products tr").forEach(el => {
+          el.addEventListener("mouseenter", (e) => {
+            e.currentTarget.classList.add("table-active");
+          });
+          el.addEventListener("mouseleave", (e) => {
+            e.currentTarget.classList.remove("table-active");
+          });
         });
       }
     });

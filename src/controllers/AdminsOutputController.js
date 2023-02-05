@@ -30,6 +30,14 @@ class OutputController {
       components: 'products/create',
     });
   };
+
+  productsDetail = (req, res) => {
+    const { productId } = req.params;
+    res.render('admins/index', {
+      components: 'products/details',
+      productId: parseInt(productId),
+    });
+  };
 }
 
 module.exports = OutputController;
