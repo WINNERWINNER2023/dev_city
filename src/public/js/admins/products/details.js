@@ -1,3 +1,40 @@
+window.onload = () => {
+  getProduct(productId);
+};
+
+const getProduct = async (productId) => {
+  fetch('/api/admins/products/' + productId, {
+    method: 'GET',
+  })
+    .then(async (res) => {
+      const code = res.status;
+
+      res = await res.json();
+      if (res.message) {
+        alert(res.message);
+      }
+
+      if (code === 200) {
+        const product = res.data;
+        document.querySelector('#name').value = product.name;
+        document.querySelector('#contents').value = product.contents;
+        document.querySelector('#price').value = product.price;
+        let useableDate = new Date(product.startUse).toLocaleDateString().split('.');
+
+        // input type date에 넣기 위해 format 변경
+        let year = useableDate[0].trim();
+        let month = useableDate[1].trim();
+        month = month.length === 1 ? '0' + month : month;
+        let day = useableDate[2].trim();
+        day = day.length === 1 ? '0' + day : day;
+        useableDate = `${year}-${month}-${day}`;
+
+        document.querySelector('#useableDate').value = useableDate;
+        document.querySelector('#imageThumnail').src = product.imagePath;
+      }
+    });
+};
+
 const category = document.querySelector('#category');
 const name = document.querySelector('#name');
 const contents = document.querySelector('#contents');
@@ -26,11 +63,6 @@ const checkInputValue = async () => {
     useableDate.focus();
     return false;
   }
-  if (!imagePath.value) {
-    alert('상품 사진이 필요합니다.');
-    imagePath.focus();
-    return false;
-  }
   if (isNaN(price.value)) {
     alert('상품 가격은 숫자만 입력 가능합니다.');
     price.focus();
@@ -44,7 +76,7 @@ const checkInputValue = async () => {
   return true;
 };
 
-const createProduct = async () => {
+const updateProduct = async () =>{
   if (!await checkInputValue()) {
     return;
   }
@@ -58,8 +90,8 @@ const createProduct = async () => {
   formData.append('endUse', useableDate.value + ' 23:59:59');
   formData.append('files', imagePath.files[0]);
 
-  await fetch('/api/admins/products', {
-    method: 'POST',
+  await fetch(`/api/admins/products/${productId}`, {
+    method: 'PUT',
     body: formData,
   })
     .then(async (res) => {
@@ -70,8 +102,31 @@ const createProduct = async () => {
         alert(res.message);
       }
 
-      if (code === 201) {
-        location.href = '/admins/products';
+      if (code === 200) {
+        location.href = `/admins/products/${productId}`;
+      }
+    })
+    .catch((err) => {
+      console.log('err: ', err);
+    });
+};
+
+const deleteProduct = async () =>{
+  await fetch(`/api/admins/products/${productId}`, {
+    method: 'DELETE',
+  })
+    .then(async (res) => {
+      const code = res.status;
+
+      res = await res.json();
+
+      if (res.message) {
+        alert(res.message);
+      }
+
+      // if (code === 204) {
+      if (code === 200) {
+        location.href = `/admins/products`;
       }
     })
     .catch((err) => {

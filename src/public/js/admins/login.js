@@ -46,6 +46,7 @@ const login = async () => {
       if (code === 200) {
         document.cookie = `accessToken=${res.accessToken}; path=/;`;
         document.cookie = `refreshToken=${res.refreshToken}; path=/;`;
+        localStorage.setItem('simpleAdminInfo', JSON.stringify(res.simpleAdminInfo));
 
         location.href = '/admins';
       }

@@ -47,6 +47,7 @@ describe('AdminsController Unit Test', () => {
 
     const loginResponse = {
       code: 200,
+      simpleAdminInfo: 'simpleAdminInfo',
       accessToken: 'accessToken',
       refreshToken: 'refreshToken',
       message: '로그인 성공',
@@ -66,6 +67,7 @@ describe('AdminsController Unit Test', () => {
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       message: registerResponse.message,
+      simpleAdminInfo: loginResponse.simpleAdminInfo,
       accessToken: loginResponse.accessToken,
       refreshToken: loginResponse.refreshToken,
     });
@@ -111,6 +113,7 @@ describe('AdminsController Unit Test', () => {
 
     const response = {
       code: 200,
+      simpleAdminInfo: 'simpleAdminInfo',
       accessToken: 'accessToken',
       refreshToken: 'refreshToken',
       message: '로그인 성공',
@@ -128,6 +131,7 @@ describe('AdminsController Unit Test', () => {
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       message: response.message,
+      simpleAdminInfo: response.simpleAdminInfo,
       accessToken: response.accessToken,
       refreshToken: response.refreshToken,
     });

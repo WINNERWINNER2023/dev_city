@@ -1,0 +1,54 @@
+<script src="/public/js/admins/products/details.js" defer></script>
+<script>
+  const productId = <%= productId %>;
+</script>
+
+<div style="width: 80vw; margin: auto;">
+  <div class="mb-3 row">
+    <label for="category" class="col-sm-2 col-form-label">카테고리</label>
+    <div class="col-sm-10">
+      <select class="form-select" id="category">
+        <option value="character" selected>캐릭터</option>
+      </select>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="name" class="col-sm-2 col-form-label">상품명</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="name">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="contents" class="col-sm-2 col-form-label">상품 설명</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="contents">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="price" class="col-sm-2 col-form-label">상품 가격</label>
+    <div class="col-sm-10">
+      <div class="input-group">
+        <input type="text" class="form-control" id="price">
+        <span class="input-group-text">dev</span>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="useableDate" class="col-sm-2 col-form-label">사용 일자</label>
+    <div class="col-sm-10">
+      <input type="date" class="form-control" id="useableDate">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="imagePath" class="col-sm-2 col-form-label">상품 사진</label>
+    <div class="col-sm-10">
+      <input onchange="previewImg(this)" type="file" class="form-control" id="imagePath">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <img id="imageThumnail" style="width: 150px;">
+  </div>
+
+  <button onclick="updateProduct()" type="button" class="btn btn-success ms-1" style="float: right;">상품 수정</button>
+  <button onclick="deleteProduct()" type="button" class="btn btn-outline-danger ms-1" style="float: right;">상품 삭제</button>
+</div>

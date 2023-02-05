@@ -1,9 +1,9 @@
 window.onload = () => {
-  getProducts(1);
+  getOrders(1);
 };
 
-const getProducts = async (p) => {
-  fetch('/api/admins/products?p=' + p, {
+const getOrders = async (p) => {
+  fetch('/api/admins/orders?p=' + p, {
     method: 'GET',
   })
     .then(async (res) => {
@@ -15,28 +15,30 @@ const getProducts = async (p) => {
         console.log(res.message);
       }
 
-      document.querySelector('#products').innerHTML = '';
+      document.querySelector('#orders').innerHTML = '';
       if (code === 200) {
 
-        const products = res.data;
-        setPagination(res.pagination, 'getProducts'); // 페이지네이션
-        products.forEach((product) => {
+        const orders = res.data;
+        setPagination(res.pagination, 'getOrders'); // 페이지네이션
+        orders.forEach((order) => {
           const temp = `
-            <tr onclick="location.href='/admins/products/${product.id}'">
-              <th scope="row">${product.id}</th>
-              <td>${product.name}</td>
-              <td>${new Date(product.startUse).toLocaleDateString()}</td>
-              <td>${product.price}</td>
-              <td>${product.count}</td>
-              <td>${new Date(product.createdAt).toLocaleString()}</td>
-              <td>${new Date(product.updatedAt).toLocaleString()}</td>
+            <tr>
+              <th scope="row">${order.subOrderId}</th>
+              <td>${order.orderId}</td>
+              <td>${order.status}</td>
+              <td>${order.customerId}</td>
+              <td>${order.productName}</td>
+              <td>${new Date(order.startUse).toLocaleDateString()}</td>
+              <td>${order.price}</td>
+              <td>${order.count}</td>
+              <td>${new Date(order.orderedAt).toLocaleString()}</td>
             </tr>
           `;
-          document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+          document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
         });
 
         // 테이블 tr 마우스 오버 시 하이라이트 효과
-        document.querySelectorAll("#products tr").forEach(el => {
+        document.querySelectorAll("#orders tr").forEach(el => {
           el.addEventListener("mouseenter", (e) => {
             e.currentTarget.classList.add("table-active");
           });
@@ -47,10 +49,10 @@ const getProducts = async (p) => {
       } else if (code === 404) {
         const temp = `
           <tr>
-            <td colspan="7">상품 정보가 없습니다.</td>
+            <td colspan="9">주문 정보가 없습니다.</td>
           </tr>
         `;
-        document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+        document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
       }
     });
 };
@@ -94,9 +96,4 @@ const setPagination = (obj, getListFnName) => {
 document.querySelector('#searchBtn').addEventListener('click', (e) => {
   e.preventDefault();
   alert('검색 기능 준비중');
-});
-
-document.querySelector('#createBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  location.href = '/admins/products/create';
 });

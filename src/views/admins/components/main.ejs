@@ -1,3 +1,5 @@
+<script src="/public/js/admins/main.js" defer></script>
+
 <div class="align-self-center" style="width: 100vw;">
   <div class="card text-center" style="height: 100vh;">
     <div class="card-header">
@@ -9,6 +11,12 @@
       <%- include('../products/list') %>
       <% } else if (locals.components === 'products/create') { %>
       <%- include('../products/create') %>
+      <% } else if (locals.components === 'products/details') { %>
+      <%- include('../products/details') %>
+      <% } else if (locals.components === 'customers/list') { %>
+      <%- include('../customers/list') %>
+      <% } else if (locals.components === 'orders/list') { %>
+      <%- include('../orders/list') %>
       <% } %>
     </div>
   </div>
