@@ -1,5 +1,4 @@
 'use strict';
-
 const { Op } = require('sequelize');
 const { Sequelize } = require('../sequelize/models');
 
@@ -13,7 +12,7 @@ class ProductsRepository {
       raw: true,
       where: { count: { [Op.gt]: 0 } },
       order: [Sequelize.fn('RAND')],
-      limit: 7,
+      limit: 3,
     });
   };
   getProductsList = async () => {

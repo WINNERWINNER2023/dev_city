@@ -1,6 +1,5 @@
 'use strict';
 
-const { isAwaitExpression } = require('typescript');
 const ProductsService = require('../services/ProductsService');
 
 class ProductsController {
@@ -18,7 +17,7 @@ class ProductsController {
     const { productId } = req.params;
     const product = await this.productsService.getProductDetails(Number(productId));
     if (product.code == 500) {
-      return res.status(200).json(product);
+      return res.status(500).json(product);
     }
 
     return res.status(200).json(product);
