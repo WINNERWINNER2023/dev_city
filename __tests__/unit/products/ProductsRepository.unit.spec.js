@@ -13,6 +13,35 @@ describe('ProductsRepository Unit Test', () => {
     jest.resetAllMocks();
   });
 
+  test('product.repository get random product susccess', async () => {
+    mockProduct.findAll = jest.fn(() => {
+      return 'findAll Result';
+    });
+
+    const randomProducts = await productsRepository.getRandomProducts();
+
+    expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
+    expect(randomProducts).toEqual('findAll Result');
+  });
+  test('product.repostory get products success', async () => {
+    mockProduct.findAll = jest.fn(() => {
+      return 'findAll Result';
+    });
+
+    const productsList = await productsRepository.getProductsList();
+    expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
+    expect(productsList).toEqual('findAll Result');
+  });
+  test('product.repostory get product success', async () => {
+    mockProduct.findOne = jest.fn(() => {
+      return 'findOne Result';
+    });
+
+    const product = await productsRepository.getProduct();
+    expect(mockProduct.findOne).toHaveBeenCalledTimes(1);
+    expect(product).toEqual('findOne Result');
+  });
+
   test('createProduct Method Success', async () => {
     mockProduct.create = jest.fn(() => {
       return 'test';
@@ -67,4 +96,4 @@ describe('ProductsRepository Unit Test', () => {
     expect(result).toEqual('test');
     expect(mockProduct.findOne).toHaveBeenCalledTimes(1);
   });
-})
+});

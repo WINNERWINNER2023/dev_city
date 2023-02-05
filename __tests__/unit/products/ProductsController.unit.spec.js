@@ -1,12 +1,16 @@
 const ProductsController = require('../../../src/controllers/ProductsController');
 
 const mockProductsService = {
+  getRandomProducts: jest.fn(),
+  getProductsList: jest.fn(),
+  getProductDetails: jest.fn(),
   createProduct: jest.fn(),
   adminGetProducts: jest.fn(),
 };
 
 const mockRequest = {
   body: jest.fn(),
+  params: jest.fn(),
   files: jest.fn(),
   query: jest.fn(),
   get: jest.fn(),
@@ -17,6 +21,58 @@ const mockResponse = {
   json: jest.fn(),
 };
 
+const getProductsResult = [
+  {
+    id: 3,
+    name: '조성훈',
+    contents: '조성훈 설명',
+    startUse: '2023-02-12T00:00:00.000Z',
+    endUse: '2023-02-12T00:00:00.000Z',
+    imagePath: '이미지 주소',
+    price: 2141,
+    count: 1,
+    createdAt: '2023-02-01T12:22:21.000Z',
+    updatedAt: '2023-02-01T12:22:21.000Z',
+  },
+  {
+    id: 5,
+    name: '박민욱',
+    contents: '박민욱 설명',
+    startUse: '2023-02-12T00:00:00.000Z',
+    endUse: '2023-02-12T00:00:00.000Z',
+    imagePath: '이미지 주소',
+    price: 2141,
+    count: 1,
+    createdAt: '2023-02-01T12:22:21.000Z',
+    updatedAt: '2023-02-01T12:22:21.000Z',
+  },
+  {
+    id: 2,
+    name: '이보형',
+    contents: '이보형 설명',
+    startUse: '2023-02-12T00:00:00.000Z',
+    endUse: '2023-02-12T00:00:00.000Z',
+    imagePath: '이미지 주소',
+    price: 2141,
+    count: 1,
+    createdAt: '2023-02-01T12:22:21.000Z',
+    updatedAt: '2023-02-01T12:22:21.000Z',
+  },
+];
+const getProductResult = [
+  {
+    id: 2,
+    name: '이보형',
+    contents: '이보형 설명',
+    startUse: '2023-02-12T00:00:00.000Z',
+    endUse: '2023-02-12T00:00:00.000Z',
+    imagePath: '이미지 주소',
+    price: 2141,
+    count: 1,
+    createdAt: '2023-02-01T12:22:21.000Z',
+    updatedAt: '2023-02-01T12:22:21.000Z',
+  },
+];
 const productsController = new ProductsController();
 productsController.productsService = mockProductsService;
 
@@ -29,6 +85,39 @@ describe('ProductsController Unit Test', () => {
     });
   });
 
+  test('product.service get random product susccess', async () => {
+    mockProductsService.getRandomProducts = jest.fn(() => {
+      return getProductsResult;
+    });
+
+    await productsController.getRandomProducts(mockRequest, mockResponse);
+
+    expect(mockProductsService.getRandomProducts).toHaveBeenCalledTimes(1);
+  });
+  test('product.service get products list success', async () => {
+    mockProductsService.getProductsList = jest.fn(() => {
+      return getProductsResult;
+    });
+
+    await productsController.getProductsList(mockRequest, mockResponse);
+
+    expect(mockProductsService.getProductsList).toHaveBeenCalledTimes(1);
+  });
+  test('product.service get product details success', async () => {
+    const requestParams = {
+      productId: 2,
+    };
+    mockRequest.params = requestParams;
+    mockProductsService.getProductDetails = jest.fn(() => {
+      return getProductResult;
+    });
+    await productsController.getProductDetails(mockRequest, mockResponse);
+
+    expect(mockProductsService.getProductDetails).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockResponse.json).toHaveBeenCalledWith(getProductResult);
+  });
+
   test('createProduct Method Success', async () => {
     const mockRequestBody = {
       name: 'name',
@@ -38,9 +127,7 @@ describe('ProductsController Unit Test', () => {
       price: 1000,
       count: 1,
     };
-    const mockRequestFiles = [
-      { filename: 'imagePath' }
-    ];
+    const mockRequestFiles = [{ filename: 'imagePath' }];
     mockRequest.body = mockRequestBody;
     mockRequest.files = mockRequestFiles;
 
@@ -100,12 +187,12 @@ describe('ProductsController Unit Test', () => {
 
   test('adminGetProducts Method Success', async () => {
     const mockRequestQuery = {
-      p: 1
+      p: 1,
     };
     mockRequest.query = mockRequestQuery;
     mockRequest.get = jest.fn(() => {
       return 'test';
-    })
+    });
 
     const adminGetProductsResult = { code: 200, data: 'data', pagination: 'pagination' };
     mockProductsService.adminGetProducts = jest.fn(() => {
@@ -130,7 +217,7 @@ describe('ProductsController Unit Test', () => {
     mockRequest.query = mockRequestQuery;
     mockRequest.get = jest.fn(() => {
       return 'test';
-    })
+    });
 
     const adminGetProductsResult = { code: 200, data: 'data', pagination: 'pagination' };
     mockProductsService.adminGetProducts = jest.fn(() => {
@@ -152,12 +239,12 @@ describe('ProductsController Unit Test', () => {
 
   test('adminGetProducts Method Fail - response code not 200', async () => {
     const mockRequestQuery = {
-      p: 1
+      p: 1,
     };
     mockRequest.query = mockRequestQuery;
     mockRequest.get = jest.fn(() => {
       return 'test';
-    })
+    });
 
     const adminGetProductsResult = { code: 404, message: '해당하는 상품 목록 없음' };
     mockProductsService.adminGetProducts = jest.fn(() => {
@@ -175,4 +262,4 @@ describe('ProductsController Unit Test', () => {
       message: adminGetProductsResult.message,
     });
   });
-})
+});
