@@ -42,7 +42,7 @@ const checkInputValue = async () => {
     return false;
   }
   return true;
-}
+};
 
 const createProduct = async () => {
   if (!await checkInputValue()) {
@@ -69,15 +69,17 @@ const createProduct = async () => {
       if (res.message) {
         alert(res.message);
       }
-      if (code === 201) {
-        location.href = '/admins';
-      }
 
       if (code === 201) {
-        location.href = '/admins/products/list';
+        location.href = '/admins/products';
       }
     })
     .catch((err) => {
       console.log('err: ', err);
     });
-}
+};
+
+const previewImg = (e) => {
+  let url = URL.createObjectURL(e.files[0]);
+  document.querySelector('#imageThumnail').src = url;
+};

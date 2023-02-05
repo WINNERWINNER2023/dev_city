@@ -82,3 +82,13 @@ const setPagination = (obj, getListFnName) => {
   document.querySelector('.pagination').innerHTML = '';
   document.querySelector('.pagination').insertAdjacentHTML('beforeend', temp);
 };
+
+document.querySelector('#searchBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  alert('검색 기능 준비중');
+});
+
+document.querySelector('#createBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  location.href = '/admins/products/create';
+});

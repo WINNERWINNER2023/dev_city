@@ -39,8 +39,12 @@
   <div class="mb-3 row">
     <label for="imagePath" class="col-sm-2 col-form-label">상품 사진</label>
     <div class="col-sm-10">
-      <input type="file" class="form-control" id="imagePath">
+      <input onchange="previewImg(this)" type="file" class="form-control" id="imagePath">
     </div>
   </div>
+  <div class="mb-3 row">
+    <img id="imageThumnail" style="width: 150px;">
+  </div>
+
   <button onclick="createProduct()" type="button" class="btn btn-primary" style="float: right;">상품 등록</button>
 </div>
