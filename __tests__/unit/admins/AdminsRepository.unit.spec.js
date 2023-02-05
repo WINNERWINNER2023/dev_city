@@ -13,7 +13,7 @@ describe('AdminRepository Unit Test', () => {
     jest.resetAllMocks();
   });
 
-  test('createAdmin Method success', async () => {
+  test('createAdmin Method Success', async () => {
     mockAdmin.create = jest.fn(() => {
       return 'test';
     });
@@ -31,7 +31,7 @@ describe('AdminRepository Unit Test', () => {
     });
   });
 
-  test('findOneByAccount Method success', async () => {
+  test('findOneByAccount Method Success', async () => {
     mockAdmin.findOne = jest.fn(() => {
       return 'test';
     });

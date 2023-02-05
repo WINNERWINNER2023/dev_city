@@ -1,8 +1,6 @@
-require('dotenv').config();
 const AdminsService = require('../../../src/services/AdminsService');
 const { encryptPassword } = require('../../../src/utils/bcryptUtil');
 // const { createAccessToken, createRefreshToken } = require('../../../src/utils/TokenUtil');
-const RedisUtil = require('../../../src/utils/RedisUtil');
 
 const mockAdminsRepository = {
   createAdmin: jest.fn(),
@@ -28,54 +26,54 @@ describe('AdminsService Unit Test', () => {
   });
 
   test('createAdmin Method Fail - already registered', async () => {
-    const AdminInfo = { ...mockAdminInfo };
+    const adminInfo = { ...mockAdminInfo };
 
     const findOneByAccountResult = 'test';
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       return findOneByAccountResult;
     });
 
-    const response = await adminsService.createAdmin(AdminInfo);
+    const response = await adminsService.createAdmin(adminInfo);
 
     expect(response).toEqual({ code: 401, message: '이미 등록된 관리자' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   });
 
   test('createAdmin Method Success', async () => {
-    const AdminInfo = { ...mockAdminInfo };
+    const adminInfo = { ...mockAdminInfo };
 
     const findOneByAccountResult = null;
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       return findOneByAccountResult;
     });
 
-    const response = await adminsService.createAdmin(AdminInfo);
+    const response = await adminsService.createAdmin(adminInfo);
 
     expect(response).toEqual({ code: 201, message: '관리자 등록 완료' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
     expect(mockAdminsRepository.createAdmin).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.createAdmin).toHaveBeenCalledWith(AdminInfo);
+    expect(mockAdminsRepository.createAdmin).toHaveBeenCalledWith(adminInfo);
   });
 
   test('createAdmin Method fail - DB error (1)', async () => {
-    const AdminInfo = { ...mockAdminInfo };
+    const adminInfo = { ...mockAdminInfo };
 
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       throw new Error();
     });
 
-    const response = await adminsService.createAdmin(AdminInfo);
+    const response = await adminsService.createAdmin(adminInfo);
 
     expect(response).toEqual({ code: 500, message: '관리자 등록 실패' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
     expect(mockAdminsRepository.createAdmin).toHaveBeenCalledTimes(0);
   });
 
   test('createAdmin Method fail - DB error (2)', async () => {
-    const AdminInfo = { ...mockAdminInfo };
+    const adminInfo = { ...mockAdminInfo };
 
     const findOneByAccountResult = null;
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
@@ -86,50 +84,50 @@ describe('AdminsService Unit Test', () => {
       throw new Error('test');
     });
 
-    const response = await adminsService.createAdmin(AdminInfo);
+    const response = await adminsService.createAdmin(adminInfo);
 
     expect(response).toEqual({ code: 500, message: '관리자 등록 실패' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
     expect(mockAdminsRepository.createAdmin).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.createAdmin).toHaveBeenCalledWith(AdminInfo);
+    expect(mockAdminsRepository.createAdmin).toHaveBeenCalledWith(adminInfo);
   });
 
   test(`login Method fail - admin not found`, async () => {
-    const AdminInfo = { ...mockAdminInfo };
+    const adminInfo = { ...mockAdminInfo };
 
     const findOneByAccountResult = null;
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       return findOneByAccountResult;
     });
 
-    const response = await adminsService.login(AdminInfo.account, AdminInfo.password);
+    const response = await adminsService.login(adminInfo.account, adminInfo.password);
 
     expect(response).toEqual({ code: 401, message: '잘못된 관리자 정보' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   });
 
   test(`login Method fail - Incorrect password`, async () => {
-    const AdminInfo = { ...mockAdminInfo };
+    const adminInfo = { ...mockAdminInfo };
 
-    const afterPassword = await encryptPassword(AdminInfo.password);
+    const afterPassword = await encryptPassword(adminInfo.password);
     const findOneByAccountResult = { id: 1, password: afterPassword };
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       return findOneByAccountResult;
     });
 
-    const response = await adminsService.login(AdminInfo.account, AdminInfo.password + 'wrong');
+    const response = await adminsService.login(adminInfo.account, adminInfo.password + 'wrong');
 
     expect(response).toEqual({ code: 401, message: '잘못된 관리자 정보' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   });
 
-  test(`login Method success`, async () => {
-    const AdminInfo = { ...mockAdminInfo };
+  test(`login Method Success`, async () => {
+    const adminInfo = { ...mockAdminInfo };
 
-    const afterPassword = await encryptPassword(AdminInfo.password);
+    const afterPassword = await encryptPassword(adminInfo.password);
     const findOneByAccountResult = { id: 1, password: afterPassword };
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       return findOneByAccountResult;
@@ -137,17 +135,17 @@ describe('AdminsService Unit Test', () => {
 
     mockRedisUtil.set = jest.fn(() => {});
 
-    const response = await adminsService.login(AdminInfo.account, AdminInfo.password);
+    const response = await adminsService.login(adminInfo.account, adminInfo.password);
 
     expect(response).toEqual({ code: 200, accessToken: expect.anything(), refreshToken: expect.anything(), message: '로그인 성공' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   });
 
   test(`login Method fail - redisUtil.set() Error`, async () => {
-    const AdminInfo = { ...mockAdminInfo };
+    const adminInfo = { ...mockAdminInfo };
 
-    const afterPassword = await encryptPassword(AdminInfo.password);
+    const afterPassword = await encryptPassword(adminInfo.password);
     const findOneByAccountResult = { id: 1, password: afterPassword };
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       return findOneByAccountResult;
@@ -157,17 +155,17 @@ describe('AdminsService Unit Test', () => {
       throw new Error();
     });
 
-    const response = await adminsService.login(AdminInfo.account, AdminInfo.password);
+    const response = await adminsService.login(adminInfo.account, adminInfo.password);
 
     expect(response).toEqual({ code: 500, message: '로그인 실패' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   });
 
   // test(`login Method fail - createRefreshToken Error`, async () => {
-  //   const AdminInfo = { ...mockAdminInfo };
+  //   const adminInfo = { ...mockAdminInfo };
 
-  //   const afterPassword = await encryptPassword(AdminInfo.password);
+  //   const afterPassword = await encryptPassword(adminInfo.password);
   //   const findOneByAccountResult = { id: 1, password: afterPassword };
   //   mockAdminsRepository.findOneByAccount = jest.fn(() => {
   //     return findOneByAccountResult;
@@ -180,17 +178,17 @@ describe('AdminsService Unit Test', () => {
   //     throw new Error('hihi');
   //   });
 
-  //   const response = await adminsService.login(AdminInfo.account, AdminInfo.password);
+  //   const response = await adminsService.login(adminInfo.account, adminInfo.password);
 
   //   expect(response).toEqual({ code: 500, message: '로그인 실패' });
   //   expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-  //   expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+  //   expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   // });
 
   // test(`login Method fail - createAccessToken Error`, async () => {
-  //   const AdminInfo = { ...mockAdminInfo };
+  //   const adminInfo = { ...mockAdminInfo };
 
-  //   const afterPassword = await encryptPassword(AdminInfo.password);
+  //   const afterPassword = await encryptPassword(adminInfo.password);
   //   const findOneByAccountResult = { id: 1, password: afterPassword };
   //   mockAdminsRepository.findOneByAccount = jest.fn(() => {
   //     return findOneByAccountResult;
@@ -200,38 +198,38 @@ describe('AdminsService Unit Test', () => {
   //     throw new Error();
   //   });
 
-  //   const response = await adminsService.login(AdminInfo.account, AdminInfo.password);
+  //   const response = await adminsService.login(adminInfo.account, adminInfo.password);
 
   //   expect(response).toEqual({ code: 500, message: '로그인 실패' });
   //   expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-  //   expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+  //   expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   // });
 
   test(`login Method fail - findOneByAccount Error`, async () => {
-    const AdminInfo = { ...mockAdminInfo };
+    const adminInfo = { ...mockAdminInfo };
 
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       throw new Error();
     });
 
-    const response = await adminsService.login(AdminInfo.account, AdminInfo.password);
+    const response = await adminsService.login(adminInfo.account, adminInfo.password);
 
     expect(response).toEqual({ code: 500, message: '로그인 실패' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   });
 
-  test('findOneByAccount Method success', async () => {
-    const AdminInfo = { ...mockAdminInfo };
+  test('findOneByAccount Method Success', async () => {
+    const adminInfo = { ...mockAdminInfo };
 
     const findOneByAccountResult = 'test';
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       return findOneByAccountResult;
     });
-    const result = await adminsService.findOneByAccount(AdminInfo.account);
+    const result = await adminsService.findOneByAccount(adminInfo.account);
 
     expect(result).toEqual(findOneByAccountResult);
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
-    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(AdminInfo.account);
+    expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   });
 });
