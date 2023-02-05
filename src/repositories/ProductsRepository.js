@@ -64,6 +64,25 @@ class ProductsRepository {
   adminGetProduct = async (productId) => {
     return await this.model.findByPk(productId);
   };
+
+  updateProduct = async (productInfo) => {
+    const product = await this.model.findByPk(productInfo.id);
+    if (!product) {
+      const err = new Error('해당하는 상품 없음');
+      err.code = 404;
+      throw err;
+    }
+    product.name = productInfo.name;
+    product.contents = productInfo.contents;
+    product.startUse = productInfo.startUse;
+    product.endUse = productInfo.endUse;
+    if (productInfo.imagePath) {
+      product.imagePath = productInfo.imagePath;
+    }
+    product.price = productInfo.price;
+    product.count = productInfo.count;
+    await product.save();
+  };
 }
 
 module.exports = ProductsRepository;

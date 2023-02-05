@@ -19,5 +19,6 @@ router.get('/products', productsController.adminGetProducts);
 router.post('/products', uploadUtil.multer({ storage: uploadUtil.storage }).array('files'), productsController.createProduct);
 
 router.get('/products/:productId', productsController.adminGetProduct);
+router.put('/products/:productId', uploadUtil.multer({ storage: uploadUtil.storage }).array('files'), productsController.updateProduct);
 
 module.exports = router;

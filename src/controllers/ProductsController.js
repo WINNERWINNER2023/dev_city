@@ -43,7 +43,7 @@ class ProductsController {
 
   adminGetProducts = async (req, res) => {
     const page = parseInt(req.query.p || 1);
-    const response = await this.productsService.adminGetProducts(req.get('Host'), page);
+    const response = await this.productsService.adminGetProducts(`${req.protocol}://${req.get('Host')}`, page);
     return res
       .status(response.code)
       .json(response.code === 200 ? { data: response.data, pagination: response.pagination } : { message: response.message });
@@ -54,10 +54,31 @@ class ProductsController {
     if (isNaN(productId)) {
       return res.status(400).json({ message: '잘못된 요청' });
     }
-    const response = await this.productsService.adminGetProduct(req.get('Host'), parseInt(productId));
+    const response = await this.productsService.adminGetProduct(`${req.protocol}://${req.get('Host')}`, parseInt(productId));
     return res
       .status(response.code)
       .json(response.code === 200 ? { data: response.data } : { message: response.message });
+  };
+
+  updateProduct = async (req, res) => {
+    const { productId } = req.params;
+    if (isNaN(productId)) {
+      return res.status(400).json({ message: '잘못된 요청' });
+    }
+    const { name, contents, startUse, endUse, price, count } = req.body;
+    const imagePath = req.files.length > 0 ? req.files[0].filename : null;
+    const productInfo = {
+      id: productId,
+      name,
+      contents,
+      startUse,
+      endUse,
+      imagePath,
+      price: price,
+      count: count,
+    };
+    const response = await this.productsService.updateProduct(productInfo);
+    return res.status(response.code).json({ message: response.message });
   };
 }
 

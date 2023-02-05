@@ -9,6 +9,7 @@ const mockProductsRepository = {
   adminGetProducts: jest.fn(),
   adminGetProductsCountAll: jest.fn(),
   adminGetProduct: jest.fn(),
+  updateProduct: jest.fn(),
 };
 const productsService = new ProductsService();
 productsService.productsRepository = mockProductsRepository;
@@ -59,25 +60,27 @@ describe('ProductsService Unit Test', () => {
   });
 
   test('createProduct Method Success', async () => {
+    const productInfo = { ...mockProductInfo };
     mockProductsRepository.createProduct = jest.fn(() => {
       return 'test';
     });
-    const response = await productsService.createProduct(mockProductInfo);
+    const response = await productsService.createProduct(productInfo);
 
     expect(response).toEqual({ code: 201, message: '상품 등록 완료' });
     expect(mockProductsRepository.createProduct).toHaveBeenCalledTimes(1);
-    expect(mockProductsRepository.createProduct).toHaveBeenCalledWith(mockProductInfo);
+    expect(mockProductsRepository.createProduct).toHaveBeenCalledWith(productInfo);
   });
 
   test('createProduct Method Error', async () => {
+    const productInfo = { ...mockProductInfo };
     mockProductsRepository.createProduct = jest.fn(() => {
       throw new Error();
     });
-    const response = await productsService.createProduct(mockProductInfo);
+    const response = await productsService.createProduct(productInfo);
 
     expect(response).toEqual({ code: 500, message: '상품 등록 실패' });
     expect(mockProductsRepository.createProduct).toHaveBeenCalledTimes(1);
-    expect(mockProductsRepository.createProduct).toHaveBeenCalledWith(mockProductInfo);
+    expect(mockProductsRepository.createProduct).toHaveBeenCalledWith(productInfo);
   });
 
   test('adminGetProducts Method Fail - get nothing', async () => {
@@ -179,5 +182,29 @@ describe('ProductsService Unit Test', () => {
     expect(response).toEqual({ code: 200, data: expect.anything() });
     expect(mockProductsRepository.adminGetProduct).toHaveBeenCalledTimes(1);
     expect(mockProductsRepository.adminGetProduct).toHaveBeenCalledWith(productId);
+  });
+
+  test('updateProduct Method Success', async () => {
+    const productInfo = { ...mockProductInfo };
+    mockProductsRepository.updateProduct = jest.fn(() => {
+      return 'test';
+    });
+    const response = await productsService.updateProduct(productInfo);
+
+    expect(response).toEqual({ code: 200, message: '상품 수정 완료' });
+    expect(mockProductsRepository.updateProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsRepository.updateProduct).toHaveBeenCalledWith(productInfo);
+  });
+
+  test('updateProduct Method Error', async () => {
+    const productInfo = { ...mockProductInfo };
+    mockProductsRepository.updateProduct = jest.fn(() => {
+      throw new Error();
+    });
+    const response = await productsService.updateProduct(productInfo);
+
+    expect(response).toEqual({ code: 500, message: '상품 수정 실패' });
+    expect(mockProductsRepository.updateProduct).toHaveBeenCalledTimes(1);
+    expect(mockProductsRepository.updateProduct).toHaveBeenCalledWith(productInfo);
   });
 });

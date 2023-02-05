@@ -76,6 +76,18 @@ class ProductsService {
       return { code: 500, message: '상품 상세 조회 실패' };
     }
   };
+
+  updateProduct = async (productInfo) => {
+    try {
+      await this.productsRepository.updateProduct(productInfo);
+      return { code: 200, message: '상품 수정 완료' };
+    } catch (err) {
+      return { 
+        code: err.code ? err.code : 500, 
+        message: err.code ? err.message : '상품 수정 실패' 
+      };
+    }
+  };
 }
 
 module.exports = ProductsService;
