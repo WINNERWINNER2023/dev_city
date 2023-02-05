@@ -1,9 +1,9 @@
 window.onload = () => {
-  getProducts(1);
+  getCustomers(1);
 };
 
-const getProducts = async (p) => {
-  fetch('/api/admins/products?p=' + p, {
+const getCustomers = async (p) => {
+  fetch('/api/admins/customers?p=' + p, {
     method: 'GET',
   })
     .then(async (res) => {
@@ -15,28 +15,27 @@ const getProducts = async (p) => {
         console.log(res.message);
       }
 
-      document.querySelector('#products').innerHTML = '';
+      document.querySelector('#customers').innerHTML = '';
       if (code === 200) {
 
-        const products = res.data;
-        setPagination(res.pagination, 'getProducts'); // 페이지네이션
-        products.forEach((product) => {
+        const customers = res.data;
+        setPagination(res.pagination, 'getCustomers'); // 페이지네이션
+        customers.forEach((product) => {
           const temp = `
-            <tr onclick="location.href='/admins/products/${product.id}'">
+            <tr>
               <th scope="row">${product.id}</th>
-              <td>${product.name}</td>
-              <td>${new Date(product.startUse).toLocaleDateString()}</td>
-              <td>${product.price}</td>
-              <td>${product.count}</td>
+              <td>${product.email}</td>
+              <td>${product.nickname}</td>
+              <td>${product.phone}</td>
+              <td>${product.coin}</td>
               <td>${new Date(product.createdAt).toLocaleString()}</td>
-              <td>${new Date(product.updatedAt).toLocaleString()}</td>
             </tr>
           `;
-          document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+          document.querySelector('#customers').insertAdjacentHTML('beforeend', temp);
         });
 
         // 테이블 tr 마우스 오버 시 하이라이트 효과
-        document.querySelectorAll("#products tr").forEach(el => {
+        document.querySelectorAll("#customers tr").forEach(el => {
           el.addEventListener("mouseenter", (e) => {
             e.currentTarget.classList.add("table-active");
           });
@@ -47,10 +46,10 @@ const getProducts = async (p) => {
       } else if (code === 404) {
         const temp = `
           <tr>
-            <td colspan="7">상품 정보가 없습니다.</td>
+            <td colspan="6">고객 정보가 없습니다.</td>
           </tr>
         `;
-        document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+        document.querySelector('#customers').insertAdjacentHTML('beforeend', temp);
       }
     });
 };
@@ -94,9 +93,4 @@ const setPagination = (obj, getListFnName) => {
 document.querySelector('#searchBtn').addEventListener('click', (e) => {
   e.preventDefault();
   alert('검색 기능 준비중');
-});
-
-document.querySelector('#createBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  location.href = '/admins/products/create';
 });

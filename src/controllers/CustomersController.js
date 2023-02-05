@@ -70,5 +70,12 @@ class CustomersController {
       res.status(400).json({ message: 'Controller - 요청이 올바르지 않습니다.' });
     }
   };
+  adminGetCustomers = async (req, res) => {
+    const page = parseInt(req.query.p || 1);
+    const response = await this.customersService.adminGetCustomers(page);
+    return res
+      .status(response.code)
+      .json(response.code === 200 ? { data: response.data, pagination: response.pagination } : { message: response.message });
+  };
 }
 module.exports = CustomersController;

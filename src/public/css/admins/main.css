@@ -10,3 +10,7 @@
   border-radius: 20px; 
   background-color: white;
 }
+
+.table tbody tr {
+  cursor: pointer;
+}

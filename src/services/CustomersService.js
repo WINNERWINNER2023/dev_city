@@ -9,8 +9,12 @@ const { encryptPassword } = require('../utils/bcryptUtil');
 // const { createAccessToken, createRefreshToken } = require('../utils/TokenUtil');
 
 const RedisUtil = require('../utils/RedisUtil');
+const PaginationUtil = require('../utils/PaginationUtil');
 
 class CustomersService {
+  pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
+  sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
+
   customersRepository = new CustomersRepository(Customer);
   redisUtil = new RedisUtil();
 
@@ -47,6 +51,7 @@ class CustomersService {
       return { code: 400, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
+
   findOneCustomer = async (customerId) => {
     try {
       const findOneCustomerInfo = await this.customersRepository.findOneCustomer(customerId);
@@ -56,6 +61,7 @@ class CustomersService {
       return { code: 400, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
+
   findCustomerByEmail = async (email) => {
     try {
       const findCustomerEmail = await this.customersRepository.findCustomerByEmail(email);
@@ -65,6 +71,7 @@ class CustomersService {
       return { code: 400, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
+
   findCustomerByNickname = async (nickname) => {
     try {
       const findCustomerNickname = await this.customersRepository.findCustomerByNickname(nickname);
@@ -74,6 +81,7 @@ class CustomersService {
       return { code: 400, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
+
   // 유효성검사 추가필요
   changeCustomer = async (email, nickname, password, phone) => {
     try {
@@ -85,6 +93,7 @@ class CustomersService {
       return { code: 400, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
+
   addCustomerCoin = async (coin) => {
     try {
       const addedCustomerCoinInfo = await this.customersRepository.addCustomerCoin(coin);
@@ -94,6 +103,7 @@ class CustomersService {
       return { code: 400, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
+
   deleteCustomer = async (customerId) => {
     try {
       const deleteCustomerInfo = await this.customersRepository.deleteCustomer(customerId);
@@ -101,6 +111,21 @@ class CustomersService {
     } catch (error) {
       console.log(error.message);
       return { code: 400, message: 'Service - 요청이 올바르지 않습니다.' };
+    }
+  };
+
+  adminGetCustomers = async (page) => {
+    try {
+      const customers = await this.customersRepository.adminGetCustomers(page);
+      if (customers.length === 0) {
+        return { code: 404, message: '해당하는 유저 목록 없음' };
+      }
+
+      const customersCountAll = await this.customersRepository.adminGetCustomersCountAll();
+      const paginationUtil = new PaginationUtil(page, customersCountAll.countAll, this.pageLimit, this.sectionLimit);
+      return { code: 200, data: customers, pagination: paginationUtil.render() };
+    } catch (err) {
+      return { code: 500, message: '유저 목록 조회 실패' };
     }
   };
 }

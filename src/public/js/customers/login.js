@@ -1,10 +1,10 @@
-const account = document.querySelector('#account');
+const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 
 const checkInputValue = async () => {
-  if (!account.value) {
+  if (!email.value) {
     alert('빈 입력값이 있습니다.');
-    account.focus();
+    email.focus();
     return false;
   }
   if (!password.value) {
@@ -13,22 +13,22 @@ const checkInputValue = async () => {
     return false;
   }
   return true;
-}
+};
 
 const enter = () => {
   login();
-}
+};
 
 const login = async () => {
-  if (!await checkInputValue()) {
+  if (!(await checkInputValue())) {
     return;
   }
 
   const data = {
-    account: account.value,
+    email: email.value,
     password: password.value,
   };
-  await fetch('/api/admins/login', {
+  await fetch('/api/customers/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -46,12 +46,11 @@ const login = async () => {
       if (code === 200) {
         document.cookie = `accessToken=${res.accessToken}; path=/;`;
         document.cookie = `refreshToken=${res.refreshToken}; path=/;`;
-        localStorage.setItem('simpleAdminInfo', JSON.stringify(res.simpleAdminInfo));
 
-        location.href = '/admins';
+        location.href = '/customers';
       }
     })
     .catch((err) => {
       console.log('err: ', err);
     });
-}
+};

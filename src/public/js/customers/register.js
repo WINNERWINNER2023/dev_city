@@ -1,4 +1,4 @@
-const account = document.querySelector('#account');
+const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 const confirmPassword = document.querySelector('#confirmPassword');
 
@@ -14,9 +14,9 @@ const checkPassword = () => {
 };
 
 const checkInputValue = async () => {
-  if (!account.value) {
+  if (!email.value) {
     alert('빈 입력값이 있습니다.');
-    account.focus();
+    email.focus();
     return false;
   }
   if (!password.value) {
@@ -35,22 +35,22 @@ const checkInputValue = async () => {
     return false;
   }
   return true;
-}
+};
 
 const enter = () => {
   register();
-}
+};
 
 const register = async () => {
-  if (!await checkInputValue()) {
+  if (!(await checkInputValue())) {
     return;
   }
 
   const data = {
-    account: account.value,
+    email: email.value,
     password: password.value,
   };
-  await fetch('/api/admins/register', {
+  await fetch('/api/customers/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,12 +68,11 @@ const register = async () => {
       if (code === 201) {
         document.cookie = `accessToken=${res.accessToken}; path=/;`;
         document.cookie = `refreshToken=${res.refreshToken}; path=/;`;
-        localStorage.setItem('simpleAdminInfo', JSON.stringify(res.simpleAdminInfo));
 
-        location.href = '/admins';
+        location.href = '/customers';
       }
     })
     .catch((err) => {
       console.log('err: ', err);
     });
-}
+};
