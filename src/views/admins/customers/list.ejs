@@ -1,1 +1,31 @@
-customers list
+<script src="/public/js/admins/customers/list.js" defer></script>
+
+<!-- 검색 시작 -->
+<form class="row g-3">
+  <div class="col-md-6">
+    <label for="searchInput" class="visually-hidden">검색어</label>
+    <input type="text" class="form-control" id="searchInput" placeholder="검색어">
+  </div>
+  <div class="col-md-4">
+    <button id="searchBtn" class="float-start btn btn-outline-primary mb-3">검색</button>
+  </div>
+</form>
+<!-- 검색 끝 -->
+
+<!-- 목록 시작 -->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">이메일</th>
+      <th scope="col">닉네임</th>
+      <th scope="col">연락처</th>
+      <th scope="col">보유코인</th>
+      <th scope="col">가입일</th>
+    </tr>
+  </thead>
+  <tbody id="customers"></tbody>
+</table>
+<!-- 목록 끝 -->
+
+<%- include('../components/pagination') -%>

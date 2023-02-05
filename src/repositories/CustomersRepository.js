@@ -13,6 +13,7 @@ class CustomersRepository {
   adminGetCustomers = async (page) => {
     return await this.model.findAll({
       raw: true,
+      attributes: ['id', 'email', 'nickname', 'phone', 'coin', 'createdAt', 'updatedAt'],
       order: [['id', 'DESC']],
       offset: (page - 1) * this.pageLimit,
       limit: this.pageLimit,
