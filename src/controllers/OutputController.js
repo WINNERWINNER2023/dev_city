@@ -1,6 +1,5 @@
 'use strict';
 
-class OutputController {
-}
+class OutputController {}
 
 module.exports = OutputController;
