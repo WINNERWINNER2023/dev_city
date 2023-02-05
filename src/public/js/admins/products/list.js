@@ -11,14 +11,15 @@ const getProducts = async (p) => {
 
       res = await res.json();
       if (res.message) {
-        alert(res.message);
+        // alert(res.message);
+        console.log(res.message);
       }
 
+      document.querySelector('#products').innerHTML = '';
       if (code === 200) {
-        document.querySelector('#products').innerHTML = '';
 
-        setPagination(res.pagination, 'getProducts'); // 페이지네이션
         const products = res.data;
+        setPagination(res.pagination, 'getProducts'); // 페이지네이션
         products.forEach((product) => {
           const temp = `
             <tr onclick="location.href='/admins/products/${product.id}'">
@@ -43,6 +44,13 @@ const getProducts = async (p) => {
             e.currentTarget.classList.remove("table-active");
           });
         });
+      } else if (code === 404) {
+        const temp = `
+          <tr>
+            <td colspan="7">상품 정보가 없습니다.</td>
+          </tr>
+        `;
+        document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
       }
     });
 };

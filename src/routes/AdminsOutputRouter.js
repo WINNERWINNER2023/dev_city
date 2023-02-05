@@ -14,4 +14,7 @@ router.get('/products/', adminsOutputController.productsList);
 router.get('/products/create', adminsOutputController.productsCreate);
 router.get('/products/:productId', adminsOutputController.productsDetail);
 
+router.get('/customers/', adminsOutputController.customersList);
+router.get('/orders/', adminsOutputController.ordersList);
+
 module.exports = router;

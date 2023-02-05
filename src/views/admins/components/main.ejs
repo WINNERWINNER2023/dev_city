@@ -13,6 +13,10 @@
       <%- include('../products/create') %>
       <% } else if (locals.components === 'products/details') { %>
       <%- include('../products/details') %>
+      <% } else if (locals.components === 'customers/list') { %>
+      <%- include('../customers/list') %>
+      <% } else if (locals.components === 'orders/list') { %>
+      <%- include('../orders/list') %>
       <% } %>
     </div>
   </div>

@@ -38,6 +38,18 @@ class OutputController {
       productId: parseInt(productId),
     });
   };
+
+  customersList = (req, res) => {
+    res.render('admins/index', {
+      components: 'customers/list',
+    });
+  };
+
+  ordersList = (req, res) => {
+    res.render('admins/index', {
+      components: 'orders/list',
+    });
+  };
 }
 
 module.exports = OutputController;
