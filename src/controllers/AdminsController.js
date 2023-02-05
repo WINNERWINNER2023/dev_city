@@ -18,6 +18,7 @@ class AdminsController {
     const loginResponse = await this.adminsService.login(account, password);
     return res.status(createAdminResponse.code).json({
       message: createAdminResponse.message,
+      simpleAdminInfo: loginResponse.simpleAdminInfo,
       accessToken: loginResponse.accessToken,
       refreshToken: loginResponse.refreshToken,
     });
@@ -31,6 +32,7 @@ class AdminsController {
       { message: response.message } : 
       {
         message: response.message,
+        simpleAdminInfo: response.simpleAdminInfo,
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       }
