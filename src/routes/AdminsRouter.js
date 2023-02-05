@@ -10,6 +10,8 @@ const ProductsController = require('../controllers/ProductsController');
 const productsController = new ProductsController();
 const CustomersController = require('../controllers/CustomersController');
 const customersController = new CustomersController();
+const OrdersController = require('../controllers/OrdersController');
+const ordersController = new OrdersController();
 
 const UploadUtil = require('../utils/UploadUtil');
 const uploadUtil = new UploadUtil(`${process.env.MULTER_UPLOADS_PATH}/products`);
@@ -25,5 +27,7 @@ router.put('/products/:productId', uploadUtil.multer({ storage: uploadUtil.stora
 router.delete('/products/:productId', productsController.deleteProduct);
 
 router.get('/customers', customersController.adminGetCustomers);
+
+router.get('/orders', ordersController.adminGetOrders);
 
 module.exports = router;
