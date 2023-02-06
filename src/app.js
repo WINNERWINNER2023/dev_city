@@ -15,4 +15,7 @@ app.use('/public', express.static(__dirname + '/public'));
 const router = require('./routes');
 app.use('/', router);
 
+const errorHandler = require('./middlewares/errorHandler');
+app.use(errorHandler);
+
 module.exports = app;

@@ -15,11 +15,12 @@ const ordersController = new OrdersController();
 
 const UploadUtil = require('../utils/UploadUtil');
 const uploadUtil = new UploadUtil(`${process.env.MULTER_UPLOADS_PATH}/products`);
+const adminsAuthMiddleware = require('../middlewares/adminsAuthMiddleware');
 
 router.post('/register', adminsController.register);
 router.post('/login', adminsController.login);
 
-router.get('/products', productsController.adminGetProducts);
+router.get('/products', adminsAuthMiddleware, productsController.adminGetProducts);
 router.post('/products', uploadUtil.multer({ storage: uploadUtil.storage }).array('files'), productsController.createProduct);
 
 router.get('/products/:productId', productsController.adminGetProduct);
