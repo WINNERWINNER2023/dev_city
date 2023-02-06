@@ -51,6 +51,12 @@ const getProducts = async (p) => {
           </tr>
         `;
         document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+      } else if (code === 307) {
+        document.cookie = `accessToken=${res.accessToken}; path=/;`;
+        getProducts(p);
+      } else if (code === 401) {
+        alert(res.message);
+        location.href = '/admins/login';
       }
     });
 };

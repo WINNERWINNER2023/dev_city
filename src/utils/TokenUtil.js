@@ -17,37 +17,36 @@ const createRefreshToken = async () => {
   return refreshToken;
 };
 
-// const validateAccessToken = async (accessToken) => {
-//   try {
-//     jwt.verify(accessToken, SECRET_KEY);
-//     return true;
-//   } catch (err) {
-//     return false;
-//   }
-// };
+const validateAccessToken = async (accessToken) => {
+  try {
+    jwt.verify(accessToken, SECRET_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
-// const validateRefreshToken = async (refreshToken) => {
-//   try {
-//     jwt.verify(refreshToken, SECRET_KEY);
-//     return true;
-//   } catch (err) {
-//     return false;
-//   }
-// };
+const validateRefreshToken = async (refreshToken) => {
+  try {
+    jwt.verify(refreshToken, SECRET_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
-// const getAccessTokenPayload = async (accessToken) => {
-//   try {
-//     const payload = jwt.verify(accessToken, SECRET_KEY);
-//     return payload;
-//   } catch (err) {
-//     return null;
-//   }
-// };
+const getAccessTokenPayload = async (accessToken) => {
+  try {
+    return jwt.verify(accessToken, SECRET_KEY);
+  } catch {
+    return null;
+  }
+};
 
 module.exports = {
   createAccessToken, 
   createRefreshToken, 
-  // validateAccessToken, 
-  // validateRefreshToken, 
-  // getAccessTokenPayload
+  validateAccessToken, 
+  validateRefreshToken, 
+  getAccessTokenPayload
 };

@@ -72,6 +72,12 @@ const createProduct = async () => {
 
       if (code === 201) {
         location.href = '/admins/products';
+      } else if (code === 307) {
+        document.cookie = `accessToken=${res.accessToken}; path=/;`;
+        createProduct();
+      } else if (code === 401) {
+        alert(res.message);
+        location.href = '/admins/login';
       }
     })
     .catch((err) => {
