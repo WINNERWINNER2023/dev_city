@@ -12,7 +12,15 @@ class CustomersController {
       if (typeof registeredCustomerInfo.message !== 'undefined') {
         return res.status(registeredCustomerInfo.code).json({ message: registeredCustomerInfo.message });
       }
+<<<<<<< Updated upstream
       return res.status(201).json({ message: '회원가입에 성공하였습니다.', data: registeredCustomerInfo });
+=======
+      res.status(201).json({ 
+        message: '회원가입에 성공하셨습니다.', 
+        accessToken: registeredCustomerInfo.accessToken,
+        refreshToken: registeredCustomerInfo.refreshToken
+      });
+>>>>>>> Stashed changes
     } catch (error) {
       console.log(error.message);
       return res.status(500).json({ message: 'Controller - 요청이 올바르지 않습니다.' });
@@ -74,7 +82,10 @@ class CustomersController {
       return res.status(500).json({ message: 'Controller - 요청이 올바르지 않습니다.' });
     }
   };
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
   loginCustomer = async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -82,6 +93,7 @@ class CustomersController {
       if (typeof loginCustomerInfo.message !== 'undefined') {
         return res.status(loginCustomerInfo.code).json({ message: loginCustomerInfo.message });
       }
+<<<<<<< Updated upstream
       return res.status(200).json({
         message: '로그인이 정상적으로 완료되었습니다',
         accessToken: loginCustomerInfo.accessToken,
@@ -100,5 +112,31 @@ class CustomersController {
       .status(response.code)
       .json(response.code === 200 ? { data: response.data, pagination: response.pagination } : { message: response.message });
   };
+=======
+      res.status(201).json({ 
+        message: '정상적으로 로그인 되었습니다.', 
+        accessToken: loginCustomerInfo.accessToken,
+        refreshToken: loginCustomerInfo.refreshToken, 
+      });
+    } catch (error) {
+      console.log(error.message);
+      res.status(400).json({ message: 'Controller - 요청이 올바르지 않습니다.' });
+    }
+  };
+
+  // login = async (req, res) => {
+  //   const { account, password } = req.body;
+  //   const response = await this.adminsService.login(account, password);
+  //   return res.status(response.code).json(
+  //     response.code !== 200
+  //       ? { message: response.message }
+  //       : {
+  //           message: response.message,
+  //           accessToken: response.accessToken,
+  //           refreshToken: response.refreshToken,
+  //         }
+  //   );
+  // };
+>>>>>>> Stashed changes
 }
 module.exports = CustomersController;

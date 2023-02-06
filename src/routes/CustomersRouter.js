@@ -12,6 +12,10 @@ router.get('/', customersController.findOneCustomer);
 router.put('/', customersController.changeCustomer);
 router.put('/coin', customersController.addCustomerCoin);
 router.delete('/', customersController.deleteCustomer);
+<<<<<<< Updated upstream
 router.post('/login', customersController.loginCustomer);
+=======
+router.post('/', customersController.loginCustomer);
+>>>>>>> Stashed changes
 
 module.exports = router;

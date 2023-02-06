@@ -5,7 +5,11 @@ require('dotenv').config();
 const CustomersRepository = require('../repositories/CustomersRepository');
 const { Customer } = require('../sequelize/models');
 
+<<<<<<< Updated upstream
 const { encryptPassword, comparePasswordForLogin } = require('../utils/bcryptUtil');
+=======
+const { encryptPassword } = require('../utils/bcryptUtil');
+>>>>>>> Stashed changes
 const { createAccessToken, createRefreshToken } = require('../utils/TokenUtil');
 
 const RedisUtil = require('../utils/RedisUtil');
@@ -44,8 +48,14 @@ class CustomersService {
       if (duplicateCustomerNickname) {
         return { code: 401, message: '중복되는 닉네임이 있습니다' };
       }
+<<<<<<< Updated upstream
       password = await encryptPassword(password);
       return await this.customersRepository.createCustomer(email, nickname, password, phone);
+=======
+      await encryptPassword(customerInfo.password);
+      await this.customersRepository.createCustomer(customerInfo);
+      return { code: 201, message: '회원가입에 성공하셨습니다.'};
+>>>>>>> Stashed changes
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
@@ -106,7 +116,12 @@ class CustomersService {
         return { code: 401, message: '중복되는 닉네임이 있습니다' };
       }
       password = await encryptPassword(password);
+<<<<<<< Updated upstream
       return await this.customersRepository.changeCustomer(email, nickname, password, phone);
+=======
+      await this.customersRepository.changeCustomer(email, nickname, password, phone);
+      return { code: 201, message: '회원 정보를 수정했습니다.' };
+>>>>>>> Stashed changes
     } catch (error) {
       console.log(error.message);
       return { code: 401, message: 'Service - 요청이 올바르지 않습니다.' };
@@ -115,7 +130,12 @@ class CustomersService {
 
   addCustomerCoin = async (coin) => {
     try {
+<<<<<<< Updated upstream
       return await this.customersRepository.addCustomerCoin(coin);
+=======
+      await this.customersRepository.addCustomerCoin(coin);
+      return { code: 201, message: '코인 충전을 완료했습니다.' };
+>>>>>>> Stashed changes
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
@@ -124,7 +144,12 @@ class CustomersService {
 
   deleteCustomer = async (customerId) => {
     try {
+<<<<<<< Updated upstream
       return await this.customersRepository.deleteCustomer(customerId);
+=======
+      await this.customersRepository.deleteCustomer(customerId);
+      return { code: 201, message: '회원 탈퇴가 완료되었습니다.'};
+>>>>>>> Stashed changes
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
@@ -172,5 +197,31 @@ class CustomersService {
       return { code: 500, message: '유저 목록 조회 실패' };
     }
   };
+
+  login = async (email, password) => {
+    let loadedCustomer;
+    try {
+      const customer = await this.findCustomerByEmail(email);
+      if (!customer) {
+        const error = new Error('A user with this email could not be found.');
+        error.statusCode = 401;
+        throw error;
+      }
+      loadedCustomer = customer;
+      // const isEqual = await bcrypt.compare(password, customer.password);
+      if (!comparePasswordForLogin(password, customer.password)) {
+        const error = new Error('Wrong password!');
+        error.statusCode = 401;
+        throw error;
+      }
+      await createAccessToken(customer.id);
+      const refreshToken = await createRefreshToken();
+      await this.redisUtil.set(refreshToken, admin.id);
+      return { code: 200, accessToken, refreshToken, customerId: loadedCustomer._id.toString(), message: '정상적으로 로그인되었습니다.' };
+    } catch (error) {
+      console.log(error.message);
+      if (!error.statusCode) {error.statusCode = 500;}
+    };
+  }
 }
 module.exports = CustomersService;
