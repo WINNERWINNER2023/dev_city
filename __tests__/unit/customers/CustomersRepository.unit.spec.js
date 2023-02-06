@@ -1,14 +1,20 @@
 const CustomersRepository = require('../../../src/repositories/CustomersRepository');
 
 const mockCustomer = {
+  create: jest.fn(),
+  findOne: jest.fn(),
+  update: jest.fn(),
+  increment: jest.fn(),
+  destroy: jest.fn(),
   findAll: jest.fn(),
   findOne: jest.fn(),
 };
 
-let mockCustomerId = 1;
-let mockCustomerEmail = 'Test1@@gmail.com';
-let mockCustomerNickname = 'Test1@';
+const customersRepository = new CustomersRepository(mockCustomer);
 
+const mockCustomerId = 1;
+const mockCustomerEmail = 'Test1@@gmail.com';
+const mockCustomerNickname = 'Test1@';
 const customerReturnValue = {
   email: 'test',
   nickname: 'Test1@@gmail.com',
@@ -16,7 +22,6 @@ const customerReturnValue = {
   phone: '010-1234-5678',
   coin: 0,
 };
-const customersRepository = new CustomersRepository(mockCustomer);
 
 describe('CustomersRepository Unit Test', () => {
   beforeEach(() => {
@@ -27,82 +32,62 @@ describe('CustomersRepository Unit Test', () => {
     jest.resetAllMocks();
   });
 
-  test('Customers Repository의 createCustomer Method 성공', async () => {
-    customersRepository.model.create = jest.fn(() => customerReturnValue);
-    const customer = await customersRepository.createCustomer(mockCustomerId);
+  test('createCustomer Method Success', async () => {
+    mockCustomer.create = jest.fn(() => customerReturnValue);
+    const result = await customersRepository.createCustomer(mockCustomerId);
 
-    expect(customersRepository.model.create).toHaveBeenCalledTimes(1);
-    expect(customer).toEqual(customerReturnValue);
+    expect(mockCustomer.create).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(customerReturnValue);
   });
 
-  test('Customers Repository의 findOneCustomer Method 성공', async () => {
-    customersRepository.model.findOne = jest.fn(() => customerReturnValue);
-    const customer = await customersRepository.findOneCustomer(mockCustomerId);
+  test('findOneCustomer Method Success', async () => {
+    mockCustomer.findOne = jest.fn(() => customerReturnValue);
+    const result = await customersRepository.findOneCustomer(mockCustomerId);
 
-    expect(customersRepository.model.findOne).toHaveBeenCalledTimes(1);
-    expect(customer).toEqual(customerReturnValue);
+    expect(mockCustomer.findOne).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(customerReturnValue);
   });
 
-  test('Customers Repository의 findCustomerByEmail Method 성공', async () => {
-    const customerEmail = { email: 'test' };
-    customersRepository.model.findOne = jest.fn(() => customerEmail);
-    const customer = await customersRepository.findCustomerByEmail(mockCustomerEmail);
+  test('findCustomerByEmail Method Success', async () => {
+    const customerEmail = { email: 'test1@gmail.com' };
+    mockCustomer.findOne = jest.fn(() => customerEmail);
+    const result = await customersRepository.findCustomerByEmail(mockCustomerEmail);
 
-    expect(customersRepository.model.findOne).toHaveBeenCalledTimes(1);
-    expect(customer).toEqual(customerEmail);
+    expect(mockCustomer.findOne).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(customerEmail);
   });
 
-  test('Customers Repository의 findCustomerByEmail Method 성공', async () => {
-    const customerNickname = { nickname: 'Test1@@gmail.com' };
-    customersRepository.model.findOne = jest.fn(() => customerNickname);
-    const customer = await customersRepository.findCustomerByEmail(mockCustomerNickname);
+  test('findCustomerByNickname Method Success', async () => {
+    const customerNickname = { nickname: 'Test1' };
+    mockCustomer.findOne = jest.fn(() => customerNickname);
+    const result = await customersRepository.findCustomerByNickname(mockCustomerNickname);
 
-    expect(customersRepository.model.findOne).toHaveBeenCalledTimes(1);
-    expect(customer).toEqual(customerNickname);
+    expect(mockCustomer.findOne).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(customerNickname);
   });
 
-  test('Customers Repository의 changeCustomer Method 성공', async () => {
-    customersRepository.model.update = jest.fn(() => customerReturnValue);
+  test('changeCustomer Method Success', async () => {
+    mockCustomer.update = jest.fn(() => customerReturnValue);
+    const result = await customersRepository.changeCustomer(mockCustomerId);
 
-    const customer = await customersRepository.changeCustomer(mockCustomerId);
-
-    expect(customersRepository.model.update).toHaveBeenCalledTimes(1);
-    expect(customer).toEqual(customerReturnValue);
+    expect(mockCustomer.update).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(customerReturnValue);
   });
 
-  test('Customers Repository의 addCustomerCoin Method 성공', async () => {
-    customersRepository.model.increment = jest.fn(() => customerReturnValue);
+  test('addCustomerCoin Method Success', async () => {
+    mockCustomer.increment = jest.fn(() => customerReturnValue);
+    const result = await customersRepository.addCustomerCoin(mockCustomerId);
 
-    const customer = await customersRepository.addCustomerCoin(mockCustomerId);
-
-    expect(customersRepository.model.increment).toHaveBeenCalledTimes(1);
-    expect(customer).toEqual(customerReturnValue);
+    expect(mockCustomer.increment).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(customerReturnValue);
   });
 
-  test('Customers Repository의 deleteCustomer Method 성공', async () => {
-    customersRepository.model.destroy = jest.fn(() => customerReturnValue);
+  test('deleteCustomer Method Success', async () => {
+    mockCustomer.destroy = jest.fn(() => customerReturnValue);
+    const result = await customersRepository.deleteCustomer(mockCustomerId);
 
-    const customer = await customersRepository.deleteCustomer(mockCustomerId);
-
-    expect(customersRepository.model.destroy).toHaveBeenCalledTimes(1);
-    expect(customer).toEqual(customerReturnValue);
-  });
-
-  test('adminGetCustomers Method Success', async () => {
-    mockCustomer.findAll = jest.fn(() => {
-      return 'test';
-    });
-    const page = 1;
-    const result = await customersRepository.adminGetCustomers(page);
-
-    expect(result).toEqual('test');
-    expect(mockCustomer.findAll).toHaveBeenCalledTimes(1);
-    expect(mockCustomer.findAll).toHaveBeenCalledWith({
-      raw: true,
-      order: [['id', 'DESC']],
-      offset: (page - 1) * customersRepository.pageLimit,
-      limit: customersRepository.pageLimit,
-    });
+    expect(mockCustomer.destroy).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(customerReturnValue);
   });
 
   test('adminGetCustomersCountAll Method Success', async () => {
