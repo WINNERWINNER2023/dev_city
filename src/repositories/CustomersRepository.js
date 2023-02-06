@@ -21,7 +21,6 @@ class CustomersRepository {
   };
 
   findOneCustomer = async (customerId) => {
-    customerId = 60;
     return await this.model.findOne({
       attributes: ['id', 'email', 'nickname', 'phone', 'coin'],
       where: { id: customerId },
@@ -36,18 +35,18 @@ class CustomersRepository {
     return await this.model.findOne({ where: { nickname } });
   };
 
-  changeCustomer = async (email, nickname, password, phone, customerId) => {
-    customerId = 60;
-    return await this.model.update({ email, nickname, password, phone }, { where: { id: customerId } });
+  changeCustomer = async (customerInfo, customerId) => {
+    return await this.model.update(
+      { email: customerInfo.email, nickname: customerInfo.nickname, password: customerInfo.password, phone: customerInfo.phone },
+      { where: { id: customerId } }
+    );
   };
 
   addCustomerCoin = async (customerId) => {
-    customerId = 60;
     return await this.model.increment({ coin: 10000 }, { where: { id: customerId } });
   };
 
-  deleteCustomer = async () => {
-    customerId = 60;
+  deleteCustomer = async (customerId) => {
     return await this.model.destroy({ where: { id: customerId } });
   };
 

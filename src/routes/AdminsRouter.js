@@ -23,7 +23,11 @@ router.get('/products', productsController.adminGetProducts);
 router.post('/products', uploadUtil.multer({ storage: uploadUtil.storage }).array('files'), productsController.createProduct);
 
 router.get('/products/:productId', productsController.adminGetProduct);
-router.put('/products/:productId', uploadUtil.multer({ storage: uploadUtil.storage }).array('files'), productsController.updateProduct);
+router.put(
+  '/products/:productId',
+  uploadUtil.multer({ storage: uploadUtil.storage }).array('files'),
+  productsController.updateProduct
+);
 router.delete('/products/:productId', productsController.deleteProduct);
 
 router.get('/customers', customersController.adminGetCustomers);
