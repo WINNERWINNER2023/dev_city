@@ -85,7 +85,7 @@ describe('AdminsController Unit Test', () => {
       password: requestBody.password,
     };
     const registerResponse = {
-      code: 401,
+      code: 409,
       message: '이미 등록된 관리자',
     };
     mockAdminsService.createAdmin = jest.fn(() => {

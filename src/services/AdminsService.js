@@ -15,7 +15,7 @@ class AdminsService {
     try {
       const admin = await this.findOneByAccount(adminInfo.account);
       if (admin) {
-        return { code: 401, message: '이미 등록된 관리자' };
+        return { code: 409, message: '이미 등록된 관리자' };
       }
       adminInfo.password = await encryptPassword(adminInfo.password);
       await this.adminsRepository.createAdmin(adminInfo);

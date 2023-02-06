@@ -53,6 +53,12 @@ const getOrders = async (p) => {
           </tr>
         `;
         document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
+      } else if (code === 307) {
+        document.cookie = `accessToken=${res.accessToken}; path=/;`;
+        getOrders(p);
+      } else if (code === 401) {
+        alert(res.message);
+        location.href = '/admins/login';
       }
     });
 };

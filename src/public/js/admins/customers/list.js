@@ -50,6 +50,12 @@ const getCustomers = async (p) => {
           </tr>
         `;
         document.querySelector('#customers').insertAdjacentHTML('beforeend', temp);
+      } else if (code === 307) {
+        document.cookie = `accessToken=${res.accessToken}; path=/;`;
+        getCustomers(p);
+      } else if (code === 401) {
+        alert(res.message);
+        location.href = '/admins/login';
       }
     });
 };
