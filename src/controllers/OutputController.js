@@ -1,5 +1,19 @@
 'use strict';
 
-class OutputController {}
+class OutputController {
+  getProduct = (req, res) => {
+    const { productId } = req.params;
+    res.render('products/details', {
+      components: 'products/details',
+      productId: parseInt(productId),
+    });
+  };
+
+  cart = (req, res) => {
+    res.render('orders/cart', {
+      components: 'orders/cart',
+    });
+  };
+}
 
 module.exports = OutputController;
