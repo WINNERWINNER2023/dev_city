@@ -31,6 +31,12 @@ const getProduct = async (productId) => {
 
         document.querySelector('#useableDate').value = useableDate;
         document.querySelector('#imageThumnail').src = product.imagePath;
+      } else if (code === 307) {
+        document.cookie = `accessToken=${res.accessToken}; path=/;`;
+        getProduct(productId);
+      } else if (code === 401) {
+        alert(res.message);
+        location.href = '/admins/login';
       }
     });
 };
@@ -104,6 +110,12 @@ const updateProduct = async () =>{
 
       if (code === 200) {
         location.href = `/admins/products/${productId}`;
+      } else if (code === 307) {
+        document.cookie = `accessToken=${res.accessToken}; path=/;`;
+        updateProduct();
+      } else if (code === 401) {
+        alert(res.message);
+        location.href = '/admins/login';
       }
     })
     .catch((err) => {
@@ -127,6 +139,12 @@ const deleteProduct = async () =>{
       // if (code === 204) {
       if (code === 200) {
         location.href = `/admins/products`;
+      } else if (code === 307) {
+        document.cookie = `accessToken=${res.accessToken}; path=/;`;
+        deleteProduct();
+      } else if (code === 401) {
+        alert(res.message);
+        location.href = '/admins/login';
       }
     })
     .catch((err) => {

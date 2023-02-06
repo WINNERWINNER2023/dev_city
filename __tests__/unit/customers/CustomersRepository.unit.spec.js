@@ -88,6 +88,15 @@ describe('CustomersRepository Unit Test', () => {
 
     expect(mockCustomer.destroy).toHaveBeenCalledTimes(1);
     expect(result).toEqual(customerReturnValue);
+    expect(result).toEqual('test');
+    expect(mockCustomer.findAll).toHaveBeenCalledTimes(1);
+    expect(mockCustomer.findAll).toHaveBeenCalledWith({
+      raw: true,
+      attributes: ['id', 'email', 'nickname', 'phone', 'coin', 'createdAt', 'updatedAt'],
+      order: [['id', 'DESC']],
+      offset: (page - 1) * customersRepository.pageLimit,
+      limit: customersRepository.pageLimit,
+    });
   });
 
   test('adminGetCustomersCountAll Method Success', async () => {

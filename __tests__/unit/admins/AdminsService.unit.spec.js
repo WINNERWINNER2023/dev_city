@@ -35,7 +35,7 @@ describe('AdminsService Unit Test', () => {
 
     const response = await adminsService.createAdmin(adminInfo);
 
-    expect(response).toEqual({ code: 401, message: '이미 등록된 관리자' });
+    expect(response).toEqual({ code: 409, message: '이미 등록된 관리자' });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);
   });
