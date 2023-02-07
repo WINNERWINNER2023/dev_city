@@ -16,35 +16,43 @@ class ProductsService {
   subOrdersRepository = new ProductsRepository(SubOrder);
   customersRepository = new ProductsRepository(Customer);
 
-  getRandomProducts = async () => {
+  getRandomProducts = async (host) => {
     try {
-      randomProducts = await this.productsRepository.getRandomProducts();
-      return { code: 200, data: randomProducts };
+      let products = await this.productsRepository.getRandomProducts();
+      products = products.map((product) => {
+        product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
+        return product;
+      })
+      return { code: 200, data: products };
     } catch (err) {
       return { code: 500, message: '데이터 가져오기 실패1' };
     }
   };
 
-  getProductsList = async (page) => {
+  getProductsList = async (host, page) => {
     try {
       let pageCount = 0;
       if (page > 1) {
-        pageCount = 3 * (page - 1);
+        pageCount = parseInt(process.env.PRODUCTS_PAGE_LIMIT) * (page - 1);
       }
-      const prdoductsList = await this.productsRepository.getProductsList(pageCount);
-      if (!prdoductsList.length) {
+      let products = await this.productsRepository.getProductsList(pageCount);
+      if (!products.length) {
         return { code: 200, message: '마지막 상품입니다.' };
       }
-      return { code: 200, data: prdoductsList };
+      products = products.map((product) => {
+        product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
+        return product;
+      })
+      return { code: 200, data: products };
     } catch (err) {
       return { code: 500, message: '데이터 가져오기 실패2' };
     }
   };
 
-  getProductDetails = async (productId) => {
+  getProductDetails = async (host, productId) => {
     try {
       const product = await this.productsRepository.getProduct(productId);
-
+      product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
       return { code: 200, data: product };
     } catch (err) {
       return { code: 500, message: '데이터 가져오기 실패3' };

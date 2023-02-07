@@ -18,26 +18,10 @@
 <!-- 메뉴 시작 -->
 <ul class="nav nav-tabs card-header-tabs">
   <li class="nav-item">
-    <a class="nav-link" href="/최호인님수정필요">HOME</a>
+    <a class="nav-link" href="/">HOME</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="/최호인님수정필요">MARKET</a>
+    <a class="nav-link" href="/products">MARKET</a>
   </li>
 </ul>
 <!-- 메뉴 끝 -->
-
-<script>
-  const menu = '<%= locals.components.split(' / ')[0] %>';
-  const nav = document.querySelectorAll('.nav-link');
-  switch (menu) {
-    case 'products':
-      nav[0].classList.add('active');
-      break;
-    case 'customers':
-      nav[1].classList.add('active');
-      break;
-    case 'orders':
-      nav[2].classList.add('active');
-      break;
-  }
-</script>
