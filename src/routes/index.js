@@ -3,17 +3,22 @@
 const express = require('express');
 const router = express.Router();
 
+const OutputRouter = require('./OutputRouter');
+const CustomersRouter = require('./CustomersRouter');
+const AdminsRouter = require('./AdminsRouter');
 const ProductsRouter = require('./ProductsRouter');
 
-const AdminsRouter = require('./AdminsRouter');
+const CustomersOutputRouter = require('./CustomersOutputRouter');
 const AdminsOutputRouter = require('./AdminsOutputRouter');
-const OutputRouter = require('./OutputRouter');
 
-router.use('/api/products', ProductsRouter);
+router.use('/api/customers', CustomersRouter);
 router.use('/api/admins', AdminsRouter);
+router.use('/api/products', ProductsRouter);
 
-router.use('/admins', AdminsOutputRouter);
 router.use('/', OutputRouter);
-router.get('/*', (req, res) => res.redirect('/'));
+router.use('/customers', CustomersOutputRouter);
+router.use('/admins', AdminsOutputRouter);
+
+router.get('/*', (_, res) => res.redirect('/'));
 
 module.exports = router;

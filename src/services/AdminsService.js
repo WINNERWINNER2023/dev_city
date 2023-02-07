@@ -36,7 +36,7 @@ class AdminsService {
       }
       const accessToken = await createAccessToken(admin.id);
       const refreshToken = await createRefreshToken();
-      if (accessToken === undefined | refreshToken === undefined) {
+      if ((accessToken === undefined) | (refreshToken === undefined)) {
         throw new Error('token 생성 실패');
       }
 
@@ -55,7 +55,7 @@ class AdminsService {
     } catch (err) {
       return { code: 500, message: '로그인 실패' };
     }
-  }
+  };
 
   findOneByAccount = async (account) => {
     return await this.adminsRepository.findOneByAccount(account);

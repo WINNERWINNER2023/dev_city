@@ -7,9 +7,9 @@ class AdminsController {
 
   register = async (req, res) => {
     const { account, password } = req.body;
-    const adminInfo = { 
-      account, 
-      password, 
+    const adminInfo = {
+      account,
+      password,
     };
     const createAdminResponse = await this.adminsService.createAdmin(adminInfo);
     if (createAdminResponse.code !== 201) {
@@ -28,14 +28,14 @@ class AdminsController {
     const { account, password } = req.body;
     const response = await this.adminsService.login(account, password);
     return res.status(response.code).json(
-      response.code !== 200 ? 
-      { message: response.message } : 
-      {
-        message: response.message,
-        simpleAdminInfo: response.simpleAdminInfo,
-        accessToken: response.accessToken,
-        refreshToken: response.refreshToken,
-      }
+      response.code !== 200
+        ? { message: response.message }
+        : {
+            message: response.message,
+            simpleAdminInfo: response.simpleAdminInfo,
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
+          }
     );
   };
 }

@@ -1,10 +1,12 @@
-const account = document.querySelector('#account');
+// 조성훈님 출처코드 변경사항 account -> email / admins -> customers / simpleAdminInfo -> simpleCustomerInfo
+
+const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 
 const checkInputValue = async () => {
-  if (!account.value) {
+  if (!email.value) {
     alert('빈 입력값이 있습니다.');
-    account.focus();
+    email.focus();
     return false;
   }
   if (!password.value) {
@@ -25,10 +27,10 @@ const login = async () => {
   }
 
   const data = {
-    account: account.value,
+    email: email.value,
     password: password.value,
   };
-  await fetch('/api/admins/login', {
+  await fetch('/api/customers/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -46,9 +48,9 @@ const login = async () => {
       if (code === 200) {
         document.cookie = `accessToken=${res.accessToken}; path=/;`;
         document.cookie = `refreshToken=${res.refreshToken}; path=/;`;
-        localStorage.setItem('simpleAdminInfo', JSON.stringify(res.simpleAdminInfo));
+        localStorage.setItem('simpleCustomerInfo', JSON.stringify(res.simpleCustomerInfo));
 
-        location.href = '/admins';
+        location.href = '/customers';
       }
     })
     .catch((err) => {
