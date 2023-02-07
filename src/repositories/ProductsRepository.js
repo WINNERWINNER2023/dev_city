@@ -54,11 +54,39 @@ class ProductsRepository {
     });
   };
 
+  adminGetProducts = async (page, filter, keyword) => {
+    const obj = {
+      raw: true,
+      order: [['id', 'DESC']],
+      offset: (page - 1) * this.pageLimit,
+      limit: this.pageLimit,
+    };
+    switch(filter) {
+      case 'name': 
+        obj.where = { name: { [Op.like]: `%${keyword}%`, } };
+        break;
+    };
+    return await this.model.findAll(obj);
+  };
+
   adminGetProductsCountAll = async () => {
     return await this.model.findOne({
       raw: true,
       attributes: [[sequelize.fn('COUNT', sequelize.col('*')), 'countAll']],
     });
+  };
+
+  adminGetProductsCountAll = async (filter, keyword) => {
+    const obj = {
+      raw: true,
+      attributes: [[sequelize.fn('COUNT', sequelize.col('*')), 'countAll']],
+    };
+    switch(filter) {
+      case 'name': 
+        obj.where = { name: { [Op.like]: `%${keyword}%`, } };
+        break;
+    };
+    return await this.model.findOne(obj);
   };
 
   adminGetProduct = async (productId) => {

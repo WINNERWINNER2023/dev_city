@@ -101,6 +101,10 @@ describe('ProductsRepository Unit Test', () => {
 
     expect(result).toEqual('test');
     expect(mockProduct.findOne).toHaveBeenCalledTimes(1);
+    expect(mockProduct.findOne).toHaveBeenCalledWith({
+      raw: true,
+      attributes: expect.anything(),
+    });
   });
 
   test('adminGetProduct Method Success', async () => {
@@ -166,6 +170,43 @@ describe('ProductsRepository Unit Test', () => {
     expect(mockProduct.destroy).toHaveBeenCalledTimes(1);
     expect(mockProduct.destroy).toHaveBeenCalledWith({
       where: { id: productId }
+    });
+  });
+
+  test('adminGetProducts Method Success - with filter, keyword', async () => {
+    mockProduct.findAll = jest.fn(() => {
+      return 'test';
+    });
+    const page = 1;
+    const filter = 'name';
+    const keyword = 'keyword';
+    const result = await productsRepository.adminGetProducts(page, filter, keyword);
+
+    expect(result).toEqual('test');
+    expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
+    expect(mockProduct.findAll).toHaveBeenCalledWith({
+      raw: true,
+      order: [['id', 'DESC']],
+      offset: (page - 1) * productsRepository.pageLimit,
+      limit: productsRepository.pageLimit,
+      where: { name: expect.anything(), },
+    });
+  });
+
+  test('adminGetProductsCountAll Method Success - with filter, keyword', async () => {
+    mockProduct.findOne = jest.fn(() => {
+      return 'test';
+    });
+    const filter = 'name';
+    const keyword = 'keyword';
+    const result = await productsRepository.adminGetProductsCountAll(filter, keyword);
+
+    expect(result).toEqual('test');
+    expect(mockProduct.findOne).toHaveBeenCalledTimes(1);
+    expect(mockProduct.findOne).toHaveBeenCalledWith({
+      raw: true,
+      attributes: expect.anything(),
+      where: { name: expect.anything(), },
     });
   });
 });

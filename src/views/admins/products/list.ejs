@@ -2,9 +2,14 @@
 
 <!-- 검색 시작 -->
 <form class="row g-3">
-  <div class="col-md-6">
-    <label for="searchInput" class="visually-hidden">검색어</label>
-    <input type="text" class="form-control" id="searchInput" placeholder="검색어">
+  <div class="col-md-2">
+    <select class="form-select" id="filter">
+      <option value="name" selected>상품명</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label for="keyword" class="visually-hidden">검색어</label>
+    <input type="text" class="form-control" id="keyword" placeholder="검색어">
   </div>
   <div class="col-md-4">
     <button id="searchBtn" class="float-start btn btn-outline-primary mb-3">검색</button>

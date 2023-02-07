@@ -1,9 +1,17 @@
 window.onload = () => {
-  getProducts(1);
+  const search = JSON.parse(localStorage.getItem('search'));
+  if (!search) {
+    getProducts(1);
+  } else {
+    getProducts(1, search.filter, search.keyword);
+  }
 };
 
-const getProducts = async (p) => {
-  fetch('/api/admins/products?p=' + p, {
+const filter = document.querySelector('#filter');
+const keyword = document.querySelector('#keyword');
+
+const getProducts = async (p, filter, keyword) => {
+  fetch(`/api/admins/products?p=${p}&filter=${filter}&keyword=${keyword}`, {
     method: 'GET',
   })
     .then(async (res) => {
@@ -19,7 +27,7 @@ const getProducts = async (p) => {
       if (code === 200) {
 
         const products = res.data;
-        setPagination(res.pagination, 'getProducts'); // 페이지네이션
+        setPagination('getProducts', res.pagination, res.search); // 페이지네이션
         products.forEach((product) => {
           const temp = `
             <tr onclick="location.href='/admins/products/${product.id}'">
@@ -51,6 +59,7 @@ const getProducts = async (p) => {
           </tr>
         `;
         document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+        setPagination();
       } else if (code === 307) {
         document.cookie = `accessToken=${res.accessToken}; path=/;`;
         getProducts(p);
@@ -61,16 +70,23 @@ const getProducts = async (p) => {
     });
 };
 
-const setPagination = (obj, getListFnName) => {
-  let page = parseInt(obj.page);
-  let totalPage = parseInt(obj.totalPage);
-  let startPage = parseInt(obj.startPage);
-  let endPage = parseInt(obj.endPage);
+const setPagination = (getListFnName, pagination, search) => {
+  document.querySelector('.pagination').innerHTML = '';
+  if (!getListFnName) {
+    return;
+  }
+  let page = parseInt(pagination.page);
+  let totalPage = parseInt(pagination.totalPage);
+  let startPage = parseInt(pagination.startPage);
+  let endPage = parseInt(pagination.endPage);
+
+  const filter = search.filter;
+  const keyword = search.keyword;
 
   let temp = '';
   if (startPage != 1) {
     temp += `<li class="page-item" style="cursor: pointer;">
-              <a class="page-link" onclick="${getListFnName}(${startPage - 1})"><span aria-hidden="true">&laquo;</span></a>
+              <a class="page-link" onclick="${getListFnName}(${startPage - 1}, '${filter}', '${keyword}')"><span aria-hidden="true">&laquo;</span></a>
             </li>`;
   } else {
     temp += `<li class="page-item disabled">
@@ -79,27 +95,27 @@ const setPagination = (obj, getListFnName) => {
   }
   for (let i = startPage; i <= endPage; i++) {
     if (i == page) {
-      temp += `<li class="page-item active" style="cursor: pointer;"><a class="page-link" onclick="${getListFnName}(${i})">${i}</a></li>`;
+      temp += `<li class="page-item active" style="cursor: pointer;"><a class="page-link" onclick="${getListFnName}(${i}, '${filter}', '${keyword}')">${i}</a></li>`;
     } else {
-      temp += `<li class="page-item" style="cursor: pointer;"><a class="page-link" onclick="${getListFnName}(${i})">${i}</a></li>`;
+      temp += `<li class="page-item" style="cursor: pointer;"><a class="page-link" onclick="${getListFnName}(${i}, '${filter}', '${keyword}')">${i}</a></li>`;
     }
   }
   if (endPage != totalPage) {
     temp += `<li class="page-item" style="cursor: pointer;">
-              <a class="page-link" onclick="${getListFnName}(${endPage + 1})"><span aria-hidden="true">&raquo;</span></a>
+              <a class="page-link" onclick="${getListFnName}(${endPage + 1}, '${filter}', '${keyword}')"><span aria-hidden="true">&raquo;</span></a>
             </li>`;
   } else {
     temp += `<li class="page-item disabled">
               <a class="page-link"><span aria-hidden="true">&raquo;</span></a>
             </li>`;
   }
-  document.querySelector('.pagination').innerHTML = '';
   document.querySelector('.pagination').insertAdjacentHTML('beforeend', temp);
 };
 
 document.querySelector('#searchBtn').addEventListener('click', (e) => {
   e.preventDefault();
-  alert('검색 기능 준비중');
+  localStorage.setItem('search', JSON.stringify({ filter: filter.value, keyword: keyword.value }));
+  getProducts(1, filter.value, keyword.value);
 });
 
 document.querySelector('#createBtn').addEventListener('click', (e) => {

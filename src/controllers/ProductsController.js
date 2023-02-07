@@ -43,10 +43,17 @@ class ProductsController {
 
   adminGetProducts = async (req, res) => {
     const page = parseInt(req.query.p || 1);
-    const response = await this.productsService.adminGetProducts(`${req.protocol}://${req.get('Host')}`, page);
-    return res
-      .status(response.code)
-      .json(response.code === 200 ? { data: response.data, pagination: response.pagination } : { message: response.message });
+    const { filter, keyword } = req.query;
+    const response = await this.productsService.adminGetProducts(`${req.protocol}://${req.get('Host')}`, page, filter, keyword);
+
+    return res.status(response.code).json(
+      response.code === 200 ? 
+      { 
+        data: response.data, 
+        pagination: response.pagination, 
+        search: { filter, keyword } 
+      } : 
+      { message: response.message });
   };
 
   adminGetProduct = async (req, res) => {
@@ -55,9 +62,11 @@ class ProductsController {
       return res.status(400).json({ message: '잘못된 요청' });
     }
     const response = await this.productsService.adminGetProduct(`${req.protocol}://${req.get('Host')}`, parseInt(productId));
-    return res
-      .status(response.code)
-      .json(response.code === 200 ? { data: response.data } : { message: response.message });
+    return res.status(response.code).json(
+      response.code === 200 ? 
+      { data: response.data } : 
+      { message: response.message }
+    );
   };
 
   updateProduct = async (req, res) => {
