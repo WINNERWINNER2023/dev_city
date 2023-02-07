@@ -5,6 +5,7 @@ const { sequelize } = require('../sequelize/models/index');
 
 class CustomersRepository {
   pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
+  addCoin = parseInt(process.env.ADD_AMOUNT_CUSTOMER_COIN);
 
   constructor(model) {
     this.model = model;
@@ -14,10 +15,10 @@ class CustomersRepository {
     return await this.model.create({ email, nickname, password, phone });
   };
 
-  findOneCustomer = async (customerId) => {
+  findOneCustomer = async (id) => {
     return await this.model.findOne({
-      attributes: ['id', 'email', 'nickname', 'phone', 'coin'],
-      where: { id: customerId },
+      attributes: ['id', 'email', 'nickname', 'password', 'phone', 'coin'],
+      where: { id },
     });
   };
 
@@ -29,19 +30,19 @@ class CustomersRepository {
     return await this.model.findOne({ where: { nickname } });
   };
 
-  changeCustomer = async (customerInfo, customerId) => {
+  changeCustomer = async (customerInfo, id) => {
     return await this.model.update(
       { email: customerInfo.email, nickname: customerInfo.nickname, password: customerInfo.password, phone: customerInfo.phone },
-      { where: { id: customerId } }
+      { where: { id } }
     );
   };
 
-  addCustomerCoin = async (customerId) => {
-    return await this.model.increment({ coin: 10000 }, { where: { id: customerId } });
+  addCustomerCoin = async (id) => {
+    return await this.model.increment({ coin: this.addCoin }, { where: { id } });
   };
 
-  deleteCustomer = async (customerId) => {
-    return await this.model.destroy({ where: { id: customerId } });
+  deleteCustomer = async (id) => {
+    return await this.model.destroy({ where: { id } });
   };
 
   adminGetCustomers = async (page) => {

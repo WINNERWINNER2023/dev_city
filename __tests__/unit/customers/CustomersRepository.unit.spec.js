@@ -13,11 +13,11 @@ const mockCustomer = {
 const customersRepository = new CustomersRepository(mockCustomer);
 
 const mockCustomerId = 1;
-const mockCustomerEmail = 'Test1@@gmail.com';
-const mockCustomerNickname = 'Test1@';
+const mockCustomerEmail = 'Test1@gmail.com';
+const mockCustomerNickname = 'Test1';
 const customerReturnValue = {
-  email: 'test',
-  nickname: 'Test1@@gmail.com',
+  email: 'Test1@gmail.com',
+  nickname: 'Test1',
   password: 'Test1@',
   phone: '010-1234-5678',
 };
