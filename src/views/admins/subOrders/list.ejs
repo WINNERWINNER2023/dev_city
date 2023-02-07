@@ -1,4 +1,4 @@
-<script src="/public/js/admins/orders/list.js" defer></script>
+<script src="/public/js/admins/subOrders/list.js" defer></script>
 
 <!-- 검색 시작 -->
 <form class="row g-3">
@@ -16,15 +16,18 @@
 <table class="table">
   <thead>
     <tr>
+      <th scope="col">주문상세번호</th>
       <th scope="col">주문번호</th>
+      <th scope="col">상태</th>
       <th scope="col">구매자번호</th>
       <th scope="col">구매자</th>
-      <th scope="col">총결제금액</th>
-      <th scope="col">상태</th>
+      <th scope="col">사용가능일</th>
+      <th scope="col">가격</th>
+      <th scope="col">개수</th>
       <th scope="col">주문일</th>
     </tr>
   </thead>
-  <tbody id="orders"></tbody>
+  <tbody id="subOrders"></tbody>
 </table>
 <!-- 목록 끝 -->
 

@@ -15,6 +15,9 @@
   <li class="nav-item">
     <a class="nav-link" onclick="goMenu('orders')">주문관리</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" onclick="goMenu('subOrders')">상세주문관리</a>
+  </li>
 </ul>
 <!-- 메뉴 끝 -->
 
@@ -30,6 +33,9 @@
       break;
     case 'orders': 
       nav[2].classList.add('active');
+      break;
+    case 'subOrders': 
+      nav[3].classList.add('active');
       break;
   };
 </script>

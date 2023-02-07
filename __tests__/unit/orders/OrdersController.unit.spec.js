@@ -90,4 +90,70 @@ describe('OrdersController Unit Test', () => {
       message: adminGetOrdersResult.message,
     });
   });
+
+  test('adminGetSubOrders Method Success', async () => {
+    const mockRequestQuery = {
+      p: 1,
+    };
+    mockRequest.query = mockRequestQuery;
+
+    const adminGetSubOrdersResult = { code: 200, data: 'data', pagination: 'pagination' };
+    mockOrdersService.adminGetSubOrders = jest.fn(() => {
+      return adminGetSubOrdersResult;
+    });
+    await ordersController.adminGetSubOrders(mockRequest, mockResponse);
+
+    expect(mockOrdersService.adminGetSubOrders).toHaveBeenCalledTimes(1);
+    expect(mockOrdersService.adminGetSubOrders).toHaveBeenCalledWith(mockRequestQuery.p);
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(adminGetSubOrdersResult.code);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      data: adminGetSubOrdersResult.data,
+      pagination: adminGetSubOrdersResult.pagination,
+    });
+  });
+
+  test('adminGetSubOrders Method Success - page is not received', async () => {
+    const mockRequestQuery = {};
+    mockRequest.query = mockRequestQuery;
+
+    const adminGetSubOrdersResult = { code: 200, data: 'data', pagination: 'pagination' };
+    mockOrdersService.adminGetSubOrders = jest.fn(() => {
+      return adminGetSubOrdersResult;
+    });
+    await ordersController.adminGetSubOrders(mockRequest, mockResponse);
+
+    expect(mockOrdersService.adminGetSubOrders).toHaveBeenCalledTimes(1);
+    expect(mockOrdersService.adminGetSubOrders).toHaveBeenCalledWith(mockRequestQuery.p || 1);
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(adminGetSubOrdersResult.code);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      data: adminGetSubOrdersResult.data,
+      pagination: adminGetSubOrdersResult.pagination,
+    });
+  });
+
+  test('adminGetSubOrders Method Fail - response code not 200', async () => {
+    const mockRequestQuery = {
+      p: 1,
+    };
+    mockRequest.query = mockRequestQuery;
+
+    const adminGetSubOrdersResult = { code: 404, message: '해당하는 주문 목록 없음' };
+    mockOrdersService.adminGetSubOrders = jest.fn(() => {
+      return adminGetSubOrdersResult;
+    });
+    await ordersController.adminGetSubOrders(mockRequest, mockResponse);
+
+    expect(mockOrdersService.adminGetSubOrders).toHaveBeenCalledTimes(1);
+    expect(mockOrdersService.adminGetSubOrders).toHaveBeenCalledWith(mockRequestQuery.p);
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(adminGetSubOrdersResult.code);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: adminGetSubOrdersResult.message,
+    });
+  });
 });

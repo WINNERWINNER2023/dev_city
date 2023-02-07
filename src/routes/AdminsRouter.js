@@ -30,5 +30,6 @@ router.delete('/products/:productId', adminsAuthMiddleware, productsController.d
 router.get('/customers', adminsAuthMiddleware, customersController.adminGetCustomers);
 
 router.get('/orders', adminsAuthMiddleware, ordersController.adminGetOrders);
+router.get('/subOrders', adminsAuthMiddleware, ordersController.adminGetSubOrders);
 
 module.exports = router;

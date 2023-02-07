@@ -50,6 +50,12 @@ class OutputController {
       components: 'orders/list',
     });
   };
+
+  subOrdersList = (req, res) => {
+    res.render('admins/index', {
+      components: 'subOrders/list',
+    });
+  };
 }
 
 module.exports = OutputController;
