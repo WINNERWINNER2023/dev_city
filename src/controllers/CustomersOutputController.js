@@ -1,35 +1,29 @@
-// 'use strict';
+'use strict';
 
-// class OutputController {
-//   registerCustomer = (req, res) => {
-//     res.render('customers/index', {
-//       components: 'register',
-//     });
-//   };
+class OutputController {
+  main = (req, res) => {
+    res.render('customers/index', {
+      components: 'main',
+    });
+  };
 
-//   findOneCustomer = (req, res) => {
-//     res.render('customers/index', {
-//       components: 'details',
-//     });
-//   };
+  register = (req, res) => {
+    res.render('customers/index', {
+      components: 'register',
+    });
+  };
 
-//   changeCustomer = (req, res) => {
-//     res.render('customers/index', {
-//       components: 'change',
-//     });
-//   };
+  login = (req, res) => {
+    res.render('customers/index', {
+      components: 'login',
+    });
+  };
 
-//   addCustomerCoin = (req, res) => {
-//     res.render('customers/index', {
-//       components: 'coin',
-//     });
-//   };
+  mypage = (req, res) => {
+    res.render('customers/index', {
+      components: 'mypage',
+    });
+  };
+}
 
-//   deleteCustomer = (req, res) => {
-//     res.render('customers/index', {
-//       components: 'delete',
-//     });
-//   };
-// }
-
-// module.exports = OutputController;
+module.exports = OutputController;

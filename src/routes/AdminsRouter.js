@@ -43,9 +43,7 @@ router.put(
   productsController.updateProduct
 );
 router.delete('/products/:productId', adminsAuthMiddleware, productsController.deleteProduct);
-
 router.get('/customers', adminsAuthMiddleware, customersController.adminGetCustomers);
-
 router.get('/orders', adminsAuthMiddleware, ordersController.adminGetOrders);
 
 module.exports = router;

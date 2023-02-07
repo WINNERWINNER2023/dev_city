@@ -1,6 +1,8 @@
 'use strict';
 
 const app = require('../src/app.js');
+// const SocketUtil = require('../src/utils/SocketUtil');
+// const socketUtil = new SocketUtil(app);
 // const ChatsController = require('../src/controllers/ChatsController');
 // const chatsController = new ChatsController(app);
 
@@ -15,20 +17,12 @@ models.sequelize
     console.log(err);
   });
 
+// const PORT = parseInt(process.env.PORT) || 3000;
+// socketUtil.server.listen(PORT, () => {
+//   console.log(`Listening on http://localhost:${PORT}`);
+// });
+
 const PORT = parseInt(process.env.PORT) || 3000;
 app.listen(PORT, () => {
   console.log(`Listening on http://localhost:${PORT}`);
 });
-
-// const PORT = parseInt(process.env.PORT) || 3000;
-// chatsController.server.listen(PORT, () => {
-//   console.log(`Listening on http://localhost:${PORT}`);
-// });
-
-// const server = app.listen(PORT, () => {
-//   console.log(`Listening on http://localhost:${PORT}`);
-//   const io = require('socket.io')(server);
-//   io.on('connection', (socket) => {
-//     console.log('Socket connected');
-//   });
-// });

@@ -35,14 +35,14 @@ const checkInputValue = async () => {
     return false;
   }
   return true;
-}
+};
 
 const enter = () => {
   register();
-}
+};
 
 const register = async () => {
-  if (!await checkInputValue()) {
+  if (!(await checkInputValue())) {
     return;
   }
 
@@ -76,4 +76,4 @@ const register = async () => {
     .catch((err) => {
       console.log('err: ', err);
     });
-}
+};

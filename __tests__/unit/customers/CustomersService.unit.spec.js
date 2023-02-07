@@ -1,6 +1,5 @@
 require('dotenv').config();
 const CustomersService = require('../../../src/services/CustomersService');
-const { encryptPassword } = require('../../../src/utils/bcryptUtil');
 const PaginationUtil = require('../../../src/utils/PaginationUtil');
 
 const mockCustomersRepository = {
@@ -64,6 +63,24 @@ describe('CustomersService Unit Test', () => {
     expect(result.code).toEqual(401);
   });
 
+  test.each([
+    {
+      email: null,
+      password: null,
+    },
+    {
+      email: null,
+      password: 'Test1@',
+    },
+    {
+      email: 'test1@gmail.com',
+      password: null,
+    },
+  ])('loginCustomer Method Fail - login NULL value', async ({ customerReturnValue }) => {
+    const result = await customersService.loginCustomer(customerReturnValue);
+    expect(result.code).toEqual(401);
+  });
+
   test('findOneCustomer Method Success', async () => {
     mockCustomersRepository.findOneCustomer = jest.fn(() => customerReturnValue);
     const result = await customersService.findOneCustomer(mockCustomerId);
@@ -77,7 +94,7 @@ describe('CustomersService Unit Test', () => {
     const result = await customersService.findOneCustomer(mockCustomerId);
 
     expect(mockCustomersRepository.findOneCustomer).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({ code: 500, message: 'Service - 요청이 올바르지 않습니다.' });
+    expect(result).toEqual(mockErrorResult);
   });
 
   test('findCustomerByEmail Method Success', async () => {
@@ -93,7 +110,7 @@ describe('CustomersService Unit Test', () => {
     const result = await customersService.findCustomerByEmail(customerInfo.email);
 
     expect(mockCustomersRepository.findCustomerByEmail).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({ code: 500, message: 'Service - 요청이 올바르지 않습니다.' });
+    expect(result).toEqual(mockErrorResult);
   });
 
   test('findCustomerByNickname Method Success', async () => {
@@ -109,7 +126,7 @@ describe('CustomersService Unit Test', () => {
     const result = await customersService.findCustomerByNickname(customerInfo.email);
 
     expect(mockCustomersRepository.findCustomerByNickname).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({ code: 500, message: 'Service - 요청이 올바르지 않습니다.' });
+    expect(result).toEqual(mockErrorResult);
   });
 
   test.each([
@@ -133,7 +150,7 @@ describe('CustomersService Unit Test', () => {
     },
     {
       email: 'test1@gmail.com',
-      nickname: '',
+      nickname: null,
       password: 'Test1@',
       phone: '010-1234-5678',
     },
@@ -143,53 +160,37 @@ describe('CustomersService Unit Test', () => {
   });
 
   test('addCustomerCoin Method Success', async () => {
-    mockCustomersRepository.addCustomerCoin = jest.fn(() => customerReturnValue);
+    mockCustomersRepository.addCustomerCoin = jest.fn(() => {return 'mock'});
     const result = await customersService.addCustomerCoin(mockCustomerId);
 
     expect(mockCustomersRepository.addCustomerCoin).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(customerReturnValue);
+    expect(result.code).toEqual(201);
+    expect(result.message).toEqual('코인 충전을 완료했습니다.');
   });
 
   test('addCustomerCoin Method Fail', async () => {
-    mockCustomersRepository.addCustomerCoin = jest.fn(() => mockErrorResult);
+    mockCustomersRepository.addCustomerCoin = jest.fn(() => {throw new Error();});
     const result = await customersService.addCustomerCoin(mockCustomerId);
 
     expect(mockCustomersRepository.addCustomerCoin).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({ code: 500, message: 'Service - 요청이 올바르지 않습니다.' });
+    expect(result).toEqual(mockErrorResult);
   });
 
   test('deleteCustomer Method Success', async () => {
-    mockCustomersRepository.deleteCustomer = jest.fn(() => customerReturnValue);
+    mockCustomersRepository.deleteCustomer = jest.fn(() => {return 'mock'});
     const result = await customersService.deleteCustomer(mockCustomerId);
 
     expect(mockCustomersRepository.deleteCustomer).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(customerReturnValue);
+    expect(result.code).toEqual(201);
+    expect(result.message).toEqual('회원 탈퇴가 완료되었습니다.');
   });
 
   test('deleteCustomer Method Fail', async () => {
-    mockCustomersRepository.deleteCustomer = jest.fn(() => mockErrorResult);
+    mockCustomersRepository.deleteCustomer = jest.fn(() => {throw new Error();});
     const result = await customersService.deleteCustomer(mockCustomerId);
 
     expect(mockCustomersRepository.deleteCustomer).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({ code: 500, message: 'Service - 요청이 올바르지 않습니다.' });
-  });
-
-  test.each([
-    {
-      email: '',
-      password: '',
-    },
-    {
-      email: '',
-      password: 'Test1@',
-    },
-    {
-      email: 'test1@gmail.com',
-      password: '',
-    },
-  ])('loginCustomer Method Fail - login NULL value', async ({ customerReturnValue }) => {
-    const result = await customersService.loginCustomer(customerReturnValue);
-    expect(result.code).toEqual(401);
+    expect(result).toEqual(mockErrorResult);
   });
 
   test('adminGetCustomers Method Fail - get nothing', async () => {

@@ -5,22 +5,17 @@ require('dotenv').config();
 const CustomersRepository = require('../repositories/CustomersRepository');
 const { Customer } = require('../sequelize/models');
 
-<<<<<<< Updated upstream
 const { encryptPassword, comparePasswordForLogin } = require('../utils/bcryptUtil');
-=======
-const { encryptPassword } = require('../utils/bcryptUtil');
->>>>>>> Stashed changes
 const { createAccessToken, createRefreshToken } = require('../utils/TokenUtil');
-
 const RedisUtil = require('../utils/RedisUtil');
 const PaginationUtil = require('../utils/PaginationUtil');
 
 class CustomersService {
-  pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
-  sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
-
   customersRepository = new CustomersRepository(Customer);
   redisUtil = new RedisUtil();
+
+  pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
+  sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
 
   createCustomer = async (email, nickname, password, phone) => {
     const validateEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i; // 이메일 형식;
@@ -37,9 +32,10 @@ class CustomersService {
       if (!validatePhone.test(phone)) {
         return { code: 401, message: '연락처가 작성 형식과 맞지 않습니다.' };
       }
-      if (!nickname) {
-        return { code: 401, message: '닉네임이 입력되지 않았습니다.' };
-      }
+      // 프론트엔드 처리
+      // if (!nickname) {
+      //   return { code: 401, message: '닉네임이 입력되지 않았습니다.' };
+      // }
       const duplicateCustomerEmail = await this.findCustomerByEmail(email);
       if (duplicateCustomerEmail) {
         return { code: 401, message: '중복되는 이메일 계정이 있습니다' };
@@ -48,17 +44,49 @@ class CustomersService {
       if (duplicateCustomerNickname) {
         return { code: 401, message: '중복되는 닉네임이 있습니다' };
       }
-<<<<<<< Updated upstream
       password = await encryptPassword(password);
-      return await this.customersRepository.createCustomer(email, nickname, password, phone);
-=======
-      await encryptPassword(customerInfo.password);
-      await this.customersRepository.createCustomer(customerInfo);
-      return { code: 201, message: '회원가입에 성공하셨습니다.'};
->>>>>>> Stashed changes
+      await this.customersRepository.createCustomer(email, nickname, password, phone);
+      return { code: 201, message: '회원가입에 성공하셨습니다.' };
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
+    }
+  };
+
+  loginCustomer = async (email, password) => {
+    try {
+      const customer = await this.findCustomerByEmail(email);
+      if (!customer) {
+        return { code: 401, message: '입력한 이메일의 계정을 찾을 수 없습니다.' };
+      }
+      // "입력한 비밀번호의 계정을 찾을 수 없습니다." 에러 - await가 없으면 해당 if문 건너뜀
+      const isEqual = await comparePasswordForLogin(password, customer.password);
+      if (!isEqual) {
+        return { code: 401, message: '입력한 비밀번호의 계정을 찾을 수 없습니다.' };
+      }
+      const accessToken = await createAccessToken(customer.id);
+      const refreshToken = await createRefreshToken();
+      if ((accessToken === undefined) | (refreshToken === undefined)) {
+        throw new Error('token 생성 실패');
+      }
+      await this.redisUtil.set(refreshToken, customer.id);
+      return {
+        code: 200,
+        simpleCustomerInfo: {
+          id: customer.id,
+          email: customer.email,
+        },
+        accessToken,
+        refreshToken,
+        message: '로그인이 정상적으로 완료되었습니다.',
+        // customerId: loadedCustomer._id.toString(),
+      };
+    } catch (error) {
+      console.log(error.message);
+      return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
+      // if (!error.code) {
+      //   error.code = 500;
+      // }
     }
   };
 
@@ -104,9 +132,10 @@ class CustomersService {
       if (!validatePhone.test(phone)) {
         return { code: 401, message: '연락처가 작성 형식과 맞지 않습니다.' };
       }
-      if (!nickname) {
-        return { code: 401, message: '닉네임이 입력되지 않았습니다.' };
-      }
+      // 프론트엔드 처리
+      // if (!nickname) {
+      //   return { code: 401, message: '닉네임이 입력되지 않았습니다.' };
+      // }
       const duplicateCustomerEmail = await this.findCustomerByEmail(email);
       if (duplicateCustomerEmail) {
         return { code: 401, message: '중복되는 이메일 계정이 있습니다' };
@@ -116,12 +145,8 @@ class CustomersService {
         return { code: 401, message: '중복되는 닉네임이 있습니다' };
       }
       password = await encryptPassword(password);
-<<<<<<< Updated upstream
-      return await this.customersRepository.changeCustomer(email, nickname, password, phone);
-=======
       await this.customersRepository.changeCustomer(email, nickname, password, phone);
       return { code: 201, message: '회원 정보를 수정했습니다.' };
->>>>>>> Stashed changes
     } catch (error) {
       console.log(error.message);
       return { code: 401, message: 'Service - 요청이 올바르지 않습니다.' };
@@ -130,12 +155,8 @@ class CustomersService {
 
   addCustomerCoin = async (coin) => {
     try {
-<<<<<<< Updated upstream
-      return await this.customersRepository.addCustomerCoin(coin);
-=======
       await this.customersRepository.addCustomerCoin(coin);
       return { code: 201, message: '코인 충전을 완료했습니다.' };
->>>>>>> Stashed changes
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
@@ -144,42 +165,11 @@ class CustomersService {
 
   deleteCustomer = async (customerId) => {
     try {
-<<<<<<< Updated upstream
-      return await this.customersRepository.deleteCustomer(customerId);
-=======
       await this.customersRepository.deleteCustomer(customerId);
-      return { code: 201, message: '회원 탈퇴가 완료되었습니다.'};
->>>>>>> Stashed changes
+      return { code: 201, message: '회원 탈퇴가 완료되었습니다.' };
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
-    }
-  };
-
-  loginCustomer = async (email, password) => {
-    try {
-      if (!email || !password) {
-        return { code: 401, message: '입력값이 비어있습니다.' };
-      }
-      const customer = await this.findCustomerByEmail(email);
-      if (!customer) {
-        return { code: 401, message: '입력한 이메일의 계정을 찾을 수 없습니다.' };
-      }
-      // const isEqual = await bcrypt.compare(password, customer.password);
-      // "입력한 비밀번호의 계정을 찾을 수 없습니다." 에러 - await가 없으면 해당 if문 건너뜀
-      if (!(await comparePasswordForLogin(password, customer.password))) {
-        return { code: 401, message: '입력한 비밀번호의 계정을 찾을 수 없습니다.' };
-      }
-      const accessToken = await createAccessToken(customer.email);
-      const refreshToken = await createRefreshToken();
-      await this.redisUtil.set(refreshToken, customer.email);
-      return { code: 200, message: '로그인이 정상적으로 완료되었습니다.', accessToken, refreshToken };
-    } catch (error) {
-      console.log(error.message);
-      return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
-      // if (!error.code) {
-      //   error.code = 500;
-      // }
     }
   };
 
@@ -197,31 +187,5 @@ class CustomersService {
       return { code: 500, message: '유저 목록 조회 실패' };
     }
   };
-
-  login = async (email, password) => {
-    let loadedCustomer;
-    try {
-      const customer = await this.findCustomerByEmail(email);
-      if (!customer) {
-        const error = new Error('A user with this email could not be found.');
-        error.statusCode = 401;
-        throw error;
-      }
-      loadedCustomer = customer;
-      // const isEqual = await bcrypt.compare(password, customer.password);
-      if (!comparePasswordForLogin(password, customer.password)) {
-        const error = new Error('Wrong password!');
-        error.statusCode = 401;
-        throw error;
-      }
-      await createAccessToken(customer.id);
-      const refreshToken = await createRefreshToken();
-      await this.redisUtil.set(refreshToken, admin.id);
-      return { code: 200, accessToken, refreshToken, customerId: loadedCustomer._id.toString(), message: '정상적으로 로그인되었습니다.' };
-    } catch (error) {
-      console.log(error.message);
-      if (!error.statusCode) {error.statusCode = 500;}
-    };
-  }
 }
 module.exports = CustomersService;

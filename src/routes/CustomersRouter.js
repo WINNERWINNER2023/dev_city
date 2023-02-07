@@ -1,21 +1,19 @@
 'use strict';
 
-require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 
 const CustomersController = require('../controllers/CustomersController');
 const customersController = new CustomersController();
 
+const customersAuthMiddleware = require('../middlewares/customersAuthMiddleware');
+
 router.post('/', customersController.registerCustomer);
-router.get('/', customersController.findOneCustomer);
-router.put('/', customersController.changeCustomer);
-router.put('/coin', customersController.addCustomerCoin);
-router.delete('/', customersController.deleteCustomer);
-<<<<<<< Updated upstream
 router.post('/login', customersController.loginCustomer);
-=======
-router.post('/', customersController.loginCustomer);
->>>>>>> Stashed changes
+
+router.get('/', customersAuthMiddleware, customersController.findOneCustomer);
+router.put('/', customersAuthMiddleware, customersController.changeCustomer);
+router.put('/coin', customersAuthMiddleware, customersController.addCustomerCoin);
+router.delete('/', customersAuthMiddleware, customersController.deleteCustomer);
 
 module.exports = router;

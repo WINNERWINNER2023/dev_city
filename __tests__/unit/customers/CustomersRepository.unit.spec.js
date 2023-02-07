@@ -20,7 +20,6 @@ const customerReturnValue = {
   nickname: 'Test1@@gmail.com',
   password: 'Test1@',
   phone: '010-1234-5678',
-  coin: 0,
 };
 
 describe('CustomersRepository Unit Test', () => {
@@ -88,6 +87,15 @@ describe('CustomersRepository Unit Test', () => {
 
     expect(mockCustomer.destroy).toHaveBeenCalledTimes(1);
     expect(result).toEqual(customerReturnValue);
+  });
+
+  test('adminGetCustomers Method Success', async () => {
+    mockCustomer.findAll = jest.fn(() => {
+      return 'test';
+    });
+    const page = 1;
+    const result = await customersRepository.adminGetCustomers(page);
+
     expect(result).toEqual('test');
     expect(mockCustomer.findAll).toHaveBeenCalledTimes(1);
     expect(mockCustomer.findAll).toHaveBeenCalledWith({

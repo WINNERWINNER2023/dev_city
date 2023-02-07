@@ -1,3 +1,5 @@
+// 조성훈님 출처코드 변경사항 account -> email / admins -> customers / simpleAdminInfo -> simpleCustomerInfo
+
 const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 
@@ -46,6 +48,7 @@ const login = async () => {
       if (code === 200) {
         document.cookie = `accessToken=${res.accessToken}; path=/;`;
         document.cookie = `refreshToken=${res.refreshToken}; path=/;`;
+        localStorage.setItem('simpleCustomerInfo', JSON.stringify(res.simpleCustomerInfo));
 
         location.href = '/customers';
       }
