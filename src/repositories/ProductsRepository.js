@@ -45,15 +45,6 @@ class ProductsRepository {
     });
   };
 
-  adminGetProducts = async (page) => {
-    return await this.model.findAll({
-      raw: true,
-      order: [['id', 'DESC']],
-      offset: (page - 1) * this.pageLimit,
-      limit: this.pageLimit,
-    });
-  };
-
   adminGetProducts = async (page, filter, keyword) => {
     const obj = {
       raw: true,

@@ -76,37 +76,6 @@ describe('ProductsRepository Unit Test', () => {
     });
   });
 
-  test('adminGetProducts Method Success', async () => {
-    mockProduct.findAll = jest.fn(() => {
-      return 'test';
-    });
-    const page = 1;
-    const result = await productsRepository.adminGetProducts(page);
-
-    expect(result).toEqual('test');
-    expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
-    expect(mockProduct.findAll).toHaveBeenCalledWith({
-      raw: true,
-      order: [['id', 'DESC']],
-      offset: (page - 1) * productsRepository.pageLimit,
-      limit: productsRepository.pageLimit,
-    });
-  });
-
-  test('adminGetProductsCountAll Method Success', async () => {
-    mockProduct.findOne = jest.fn(() => {
-      return 'test';
-    });
-    const result = await productsRepository.adminGetProductsCountAll();
-
-    expect(result).toEqual('test');
-    expect(mockProduct.findOne).toHaveBeenCalledTimes(1);
-    expect(mockProduct.findOne).toHaveBeenCalledWith({
-      raw: true,
-      attributes: expect.anything(),
-    });
-  });
-
   test('adminGetProduct Method Success', async () => {
     mockProduct.findByPk = jest.fn(() => {
       return 'test';

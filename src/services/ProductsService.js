@@ -45,24 +45,6 @@ class ProductsService {
     }
   };
 
-  adminGetProducts = async (host, page) => {
-    try {
-      const products = (await this.productsRepository.adminGetProducts(page)).map((product) => {
-        product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
-        return product;
-      });
-      if (products.length === 0) {
-        return { code: 404, message: '해당하는 상품 목록 없음' };
-      }
-
-      const productsCountAll = await this.productsRepository.adminGetProductsCountAll();
-      const paginationUtil = new PaginationUtil(page, productsCountAll.countAll, this.pageLimit, this.sectionLimit);
-      return { code: 200, data: products, pagination: paginationUtil.render() };
-    } catch (err) {
-      return { code: 500, message: '상품 목록 조회 실패' };
-    }
-  };
-
   adminGetProducts = async (host, page, filter, keyword) => {
     try {
       const products = (await this.productsRepository.adminGetProducts(page, filter, keyword)).map((product) => {
