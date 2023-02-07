@@ -74,13 +74,14 @@ class ProductsController {
     const response = await this.productsService.adminGetProducts(`${req.protocol}://${req.get('Host')}`, page, filter, keyword);
 
     return res.status(response.code).json(
-      response.code === 200 ? 
-      { 
-        data: response.data, 
-        pagination: response.pagination, 
-        search: { filter, keyword } 
-      } : 
-      { message: response.message });
+      response.code === 200
+        ? {
+            data: response.data,
+            pagination: response.pagination,
+            search: { filter, keyword },
+          }
+        : { message: response.message }
+    );
   };
 
   adminGetProduct = async (req, res) => {

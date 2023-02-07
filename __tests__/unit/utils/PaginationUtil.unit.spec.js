@@ -22,7 +22,7 @@ describe('PaginationUtil Unit Test', () => {
     }
 
     const paginationUtil = new PaginationUtil(page, countAll, pageLimit, sectionLimit);
-    
+
     expect(paginationUtil.page).toEqual(page);
     expect(paginationUtil.totalPage).toEqual(totalPage);
     expect(paginationUtil.startPage).toEqual(startPage);
@@ -46,7 +46,7 @@ describe('PaginationUtil Unit Test', () => {
     }
 
     const paginationUtil = new PaginationUtil(page, countAll, pageLimit, sectionLimit);
-    
+
     expect(paginationUtil.page).toEqual(page);
     expect(paginationUtil.totalPage).toEqual(totalPage);
     expect(paginationUtil.startPage).toEqual(startPage);

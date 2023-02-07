@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const mockMulter = {
   diskStorage: jest.fn(),
-}
+};
 const mockPath = 'testPath';
 
 const UploadUtil = require('../../../src/utils/UploadUtil');
@@ -19,7 +19,6 @@ describe('UploadUtil Unit Test', () => {
     //   return 'test';
     // });
     // const result = uploadUtil.storage;
-
     // expect(result).toEqual('test');
   });
 });

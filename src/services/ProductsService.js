@@ -54,17 +54,17 @@ class ProductsService {
   getProductsListByCustomerId = async (customerId) => {
     try {
       const customerOrders = await this.ordersRepository.getOrderListByCustomerId(customerId);
-      console.log(customerOrders)
-      let customerProducts = []
-      for(let i = 0; i < customerOrders.length; i++) {
-        let orderId = customerOrders[i].id
-        console.log(orderId)
-        let products = await this.subOrdersRepository.getSubOrderListByOrderId(orderId)
-        console.log(products)
-        for(let j = 0; j < products.length; j++){
-          customerProducts.push(products[j])
+      console.log(customerOrders);
+      let customerProducts = [];
+      for (let i = 0; i < customerOrders.length; i++) {
+        let orderId = customerOrders[i].id;
+        console.log(orderId);
+        let products = await this.subOrdersRepository.getSubOrderListByOrderId(orderId);
+        console.log(products);
+        for (let j = 0; j < products.length; j++) {
+          customerProducts.push(products[j]);
         }
-        console.log(customerProducts)
+        console.log(customerProducts);
       }
       return { code: 200, data: customerProducts };
     } catch (err) {
@@ -127,10 +127,10 @@ class ProductsService {
 
       const productsCountAll = await this.productsRepository.adminGetProductsCountAll(filter, keyword);
       const paginationUtil = new PaginationUtil(page, productsCountAll.countAll, this.pageLimit, this.sectionLimit);
-      return { 
-        code: 200, 
-        data: products, 
-        pagination: paginationUtil.render(), 
+      return {
+        code: 200,
+        data: products,
+        pagination: paginationUtil.render(),
       };
     } catch (err) {
       return { code: 500, message: '상품 목록 조회 실패' };

@@ -39,15 +39,15 @@ class ProductsRepository {
 
   getOrderListByCustomerId = async (customerId) => {
     return await this.model.findAll({
-      raw : true,
-      where : { customerId : customerId }
-    })
-  }
+      raw: true,
+      where: { customerId: customerId },
+    });
+  };
 
   getSubOrderListByOrderId = async (orderId) => {
     return await this.model.findAll({
       raw: true,
-      where: { orderId : orderId},
+      where: { orderId: orderId },
     });
   };
 
@@ -88,11 +88,11 @@ class ProductsRepository {
       offset: (page - 1) * this.pageLimit,
       limit: this.pageLimit,
     };
-    switch(filter) {
-      case 'name': 
-        obj.where = { name: { [Op.like]: `%${keyword}%`, } };
+    switch (filter) {
+      case 'name':
+        obj.where = { name: { [Op.like]: `%${keyword}%` } };
         break;
-    };
+    }
     return await this.model.findAll(obj);
   };
 
@@ -108,11 +108,11 @@ class ProductsRepository {
       raw: true,
       attributes: [[sequelize.fn('COUNT', sequelize.col('*')), 'countAll']],
     };
-    switch(filter) {
-      case 'name': 
-        obj.where = { name: { [Op.like]: `%${keyword}%`, } };
+    switch (filter) {
+      case 'name':
+        obj.where = { name: { [Op.like]: `%${keyword}%` } };
         break;
-    };
+    }
     return await this.model.findOne(obj);
   };
 

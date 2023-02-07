@@ -5,23 +5,21 @@ window.onload = () => {
 const getSubOrders = async (p) => {
   fetch('/api/admins/subOrders?p=' + p, {
     method: 'GET',
-  })
-    .then(async (res) => {
-      const code = res.status;
+  }).then(async (res) => {
+    const code = res.status;
 
-      res = await res.json();
-      if (res.message) {
-        // alert(res.message);
-        console.log(res.message);
-      }
+    res = await res.json();
+    if (res.message) {
+      // alert(res.message);
+      console.log(res.message);
+    }
 
-      document.querySelector('#subOrders').innerHTML = '';
-      if (code === 200) {
-
-        const subOrders = res.data;
-        setPagination(res.pagination, 'getSubOrders'); // 페이지네이션
-        subOrders.forEach((order) => {
-          const temp = `
+    document.querySelector('#subOrders').innerHTML = '';
+    if (code === 200) {
+      const subOrders = res.data;
+      setPagination(res.pagination, 'getSubOrders'); // 페이지네이션
+      subOrders.forEach((order) => {
+        const temp = `
             <tr>
               <th scope="row">${order.subOrderId}</th>
               <td>${order.orderId}</td>
@@ -34,33 +32,33 @@ const getSubOrders = async (p) => {
               <td>${new Date(order.orderedAt).toLocaleString()}</td>
             </tr>
           `;
-          document.querySelector('#subOrders').insertAdjacentHTML('beforeend', temp);
-        });
+        document.querySelector('#subOrders').insertAdjacentHTML('beforeend', temp);
+      });
 
-        // 테이블 tr 마우스 오버 시 하이라이트 효과
-        document.querySelectorAll("#subOrders tr").forEach(el => {
-          el.addEventListener("mouseenter", (e) => {
-            e.currentTarget.classList.add("table-active");
-          });
-          el.addEventListener("mouseleave", (e) => {
-            e.currentTarget.classList.remove("table-active");
-          });
+      // 테이블 tr 마우스 오버 시 하이라이트 효과
+      document.querySelectorAll('#subOrders tr').forEach((el) => {
+        el.addEventListener('mouseenter', (e) => {
+          e.currentTarget.classList.add('table-active');
         });
-      } else if (code === 404) {
-        const temp = `
+        el.addEventListener('mouseleave', (e) => {
+          e.currentTarget.classList.remove('table-active');
+        });
+      });
+    } else if (code === 404) {
+      const temp = `
           <tr>
             <td colspan="9">주문 정보가 없습니다.</td>
           </tr>
         `;
-        document.querySelector('#subOrders').insertAdjacentHTML('beforeend', temp);
-      } else if (code === 307) {
-        document.cookie = `accessToken=${res.accessToken}; path=/;`;
-        getSubOrders(p);
-      } else if (code === 401) {
-        alert(res.message);
-        location.href = '/admins/login';
-      }
-    });
+      document.querySelector('#subOrders').insertAdjacentHTML('beforeend', temp);
+    } else if (code === 307) {
+      document.cookie = `accessToken=${res.accessToken}; path=/;`;
+      getSubOrders(p);
+    } else if (code === 401) {
+      alert(res.message);
+      location.href = '/admins/login';
+    }
+  });
 };
 
 const setPagination = (obj, getListFnName) => {

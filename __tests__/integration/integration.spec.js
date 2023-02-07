@@ -44,7 +44,6 @@ describe('Admins Domain Integration Test', () => {
       refreshToken: expect.anything(),
     });
   });
-
 });
 
 afterAll(async () => {

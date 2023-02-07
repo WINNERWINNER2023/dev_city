@@ -22,5 +22,4 @@ class OutputController {
   };
 }
 
- 
 module.exports = OutputController;

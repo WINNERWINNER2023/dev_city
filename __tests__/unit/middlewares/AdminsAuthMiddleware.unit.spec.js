@@ -5,7 +5,5 @@ describe('adminsAuthMiddleware Unit Test', () => {
     jest.resetAllMocks();
   });
 
-  test('adminsAuthMiddleware Method Success', async () => {
-
-  });
+  test('adminsAuthMiddleware Method Success', async () => {});
 });

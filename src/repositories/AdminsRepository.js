@@ -14,7 +14,7 @@ class AdminsRepository {
 
   findOneByAccount = async (account) => {
     return await this.model.findOne({ where: { account } });
-  }
+  };
 }
 
 module.exports = AdminsRepository;

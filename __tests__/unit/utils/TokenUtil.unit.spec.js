@@ -5,7 +5,5 @@ describe('TokenUtil Unit Test', () => {
     jest.resetAllMocks();
   });
 
-  test('sample Method Success', async () => {
-
-  });
+  test('sample Method Success', async () => {});
 });

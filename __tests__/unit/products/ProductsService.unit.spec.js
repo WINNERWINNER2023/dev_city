@@ -50,7 +50,7 @@ describe('ProductsService Unit Test', () => {
     expect(mockProductsRepository.getProductsList).toHaveBeenCalledTimes(1);
     expect(productsList).toEqual('get products list');
   });
-  
+
   test('product.service get product details success', async () => {
     mockProductsRepository.getProduct = jest.fn(() => {
       return 'get product details';

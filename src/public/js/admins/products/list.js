@@ -13,23 +13,21 @@ const keyword = document.querySelector('#keyword');
 const getProducts = async (p, filter, keyword) => {
   fetch(`/api/admins/products?p=${p}&filter=${filter}&keyword=${keyword}`, {
     method: 'GET',
-  })
-    .then(async (res) => {
-      const code = res.status;
+  }).then(async (res) => {
+    const code = res.status;
 
-      res = await res.json();
-      if (res.message) {
-        // alert(res.message);
-        console.log(res.message);
-      }
+    res = await res.json();
+    if (res.message) {
+      // alert(res.message);
+      console.log(res.message);
+    }
 
-      document.querySelector('#products').innerHTML = '';
-      if (code === 200) {
-
-        const products = res.data;
-        setPagination('getProducts', res.pagination, res.search); // 페이지네이션
-        products.forEach((product) => {
-          const temp = `
+    document.querySelector('#products').innerHTML = '';
+    if (code === 200) {
+      const products = res.data;
+      setPagination('getProducts', res.pagination, res.search); // 페이지네이션
+      products.forEach((product) => {
+        const temp = `
             <tr onclick="location.href='/admins/products/${product.id}'">
               <th scope="row">${product.id}</th>
               <td>${product.name}</td>
@@ -40,34 +38,34 @@ const getProducts = async (p, filter, keyword) => {
               <td>${new Date(product.updatedAt).toLocaleString()}</td>
             </tr>
           `;
-          document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
-        });
+        document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+      });
 
-        // 테이블 tr 마우스 오버 시 하이라이트 효과
-        document.querySelectorAll("#products tr").forEach(el => {
-          el.addEventListener("mouseenter", (e) => {
-            e.currentTarget.classList.add("table-active");
-          });
-          el.addEventListener("mouseleave", (e) => {
-            e.currentTarget.classList.remove("table-active");
-          });
+      // 테이블 tr 마우스 오버 시 하이라이트 효과
+      document.querySelectorAll('#products tr').forEach((el) => {
+        el.addEventListener('mouseenter', (e) => {
+          e.currentTarget.classList.add('table-active');
         });
-      } else if (code === 404) {
-        const temp = `
+        el.addEventListener('mouseleave', (e) => {
+          e.currentTarget.classList.remove('table-active');
+        });
+      });
+    } else if (code === 404) {
+      const temp = `
           <tr>
             <td colspan="7">상품 정보가 없습니다.</td>
           </tr>
         `;
-        document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
-        setPagination();
-      } else if (code === 307) {
-        document.cookie = `accessToken=${res.accessToken}; path=/;`;
-        getProducts(p);
-      } else if (code === 401) {
-        alert(res.message);
-        location.href = '/admins/login';
-      }
-    });
+      document.querySelector('#products').insertAdjacentHTML('beforeend', temp);
+      setPagination();
+    } else if (code === 307) {
+      document.cookie = `accessToken=${res.accessToken}; path=/;`;
+      getProducts(p);
+    } else if (code === 401) {
+      alert(res.message);
+      location.href = '/admins/login';
+    }
+  });
 };
 
 const setPagination = (getListFnName, pagination, search) => {

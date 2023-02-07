@@ -36,7 +36,7 @@ describe('ProductsRepository Unit Test', () => {
     expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
     expect(randomProducts).toEqual('findAll Result');
   });
-  
+
   test('product.repostory get products success', async () => {
     mockProduct.findAll = jest.fn(() => {
       return 'findAll Result';
@@ -93,7 +93,7 @@ describe('ProductsRepository Unit Test', () => {
     productInfo.imagePath = null;
     mockProduct.findByPk = jest.fn(() => {
       return {
-        async save() {}
+        async save() {},
       };
     });
     await productsRepository.updateProduct(productInfo);
@@ -106,7 +106,7 @@ describe('ProductsRepository Unit Test', () => {
     const productInfo = { ...mockProductInfo };
     mockProduct.findByPk = jest.fn(() => {
       return {
-        async save() {}
+        async save() {},
       };
     });
     await productsRepository.updateProduct(productInfo);
@@ -138,7 +138,7 @@ describe('ProductsRepository Unit Test', () => {
 
     expect(mockProduct.destroy).toHaveBeenCalledTimes(1);
     expect(mockProduct.destroy).toHaveBeenCalledWith({
-      where: { id: productId }
+      where: { id: productId },
     });
   });
 
@@ -158,7 +158,7 @@ describe('ProductsRepository Unit Test', () => {
       order: [['id', 'DESC']],
       offset: (page - 1) * productsRepository.pageLimit,
       limit: productsRepository.pageLimit,
-      where: { name: expect.anything(), },
+      where: { name: expect.anything() },
     });
   });
 
@@ -175,7 +175,7 @@ describe('ProductsRepository Unit Test', () => {
     expect(mockProduct.findOne).toHaveBeenCalledWith({
       raw: true,
       attributes: expect.anything(),
-      where: { name: expect.anything(), },
+      where: { name: expect.anything() },
     });
   });
 });

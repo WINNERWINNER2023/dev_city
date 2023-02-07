@@ -160,7 +160,9 @@ describe('CustomersService Unit Test', () => {
   });
 
   test('addCustomerCoin Method Success', async () => {
-    mockCustomersRepository.addCustomerCoin = jest.fn(() => {return 'mock'});
+    mockCustomersRepository.addCustomerCoin = jest.fn(() => {
+      return 'mock';
+    });
     const result = await customersService.addCustomerCoin(mockCustomerId);
 
     expect(mockCustomersRepository.addCustomerCoin).toHaveBeenCalledTimes(1);
@@ -169,7 +171,9 @@ describe('CustomersService Unit Test', () => {
   });
 
   test('addCustomerCoin Method Fail', async () => {
-    mockCustomersRepository.addCustomerCoin = jest.fn(() => {throw new Error();});
+    mockCustomersRepository.addCustomerCoin = jest.fn(() => {
+      throw new Error();
+    });
     const result = await customersService.addCustomerCoin(mockCustomerId);
 
     expect(mockCustomersRepository.addCustomerCoin).toHaveBeenCalledTimes(1);
@@ -177,7 +181,9 @@ describe('CustomersService Unit Test', () => {
   });
 
   test('deleteCustomer Method Success', async () => {
-    mockCustomersRepository.deleteCustomer = jest.fn(() => {return 'mock'});
+    mockCustomersRepository.deleteCustomer = jest.fn(() => {
+      return 'mock';
+    });
     const result = await customersService.deleteCustomer(mockCustomerId);
 
     expect(mockCustomersRepository.deleteCustomer).toHaveBeenCalledTimes(1);
@@ -186,7 +192,9 @@ describe('CustomersService Unit Test', () => {
   });
 
   test('deleteCustomer Method Fail', async () => {
-    mockCustomersRepository.deleteCustomer = jest.fn(() => {throw new Error();});
+    mockCustomersRepository.deleteCustomer = jest.fn(() => {
+      throw new Error();
+    });
     const result = await customersService.deleteCustomer(mockCustomerId);
 
     expect(mockCustomersRepository.deleteCustomer).toHaveBeenCalledTimes(1);

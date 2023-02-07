@@ -5,23 +5,21 @@ window.onload = () => {
 const getCustomers = async (p) => {
   fetch('/api/admins/customers?p=' + p, {
     method: 'GET',
-  })
-    .then(async (res) => {
-      const code = res.status;
+  }).then(async (res) => {
+    const code = res.status;
 
-      res = await res.json();
-      if (res.message) {
-        // alert(res.message);
-        console.log(res.message);
-      }
+    res = await res.json();
+    if (res.message) {
+      // alert(res.message);
+      console.log(res.message);
+    }
 
-      document.querySelector('#customers').innerHTML = '';
-      if (code === 200) {
-
-        const customers = res.data;
-        setPagination(res.pagination, 'getCustomers'); // 페이지네이션
-        customers.forEach((product) => {
-          const temp = `
+    document.querySelector('#customers').innerHTML = '';
+    if (code === 200) {
+      const customers = res.data;
+      setPagination(res.pagination, 'getCustomers'); // 페이지네이션
+      customers.forEach((product) => {
+        const temp = `
             <tr>
               <th scope="row">${product.id}</th>
               <td>${product.email}</td>
@@ -31,33 +29,33 @@ const getCustomers = async (p) => {
               <td>${new Date(product.createdAt).toLocaleString()}</td>
             </tr>
           `;
-          document.querySelector('#customers').insertAdjacentHTML('beforeend', temp);
-        });
+        document.querySelector('#customers').insertAdjacentHTML('beforeend', temp);
+      });
 
-        // 테이블 tr 마우스 오버 시 하이라이트 효과
-        document.querySelectorAll("#customers tr").forEach(el => {
-          el.addEventListener("mouseenter", (e) => {
-            e.currentTarget.classList.add("table-active");
-          });
-          el.addEventListener("mouseleave", (e) => {
-            e.currentTarget.classList.remove("table-active");
-          });
+      // 테이블 tr 마우스 오버 시 하이라이트 효과
+      document.querySelectorAll('#customers tr').forEach((el) => {
+        el.addEventListener('mouseenter', (e) => {
+          e.currentTarget.classList.add('table-active');
         });
-      } else if (code === 404) {
-        const temp = `
+        el.addEventListener('mouseleave', (e) => {
+          e.currentTarget.classList.remove('table-active');
+        });
+      });
+    } else if (code === 404) {
+      const temp = `
           <tr>
             <td colspan="6">고객 정보가 없습니다.</td>
           </tr>
         `;
-        document.querySelector('#customers').insertAdjacentHTML('beforeend', temp);
-      } else if (code === 307) {
-        document.cookie = `accessToken=${res.accessToken}; path=/;`;
-        getCustomers(p);
-      } else if (code === 401) {
-        alert(res.message);
-        location.href = '/admins/login';
-      }
-    });
+      document.querySelector('#customers').insertAdjacentHTML('beforeend', temp);
+    } else if (code === 307) {
+      document.cookie = `accessToken=${res.accessToken}; path=/;`;
+      getCustomers(p);
+    } else if (code === 401) {
+      alert(res.message);
+      location.href = '/admins/login';
+    }
+  });
 };
 
 const setPagination = (obj, getListFnName) => {

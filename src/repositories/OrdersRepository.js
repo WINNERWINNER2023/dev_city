@@ -79,6 +79,6 @@ class OrdersRepository {
       type: this.QueryTypes.SELECT,
     });
   };
-};
+}
 
 module.exports = OrdersRepository;
