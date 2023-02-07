@@ -1,9 +1,9 @@
 window.onload = () => {
-  getOrders(1);
+  getSubOrders(1);
 };
 
-const getOrders = async (p) => {
-  fetch('/api/admins/orders?p=' + p, {
+const getSubOrders = async (p) => {
+  fetch('/api/admins/subOrders?p=' + p, {
     method: 'GET',
   }).then(async (res) => {
     const code = res.status;
@@ -14,26 +14,29 @@ const getOrders = async (p) => {
       console.log(res.message);
     }
 
-    document.querySelector('#orders').innerHTML = '';
+    document.querySelector('#subOrders').innerHTML = '';
     if (code === 200) {
-      const orders = res.data;
-      setPagination(res.pagination, 'getOrders'); // 페이지네이션
-      orders.forEach((order) => {
+      const subOrders = res.data;
+      setPagination(res.pagination, 'getSubOrders'); // 페이지네이션
+      subOrders.forEach((order) => {
         const temp = `
             <tr>
-              <th scope="row">${order.orderId}</th>
-              <td>${order.customerId}</td>
-              <td>${order.nickname}</td>
-              <td>${order.totalPrice}</td>
+              <th scope="row">${order.subOrderId}</th>
+              <td>${order.orderId}</td>
               <td>${order.status}</td>
-              <td>${new Date(order.createdAt).toLocaleString()}</td>
+              <td>${order.customerId}</td>
+              <td>${order.productName}</td>
+              <td>${new Date(order.startUse).toLocaleDateString()}</td>
+              <td>${order.price}</td>
+              <td>${order.count}</td>
+              <td>${new Date(order.orderedAt).toLocaleString()}</td>
             </tr>
           `;
-        document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
+        document.querySelector('#subOrders').insertAdjacentHTML('beforeend', temp);
       });
 
       // 테이블 tr 마우스 오버 시 하이라이트 효과
-      document.querySelectorAll('#orders tr').forEach((el) => {
+      document.querySelectorAll('#subOrders tr').forEach((el) => {
         el.addEventListener('mouseenter', (e) => {
           e.currentTarget.classList.add('table-active');
         });
@@ -44,13 +47,13 @@ const getOrders = async (p) => {
     } else if (code === 404) {
       const temp = `
           <tr>
-            <td colspan="6">주문 정보가 없습니다.</td>
+            <td colspan="9">주문 정보가 없습니다.</td>
           </tr>
         `;
-      document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
+      document.querySelector('#subOrders').insertAdjacentHTML('beforeend', temp);
     } else if (code === 307) {
       document.cookie = `accessToken=${res.accessToken}; path=/;`;
-      getOrders(p);
+      getSubOrders(p);
     } else if (code === 401) {
       alert(res.message);
       location.href = '/admins/login';

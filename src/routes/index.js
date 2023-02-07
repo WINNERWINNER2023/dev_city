@@ -15,9 +15,9 @@ router.use('/api/customers', CustomersRouter);
 router.use('/api/admins', AdminsRouter);
 router.use('/api/products', ProductsRouter);
 
-router.use('/', OutputRouter);
 router.use('/customers', CustomersOutputRouter);
 router.use('/admins', AdminsOutputRouter);
+router.use('/', OutputRouter);
 
 router.get('/*', (_, res) => res.redirect('/'));
 

@@ -42,15 +42,15 @@ class AdminsService {
 
       await this.redisUtil.set(refreshToken, admin.id);
 
-      return { 
-        code: 200, 
-        simpleAdminInfo: { 
+      return {
+        code: 200,
+        simpleAdminInfo: {
           id: admin.id,
           account: admin.account,
-        }, 
-        accessToken, 
-        refreshToken, 
-        message: '로그인 성공' 
+        },
+        accessToken,
+        refreshToken,
+        message: '로그인 성공',
       };
     } catch (err) {
       return { code: 500, message: '로그인 실패' };

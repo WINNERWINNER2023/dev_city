@@ -15,6 +15,37 @@ class OrdersRepository {
 
   adminGetOrders = async (page) => {
     const query = `SELECT 
+                    o.id AS orderId, 
+                    c.id AS customerId, 
+                    c.nickname, 
+                    SUM(p.price) AS totalPrice,
+                    status, 
+                    o.createdAt
+                  FROM Orders o 
+                  INNER JOIN Customers c 
+                    ON o.customerId = c.id
+                  INNER JOIN SubOrders so 
+                    ON so.orderId = o.id 
+                  INNER JOIN Products p 
+                    ON so.productId = p.id 
+                  GROUP BY so.orderId 
+                  ORDER BY o.id DESC
+                  LIMIT ?, ?
+                  ;`;
+    return await this.sequelize.query(query, {
+      type: this.QueryTypes.SELECT,
+      replacements: [(page - 1) * this.pageLimit, this.pageLimit],
+    });
+  };
+
+  adminGetOrdersCountAll = async () => {
+    return await this.model.count({
+      raw: true,
+    });
+  };
+
+  adminGetSubOrders = async (page) => {
+    const query = `SELECT 
                     s.id AS subOrderId, 
                     o.id AS orderId, 
                     o.status, 
@@ -39,19 +70,15 @@ class OrdersRepository {
     });
   };
 
-  adminGetOrdersCountAll = async () => {
+  adminGetSubOrdersCountAll = async () => {
     const query = `SELECT 
-                    count(s.id) AS countAll
-                  FROM SubOrders AS s
-                  INNER JOIN Orders AS o 
-                  ON s.orderId = o.id
-                  INNER JOIN Products AS p 
-                  ON s.productId = p.id;
+                    count(*) AS countAll
+                  FROM SubOrders
                   ;`;
     return await this.sequelize.query(query, {
       type: this.QueryTypes.SELECT,
     });
   };
-};
+}
 
 module.exports = OrdersRepository;

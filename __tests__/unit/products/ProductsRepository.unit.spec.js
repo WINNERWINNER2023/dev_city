@@ -36,7 +36,7 @@ describe('ProductsRepository Unit Test', () => {
     expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
     expect(randomProducts).toEqual('findAll Result');
   });
-  
+
   test('product.repostory get products success', async () => {
     mockProduct.findAll = jest.fn(() => {
       return 'findAll Result';
@@ -76,33 +76,6 @@ describe('ProductsRepository Unit Test', () => {
     });
   });
 
-  test('adminGetProducts Method Success', async () => {
-    mockProduct.findAll = jest.fn(() => {
-      return 'test';
-    });
-    const page = 1;
-    const result = await productsRepository.adminGetProducts(page);
-
-    expect(result).toEqual('test');
-    expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
-    expect(mockProduct.findAll).toHaveBeenCalledWith({
-      raw: true,
-      order: [['id', 'DESC']],
-      offset: (page - 1) * productsRepository.pageLimit,
-      limit: productsRepository.pageLimit,
-    });
-  });
-
-  test('adminGetProductsCountAll Method Success', async () => {
-    mockProduct.findOne = jest.fn(() => {
-      return 'test';
-    });
-    const result = await productsRepository.adminGetProductsCountAll();
-
-    expect(result).toEqual('test');
-    expect(mockProduct.findOne).toHaveBeenCalledTimes(1);
-  });
-
   test('adminGetProduct Method Success', async () => {
     mockProduct.findByPk = jest.fn(() => {
       return 'test';
@@ -120,7 +93,7 @@ describe('ProductsRepository Unit Test', () => {
     productInfo.imagePath = null;
     mockProduct.findByPk = jest.fn(() => {
       return {
-        async save() {}
+        async save() {},
       };
     });
     await productsRepository.updateProduct(productInfo);
@@ -133,7 +106,7 @@ describe('ProductsRepository Unit Test', () => {
     const productInfo = { ...mockProductInfo };
     mockProduct.findByPk = jest.fn(() => {
       return {
-        async save() {}
+        async save() {},
       };
     });
     await productsRepository.updateProduct(productInfo);
@@ -165,7 +138,44 @@ describe('ProductsRepository Unit Test', () => {
 
     expect(mockProduct.destroy).toHaveBeenCalledTimes(1);
     expect(mockProduct.destroy).toHaveBeenCalledWith({
-      where: { id: productId }
+      where: { id: productId },
+    });
+  });
+
+  test('adminGetProducts Method Success - with filter, keyword', async () => {
+    mockProduct.findAll = jest.fn(() => {
+      return 'test';
+    });
+    const page = 1;
+    const filter = 'name';
+    const keyword = 'keyword';
+    const result = await productsRepository.adminGetProducts(page, filter, keyword);
+
+    expect(result).toEqual('test');
+    expect(mockProduct.findAll).toHaveBeenCalledTimes(1);
+    expect(mockProduct.findAll).toHaveBeenCalledWith({
+      raw: true,
+      order: [['id', 'DESC']],
+      offset: (page - 1) * productsRepository.pageLimit,
+      limit: productsRepository.pageLimit,
+      where: { name: expect.anything() },
+    });
+  });
+
+  test('adminGetProductsCountAll Method Success - with filter, keyword', async () => {
+    mockProduct.findOne = jest.fn(() => {
+      return 'test';
+    });
+    const filter = 'name';
+    const keyword = 'keyword';
+    const result = await productsRepository.adminGetProductsCountAll(filter, keyword);
+
+    expect(result).toEqual('test');
+    expect(mockProduct.findOne).toHaveBeenCalledTimes(1);
+    expect(mockProduct.findOne).toHaveBeenCalledWith({
+      raw: true,
+      attributes: expect.anything(),
+      where: { name: expect.anything() },
     });
   });
 });

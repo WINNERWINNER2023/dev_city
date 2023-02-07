@@ -192,6 +192,8 @@ describe('ProductsController Unit Test', () => {
   test('adminGetProducts Method Success', async () => {
     const mockRequestQuery = {
       p: 1,
+      filter: 'filter',
+      keyword: 'keyword',
     };
     mockRequest.query = mockRequestQuery;
     mockRequest.protocol = 'protocol';
@@ -206,13 +208,19 @@ describe('ProductsController Unit Test', () => {
     await productsController.adminGetProducts(mockRequest, mockResponse);
 
     expect(mockProductsService.adminGetProducts).toHaveBeenCalledTimes(1);
-    expect(mockProductsService.adminGetProducts).toHaveBeenCalledWith(`${mockRequest.protocol}://${mockRequest.get()}`, mockRequestQuery.p);
+    expect(mockProductsService.adminGetProducts).toHaveBeenCalledWith(
+      `${mockRequest.protocol}://${mockRequest.get()}`,
+      mockRequestQuery.p,
+      mockRequestQuery.filter,
+      mockRequestQuery.keyword
+    );
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(adminGetProductsResult.code);
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       data: adminGetProductsResult.data,
       pagination: adminGetProductsResult.pagination,
+      search: { filter: mockRequestQuery.filter, keyword: mockRequestQuery.keyword },
     });
   });
 
@@ -231,19 +239,27 @@ describe('ProductsController Unit Test', () => {
     await productsController.adminGetProducts(mockRequest, mockResponse);
 
     expect(mockProductsService.adminGetProducts).toHaveBeenCalledTimes(1);
-    expect(mockProductsService.adminGetProducts).toHaveBeenCalledWith(`${mockRequest.protocol}://${mockRequest.get()}`, mockRequestQuery.p || 1);
+    expect(mockProductsService.adminGetProducts).toHaveBeenCalledWith(
+      `${mockRequest.protocol}://${mockRequest.get()}`,
+      mockRequestQuery.p || 1,
+      mockRequestQuery.filter,
+      mockRequestQuery.keyword
+    );
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(adminGetProductsResult.code);
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       data: adminGetProductsResult.data,
       pagination: adminGetProductsResult.pagination,
+      search: { filter: mockRequestQuery.filter, keyword: mockRequestQuery.keyword },
     });
   });
 
   test('adminGetProducts Method Fail - response code not 200', async () => {
     const mockRequestQuery = {
       p: 1,
+      filter: 'filter',
+      keyword: 'keyword',
     };
     mockRequest.query = mockRequestQuery;
     mockRequest.protocol = 'protocol';
@@ -258,7 +274,12 @@ describe('ProductsController Unit Test', () => {
     await productsController.adminGetProducts(mockRequest, mockResponse);
 
     expect(mockProductsService.adminGetProducts).toHaveBeenCalledTimes(1);
-    expect(mockProductsService.adminGetProducts).toHaveBeenCalledWith(`${mockRequest.protocol}://${mockRequest.get()}`, mockRequestQuery.p);
+    expect(mockProductsService.adminGetProducts).toHaveBeenCalledWith(
+      `${mockRequest.protocol}://${mockRequest.get()}`,
+      mockRequestQuery.p,
+      mockRequestQuery.filter,
+      mockRequestQuery.keyword
+    );
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(adminGetProductsResult.code);
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
@@ -284,7 +305,10 @@ describe('ProductsController Unit Test', () => {
     await productsController.adminGetProduct(mockRequest, mockResponse);
 
     expect(mockProductsService.adminGetProduct).toHaveBeenCalledTimes(1);
-    expect(mockProductsService.adminGetProduct).toHaveBeenCalledWith(`${mockRequest.protocol}://${mockRequest.get()}`, mockRequestParams.productId);
+    expect(mockProductsService.adminGetProduct).toHaveBeenCalledWith(
+      `${mockRequest.protocol}://${mockRequest.get()}`,
+      mockRequestParams.productId
+    );
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(adminGetProductResult.code);
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
@@ -331,7 +355,10 @@ describe('ProductsController Unit Test', () => {
     await productsController.adminGetProduct(mockRequest, mockResponse);
 
     expect(mockProductsService.adminGetProduct).toHaveBeenCalledTimes(1);
-    expect(mockProductsService.adminGetProduct).toHaveBeenCalledWith(`${mockRequest.protocol}://${mockRequest.get()}`, mockRequestParams.productId);
+    expect(mockProductsService.adminGetProduct).toHaveBeenCalledWith(
+      `${mockRequest.protocol}://${mockRequest.get()}`,
+      mockRequestParams.productId
+    );
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(adminGetProductResult.code);
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
