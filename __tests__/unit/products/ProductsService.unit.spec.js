@@ -41,10 +41,11 @@ describe('ProductsService Unit Test', () => {
   });
 
   test('product.service get products list success', async () => {
+    const page = 1;
     mockProductsRepository.getProductsList = jest.fn(() => {
       return 'get products list';
     });
-    const productsList = await productsService.getProductsList();
+    const productsList = await productsService.getProductsList(page);
 
     expect(mockProductsRepository.getProductsList).toHaveBeenCalledTimes(1);
     expect(productsList).toEqual('get products list');

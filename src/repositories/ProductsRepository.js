@@ -1,7 +1,7 @@
 'use strict';
 
 require('dotenv').config();
-const { Op } = require('sequelize');
+const { Op, or } = require('sequelize');
 const { Sequelize } = require('../sequelize/models');
 const { sequelize } = require('../sequelize/models/index');
 
@@ -20,17 +20,53 @@ class ProductsRepository {
       limit: 3,
     });
   };
-  getProductsList = async () => {
+
+  getProductsList = async (pageCount) => {
     return await this.model.findAll({
       raw: true,
       where: { count: { [Op.gt]: 0 } },
+      offset: pageCount,
+      limit: 3,
     });
   };
+
   getProduct = async (productId) => {
     return await this.model.findOne({
-      rew: true,
+      raw: true,
       where: { id: productId },
     });
+  };
+
+  getOrderListByCustomerId = async (customerId) => {
+    return await this.model.findAll({
+      raw : true,
+      where : { customerId : customerId }
+    })
+  }
+
+  getSubOrderListByOrderId = async (orderId) => {
+    return await this.model.findAll({
+      raw: true,
+      where: { orderId : orderId},
+    });
+  };
+
+  createOrder = async (customerId) => {
+    return await this.model.create({
+      customerId: customerId,
+      status: '결제 완료',
+    });
+  };
+
+  createSubOrder = async (orderId, product) => {
+    await this.model.create({
+      orderId: orderId,
+      productId: product,
+    });
+  };
+
+  customerPayment = async (customerId, paymentPrice) => {
+    await this.model.increment({ coin: paymentPrice }, { where: { id: customerId } });
   };
 
   createProduct = async (productInfo) => {
