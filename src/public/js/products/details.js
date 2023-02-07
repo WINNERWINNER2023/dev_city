@@ -17,9 +17,10 @@ const getProduct = async (productId) => {
 
     if (code === 200) {
       product = res;
-      document.querySelector('#name').value = product.name;
-      document.querySelector('#price').value = product.price;
-      document.querySelector('#usableDate').value = new Date(product.startUse).toLocaleDateString();
+      document.querySelector('#name').innerHTML = product.name;
+      document.querySelector('#price').innerHTML = product.price.toLocaleString();
+      document.querySelector('#usableDate').innerHTML = new Date(product.startUse).toLocaleDateString();
+      document.querySelector('#imagePath').src = product.imagePath;
     }
   });
 };

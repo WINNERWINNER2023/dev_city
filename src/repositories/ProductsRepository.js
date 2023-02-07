@@ -25,8 +25,9 @@ class ProductsRepository {
     return await this.model.findAll({
       raw: true,
       where: { count: { [Op.gt]: 0 } },
+      order: [['id', 'DESC']],
       offset: pageCount,
-      limit: 3,
+      limit: parseInt(process.env.PRODUCTS_PAGE_LIMIT),
     });
   };
 

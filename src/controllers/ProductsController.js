@@ -6,24 +6,20 @@ class ProductsController {
   productsService = new ProductsService();
 
   getRandomProducts = async (req, res) => {
-    const randomProducts = await this.productsService.getRandomProducts();
-    return res.status(randomProducts.code).json(randomProducts.data);
+    const response = await this.productsService.getRandomProducts(`${req.protocol}://${req.get('Host')}`);
+    return res.status(response.code).json(response.code === 200 ? { data: response.data } : { message: response.message });
   };
 
   getProductsList = async (req, res) => {
-    const { page } = req.params;
-    const products = await this.productsService.getProductsList(page);
-    return res.status(products.code).json(products.data);
+    // const { page } = req.params;
+    const page = req.query.page || 1;
+    const products = await this.productsService.getProductsList(`${req.protocol}://${req.get('Host')}`, page);
+    return res.status(products.code).json({ data: products.data });
   };
 
   getProductDetails = async (req, res) => {
     const { productId } = req.params;
-    const product = await this.productsService.getProductDetails(Number(productId));
-    console.log(product);
-    if (product.code === 500) {
-      return res.status(product.code).json(product);
-    }
-
+    const product = await this.productsService.getProductDetails(`${req.protocol}://${req.get('Host')}`, parseInt(productId));
     return res.status(product.code).json(product.data);
   };
 

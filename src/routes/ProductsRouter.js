@@ -8,9 +8,9 @@ const ProductsController = require('../controllers/ProductsController');
 const productsController = new ProductsController();
 
 router.get('/random', productsController.getRandomProducts);
-router.get('/page/:page', productsController.getProductsList);
+router.get('/', productsController.getProductsList);
 router.get('/orders', productsController.getOrderedProductsByCustomerId);
-router.get('/:productId', productsController.getProductDetails);
 router.post('/order', productsController.createOrder);
+router.get('/:productId', productsController.getProductDetails);
 
 module.exports = router;

@@ -1,22 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="icon" href="data:," />
-  <script src="/public/js/products/details.js" defer></script>
-  <script>
-    const productId = <%= productId %>;
-  </script>
-</head>
-<body>
-  <input id="name" type="text" value="">
-  <input id="price" type="text" value="">
-  <input id="usableDate" type="text" value="">
+<script src="/public/js/products/details.js" defer></script>
+<script>
+  const productId = <%= productId %>;
+</script>
 
-  <button onclick="goOrder()">주문하기</button>
-  <button onclick="addCart()">장바구니</button>
-</body>
-</html>
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-6">
+      <img id="imagePath" src="" class="img-fluid rounded-start" style="width: 100%;">
+    </div>
+    <div class="col-md-6 d-flex ps-5">
+      <div class="card-body align-self-center">
+        <h1 class="card-title" id="name"></h1>
+        <h2 class="card-text mb-5">사용가능일자: <span id="usableDate"></span></h2>
+        <p class="card-text">가격: <span id="price"></span> dev</p>
+        <button onclick="addCart()" type="button" class="btn btn-primary btn-lg">장바구니 추가</button>
+        <button onclick="goOrder()" type="button" class="btn btn-primary btn-lg">바로 구매</button>
+      </div>
+    </div>
+  </div>
+</div>
