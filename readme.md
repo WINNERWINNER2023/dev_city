@@ -21,6 +21,19 @@ MYSQL_PASSWORD=""
 MYSQL_DATABASE=""
 MYSQL_DATABASE_TEST=""
 MYSQL_HOST=""
+
+BCRYPT_SALT=
+
+JWT_SECRET_KEY=""
+JWT_ACCESS_EXPIRES="30s"
+JWT_REFRESH_EXPIRES="5m"
+REDIS_REFRESH_TTL=300
+
+MULTER_UPLOADS_PATH="./src/public/uploads"
+UPLOADS_PATH="public/uploads"
+
+ADMINS_PAGE_LIMIT=10
+ADMINS_SECTION_LIMIT=10
 ```
 
 ### DB랑 Table 생성
@@ -29,4 +42,6 @@ MYSQL_HOST=""
 cd src/sequelize
 npx sequelize db:create
 npx sequelize db:migrate
+NODE_ENV=test npx sequelize db:create
+NODE_ENV=test npx sequelize db:migrate
 ```
