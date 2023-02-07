@@ -1,6 +1,8 @@
 'use strict';
 
 const app = require('../src/app.js');
+// const SocketUtil = require('../src/utils/SocketUtil');
+// const socketUtil = new SocketUtil(app);
 
 const models = require('../src/sequelize/models/index');
 models.sequelize
@@ -17,3 +19,7 @@ const PORT = parseInt(process.env.PORT) || 3000;
 app.listen(PORT, () => {
   console.log(`Listening on http://localhost:${PORT}`);
 });
+// const PORT = parseInt(process.env.PORT) || 3000;
+// socketUtil.server.listen(PORT, () => {
+//   console.log(`Listening on http://localhost:${PORT}`);
+// });
