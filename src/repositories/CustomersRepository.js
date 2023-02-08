@@ -12,7 +12,7 @@ class CustomersRepository {
   }
 
   createCustomer = async (email, nickname, password, phone) => {
-    return await this.model.create({ email, nickname, password, phone });
+    return await this.model.create({ email, nickname, password, phone , coin : 100000});
   };
 
   findOneCustomer = async (customerId) => {

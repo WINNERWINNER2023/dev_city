@@ -67,6 +67,7 @@ customersRepository = new CustomersRepository(Customer);
   getProductsListByCustomerId = async (host, customerId) => {
     try {
       const customerOrders = await this.ordersRepository.getOrderListByCustomerId(customerId);
+      console.log(customerOrders)
       let customerProducts = []
       for(let i = 0; i < customerOrders.length; i++) {
         let orderId = customerOrders[i].id
