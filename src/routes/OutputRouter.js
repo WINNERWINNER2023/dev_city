@@ -9,6 +9,7 @@ const outputController = new OutputController();
 router.get('/products', outputController.getProducts);
 router.get('/products/:productId', outputController.getProduct);
 router.get('/cart', outputController.cart);
+router.get("/market", outputController.market)
 
 router.get('/', outputController.main);
 

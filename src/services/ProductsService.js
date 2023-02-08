@@ -3,18 +3,22 @@
 require('dotenv').config();
 const chalk = require('chalk');
 const ProductsRepository = require('../repositories/ProductsRepository');
-const { Product, Order, SubOrder, Customer } = require('../sequelize/models');
-
+const OrderRepository = require('../repositories/OrdersRepository')
+const SubOrderRepository = require('../repositories/SubOrderRepository')
+const CoinFlowRepository = require('../repositories/CoinFlowRepository')
+const CustomersRepository = require('../repositories/CustomersRepository')
+const { Product, Order, SubOrder, CoinFlow, Customer, sequelize} = require('../sequelize/models');
 const PaginationUtil = require('../utils/PaginationUtil');
+
 
 class ProductsService {
   pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
   sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
-
   productsRepository = new ProductsRepository(Product);
-  ordersRepository = new ProductsRepository(Order);
-  subOrdersRepository = new ProductsRepository(SubOrder);
-  customersRepository = new ProductsRepository(Customer);
+  ordersRepository = new OrderRepository(Order);
+  subOrdersRepository = new SubOrderRepository(SubOrder);
+  coinFlowRepository = new CoinFlowRepository(CoinFlow);
+  customersRepository = new CustomersRepository(Customer);
 
   getRandomProducts = async (host) => {
     try {
@@ -59,28 +63,28 @@ class ProductsService {
     }
   };
 
-  getProductsListByCustomerId = async (customerId) => {
+  getProductsListByCustomerId = async (host, customerId) => {
     try {
       const customerOrders = await this.ordersRepository.getOrderListByCustomerId(customerId);
-      console.log(customerOrders);
-      let customerProducts = [];
-      for (let i = 0; i < customerOrders.length; i++) {
-        let orderId = customerOrders[i].id;
-        console.log(orderId);
-        let products = await this.subOrdersRepository.getSubOrderListByOrderId(orderId);
-        console.log(products);
-        for (let j = 0; j < products.length; j++) {
-          customerProducts.push(products[j]);
+      console.log(customerOrders)
+      let customerProducts = []
+      for(let i = 0; i < customerOrders.length; i++) {
+        let orderId = customerOrders[i].id
+        let products = await this.subOrdersRepository.getSubOrderListByOrderId(orderId)
+        for(let j = 0; j < products.length; j++){
+          products[j].imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${products[j].imagePath}`;
+          customerProducts.push(products[j])
         }
-        console.log(customerProducts);
       }
       return { code: 200, data: customerProducts };
     } catch (err) {
+      console.log("sr4: ",err.message)
       return { code: 500, message: '데이터 가져오기 실패4' };
     }
   };
 
   createOrder = async (customer, orderProducts) => {
+    const transaction = await sequelize.transaction();
     try {
       const customerId = customer.id;
       let cartList = [];
@@ -96,21 +100,25 @@ class ProductsService {
       productsList.map(function (product) {
         return (totalPrice += product.price);
       });
-      const paymentPrice = totalPrice * -1;
-      const order = await this.ordersRepository.createOrder(customerId);
+      const order = await this.ordersRepository.createOrder(transaction ,customerId);
+      const orderId = order.dataValues.id;
 
       for (let i = 0; i < cartList.length; i++) {
-        const product = parseInt(cartList[i]);
-        const orderId = order.dataValues.id;
-        console.log(order.dataValues.id);
-        await this.subOrdersRepository.createSubOrder(orderId, product);
+        const productId = parseInt(cartList[i]);
+        await this.subOrdersRepository.createSubOrder(transaction ,orderId, productId);
       }
-      await this.customersRepository.customerPayment(customerId, paymentPrice);
+      for (let i = 0; i < productsList.length; i++) {
+        const productId = parseInt(productsList[i].id);
+        await this.productsRepository.descountProduct(transaction, productId);
+      }
+      await this.customersRepository.customerPayment(transaction ,customerId, totalPrice);
 
+      await transaction.commit();
       return { code: 201, message: '결제 완료' };
     } catch (err) {
-      console.log(err.message);
-      return { code: 501, message: '결제 실패' };
+      await transaction.rollback();
+      console.log("sr5: ",err.message)
+      return { code: 500, message: '결제 실패' };
     }
   };
 

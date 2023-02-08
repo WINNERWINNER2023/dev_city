@@ -79,6 +79,22 @@ class OrdersRepository {
       type: this.QueryTypes.SELECT,
     });
   };
-}
+
+  getOrderListByCustomerId = async (customerId) => {
+    return await this.model.findAll({
+      raw : true,
+      where : { customerId : customerId }
+    })
+  }
+
+  createOrder = async (transaction ,customerId) => {
+    return await this.model.create({
+      customerId: customerId,
+      status: '결제 완료',
+    },
+    { transaction }
+    );
+  };
+};
 
 module.exports = OrdersRepository;

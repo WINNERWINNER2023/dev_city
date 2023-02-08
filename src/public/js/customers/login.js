@@ -48,7 +48,7 @@ const login = async () => {
         document.cookie = `refreshToken=${res.refreshToken}; path=/;`;
         localStorage.setItem('simpleCustomerInfo', JSON.stringify(res.simpleCustomerInfo));
 
-        location.href = '/customers';
+        location.href = '/';
       }
     })
     .catch((err) => {

@@ -11,7 +11,6 @@ class ProductsController {
   };
 
   getProductsList = async (req, res) => {
-    // const { page } = req.params;
     const page = req.query.page || 1;
     const products = await this.productsService.getProductsList(`${req.protocol}://${req.get('Host')}`, page);
     return res.status(products.code).json({ data: products.data });
@@ -24,9 +23,9 @@ class ProductsController {
   };
 
   getOrderedProductsByCustomerId = async (req, res) => {
-    // const customerId = req.body.id // thunder client 실험용
-    const customerId = 1;
-    const customerProducts = await this.productsService.getProductsListByCustomerId(customerId);
+    const { customerInfo } = req.body
+    const customerId = customerInfo.id
+    const customerProducts = await this.productsService.getProductsListByCustomerId(`${req.protocol}://${req.get('Host')}`,customerId);
     if (customerProducts.code === 500) {
       return res.status(customerProducts.code).json(customerProducts.message);
     }
@@ -34,17 +33,10 @@ class ProductsController {
   };
 
   createOrder = async (req, res) => {
-    // const customer = req.customerInfo;
-    const customer = {
-      id: 1,
-      account: 'test1',
-    };
+    const customer = req.customerInfo;
     const orderProducts = req.body.cart;
     const createOrder = await this.productsService.createOrder(customer, orderProducts);
 
-    if (createOrder.code === 500) {
-      return res.status(createOrder.code).json(createOrder.message);
-    }
     return res.status(createOrder.code).json(createOrder.message);
   };
 

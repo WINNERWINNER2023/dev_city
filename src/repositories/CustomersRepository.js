@@ -12,7 +12,7 @@ class CustomersRepository {
   }
 
   createCustomer = async (email, nickname, password, phone) => {
-    return await this.model.create({ email, nickname, password, phone });
+    return await this.model.create({ email, nickname, password, phone , coin : 100000});
   };
 
   findOneCustomer = async (customerId) => {
@@ -65,6 +65,31 @@ class CustomersRepository {
       attributes: [[sequelize.fn('COUNT', sequelize.col('*')), 'countAll']],
     });
   };
-}
+
+  getCustomer = async (customerId) => {
+    return await this.model.findOne({
+      raw : true,
+      where: { customerId }
+    })
+  }
+
+  customerPayment = async (transaction ,customerId, totalPrice) => {
+    const customerInfo = await this.model.findOne({
+      where: { id: customerId }
+    },
+    { transaction });
+
+    if(!customerInfo){
+      throw new Error("사용자 정보가 존재하지 않습니다.");
+    }
+    console.log(customerInfo.coin)
+    customerInfo.coin -= totalPrice;
+    console.log(customerInfo.coin)
+    if(customerInfo.coin < 0){
+      throw new Error("사용자의 코인이 부족합니다.")
+    }
+    await customerInfo.save({ transaction })
+  };
+};
 
 module.exports = CustomersRepository;
