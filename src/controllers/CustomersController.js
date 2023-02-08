@@ -12,7 +12,9 @@ class CustomersController {
       if (typeof registeredCustomerInfo.message !== 'undefined') {
         return res.status(registeredCustomerInfo.code).json({ message: registeredCustomerInfo.message });
       }
-      return res.status(201).json({ message: '회원가입에 성공하셨습니다.' });
+      return res.status(201).json({
+        message: '회원가입에 성공하셨습니다.',
+      });
     } catch (error) {
       console.log(error.message);
       return res.status(500).json({ message: 'Controller - 요청이 올바르지 않습니다.' });
@@ -25,6 +27,7 @@ class CustomersController {
       const loginCustomerInfo = await this.customersService.loginCustomer(email, password);
       return res.status(200).json({
         message: loginCustomerInfo.message,
+        simpleCustomerInfo: loginCustomerInfo.simpleCustomerInfo,
         accessToken: loginCustomerInfo.accessToken,
         refreshToken: loginCustomerInfo.refreshToken,
       });
@@ -36,8 +39,8 @@ class CustomersController {
 
   findOneCustomer = async (req, res) => {
     try {
-      const { id } = req.body;
-      const findOneCustomerInfo = await this.customersService.findOneCustomer(id);
+      const { customerId } = req.body;
+      const findOneCustomerInfo = await this.customersService.findOneCustomer(customerId);
       if (typeof findOneCustomerInfo.message !== 'undefined') {
         return res.status(findOneCustomerInfo.code).json({ message: findOneCustomerInfo.message });
       }
@@ -55,7 +58,7 @@ class CustomersController {
       if (typeof updatedCustomerInfo.message !== 'undefined') {
         return res.status(updatedCustomerInfo.code).json({ message: updatedCustomerInfo.message });
       }
-      return res.status(201).json({ message: '회원 정보가 수정되었습니다.' });
+      return res.status(200).json({ message: '회원 정보가 수정되었습니다.' });
     } catch (error) {
       console.log(error.message);
       return res.status(500).json({ message: 'Controller - 요청이 올바르지 않습니다.' });
@@ -64,12 +67,12 @@ class CustomersController {
 
   addCustomerCoin = async (req, res) => {
     try {
-      const { id } = req.body;
-      const updatedCustomerCoinInfo = await this.customersService.addCustomerCoin(id);
+      const { customerId } = req.body;
+      const updatedCustomerCoinInfo = await this.customersService.addCustomerCoin(customerId);
       if (typeof updatedCustomerCoinInfo.message !== 'undefined') {
         return res.status(updatedCustomerCoinInfo.code).json({ message: updatedCustomerCoinInfo.message });
       }
-      return res.status(201).json({ message: '코인 충전을 완료했습니다.' });
+      return res.status(200).json({ message: '코인 충전을 완료했습니다.' });
     } catch (error) {
       console.log(error.message);
       return res.status(500).json({ message: 'Controller - 요청이 올바르지 않습니다.' });
@@ -78,8 +81,8 @@ class CustomersController {
 
   deleteCustomer = async (req, res) => {
     try {
-      const { id } = req.body;
-      const deleteCustomerInfo = await this.customersService.deleteCustomer(id);
+      const { customerId } = req.body;
+      const deleteCustomerInfo = await this.customersService.deleteCustomer(customerId);
       if (typeof deleteCustomerInfo.message !== 'undefined') {
         return res.status(deleteCustomerInfo.code).json({ message: deleteCustomerInfo.message });
       }
