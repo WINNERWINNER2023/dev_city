@@ -27,7 +27,9 @@ const loadCart = () => {
               <div class="card-body">
                 <h5 class="card-title">${item.name}</h5>
                 <p class="card-text">가격: ${item.price}</p>
-                <p class="card-text"><small class="text-muted">사용가능일: ${new Date(item.startUse).toLocaleDateString()}</small></p>
+                <p class="card-text"><small class="text-muted">사용가능일: ${new Date(
+                  item.startUse
+                ).toLocaleDateString()}</small></p>
               </div>
             </div>
             <div class="col-md-2 p-1">
@@ -40,29 +42,40 @@ const loadCart = () => {
     });
   }
   setTotalPrice();
-}
+};
 
 const getTotalPrice = () => {
   const cart = JSON.parse(localStorage.getItem('cart'));
-  return cart.reduce(
-    (acc, item) => acc + item.price, 0
-  );
-}
+  return cart.reduce((acc, item) => acc + item.price, 0);
+};
 
 const setTotalPrice = () => {
-  document.querySelector('#totalPrice').value = getTotalPrice().toLocaleString('ko-KR');;
-}
+  document.querySelector('#totalPrice').value = getTotalPrice().toLocaleString('ko-KR');
+};
 
 const deleteItem = (id) => {
   const cart = JSON.parse(localStorage.getItem('cart'));
-  const targetIndex = cart.findIndex(item => item.id === id);
+  const targetIndex = cart.findIndex((item) => item.id === id);
   cart.splice(targetIndex, 1);
   localStorage.setItem('cart', JSON.stringify(cart));
   loadCart();
-}
+};
 
 const goOrder = () => {
   if (confirm(`총 결제 코인: ${getTotalPrice()} DEV\n결제하시겠습니까?`)) {
-    alert('준비중');
+    const cart = JSON.parse(localStorage.getItem('cart'));
+    const customer = JSON.parse(localStorage.getItem('customerInfo'));
+    $.ajax({
+      type: 'POST',
+      url: '/api/products/order',
+      data: {
+        cart: cart,
+        customer: customer,
+      },
+      success: function (response) {
+        localStorage.removeItem('cart');
+        location.reload();
+      },
+    });
   }
-}
+};

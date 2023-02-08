@@ -14,6 +14,13 @@ class OutputController {
       components: 'orders/cart',
     });
   };
+
+  market = (req, res) => {
+    res.render('index', {
+      components: 'market',
+    });
+  };
 }
 
+ 
 module.exports = OutputController;

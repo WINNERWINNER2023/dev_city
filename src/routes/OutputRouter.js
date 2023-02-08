@@ -8,6 +8,7 @@ const outputController = new OutputController();
 
 router.get('/products/:productId', outputController.getProduct)
 router.get('/cart', outputController.cart);
+router.get("/market", outputController.market)
 
 router.get('/', (req, res) => {
   res.render('index');

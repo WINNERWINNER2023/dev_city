@@ -6,23 +6,45 @@ class ProductsController {
   productsService = new ProductsService();
 
   getRandomProducts = async (req, res) => {
-    const randomProducts = await this.productsService.getRandomProducts();
-    return res.status(200).json(randomProducts);
+    const randomProducts = await this.productsService.getRandomProducts(`${req.protocol}://${req.get('Host')}`);
+    return res.status(randomProducts.code).json(randomProducts.data);
   };
 
   getProductsList = async (req, res) => {
-    const products = await this.productsService.getProductsList();
-    return res.status(200).json(products);
+    const { page } = req.params;
+    const products = await this.productsService.getProductsList(`${req.protocol}://${req.get('Host')}`, page);
+    return res.status(products.code).json(products.data);
   };
 
   getProductDetails = async (req, res) => {
     const { productId } = req.params;
-    const product = await this.productsService.getProductDetails(Number(productId));
-    if (product.code == 500) {
-      return res.status(500).json(product);
+    const product = await this.productsService.getProductDetails(`${req.protocol}://${req.get('Host')}`, Number(productId));
+    if (product.code === 500) {
+      return res.status(product.code).json(product.message);
     }
+    return res.status(product.code).json(product.data);
+  };
 
-    return res.status(200).json(product);
+  getOrderedProductsByCustomerId = async (req, res) => {
+    // const customerId = req.body.id // thunder client 실험용
+    const customerId = 1;
+    const customerProducts = await this.productsService.getProductsListByCustomerId(`${req.protocol}://${req.get('Host')}`,customerId);
+    if (customerProducts.code === 500) {
+      return res.status(customerProducts.code).json(customerProducts.message);
+    }
+    return res.status(200).json(customerProducts.data);
+  };
+
+  createOrder = async (req, res) => {
+    // const customer = req.customerInfo;
+    const customer = {
+      id: 1,
+      account: 'test1',
+    };
+    const orderProducts = req.body.cart;
+    const createOrder = await this.productsService.createOrder(customer, orderProducts);
+
+    return res.status(createOrder.code).json(createOrder.message);
   };
 
   createProduct = async (req, res) => {
@@ -55,9 +77,7 @@ class ProductsController {
       return res.status(400).json({ message: '잘못된 요청' });
     }
     const response = await this.productsService.adminGetProduct(`${req.protocol}://${req.get('Host')}`, parseInt(productId));
-    return res
-      .status(response.code)
-      .json(response.code === 200 ? { data: response.data } : { message: response.message });
+    return res.status(response.code).json(response.code === 200 ? { data: response.data } : { message: response.message });
   };
 
   updateProduct = async (req, res) => {

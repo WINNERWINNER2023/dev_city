@@ -2,40 +2,126 @@
 
 require('dotenv').config();
 const ProductsRepository = require('../repositories/ProductsRepository');
-const { Product } = require('../sequelize/models');
-
+const OrderRepository = require('../repositories/OrdersRepository')
+const SubOrderRepository = require('../repositories/SubOrderRepository')
+const CoinFlowRepository = require('../repositories/CoinFlowRepository')
+const CustomersRepository = require('../repositories/CustomersRepository')
+const { Product, Order, SubOrder, CoinFlow, Customer, sequelize} = require('../sequelize/models');
 const PaginationUtil = require('../utils/PaginationUtil');
+
 
 class ProductsService {
   pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
   sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
 
   productsRepository = new ProductsRepository(Product);
+  ordersRepository = new OrderRepository(Order);
+  subOrdersRepository = new SubOrderRepository(SubOrder);
+  coinFlowRepository = new CoinFlowRepository(CoinFlow);
+  customersRepository = new CustomersRepository(Customer);
 
-  getRandomProducts = async () => {
-    try {
-      return await this.productsRepository.getRandomProducts();
-    } catch (err) {
-      return { code: 500, message: '데이터 가져오기 실패' };
-    }
-  };
   
-  getProductsList = async () => {
+
+  getRandomProducts = async (host) => {
     try {
-      return await this.productsRepository.getProductsList();
+      const randomProducts = await this.productsRepository.getRandomProducts();
+      for(let i = 0; i < randomProducts.length; i++) {
+        let product = randomProducts[i]
+        product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
+      }
+      return { code: 200, data: randomProducts };
     } catch (err) {
-      return { code: 500, message: '데이터 가져오기 실패' };
+      console.log("sr1: ",err.message)
+      return { code: 500, message: '데이터 가져오기 실패1' };
     }
   };
 
-  getProductDetails = async (productId) => {
+  getProductsList = async (host, page) => {
     try {
-      return await this.productsRepository.getProduct(productId);
+      let pageCount = 0;
+      if (page > 1) {
+        pageCount = 3 * (page - 1);
+      }
+      const prdoductsList = await this.productsRepository.getProductsList(pageCount);
+      for(let i = 0; i < productsList.length; i++) {
+        let product = productsList[i]
+        product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
+      }
+      if (!prdoductsList.length) {
+        return { code: 200, message: '마지막 상품입니다.' };
+      }
+      return { code: 200, data: prdoductsList };
     } catch (err) {
-      return { code: 500, message: '데이터 가져오기 실패' };
+      console.log("sr2: ",err.message)
+      return { code: 500, message: '데이터 가져오기 실패2' };
     }
   };
-  
+
+  getProductDetails = async (host, productId) => {
+    try {
+      let product = await this.productsRepository.getProduct(productId);
+      product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
+      return { code: 200, data: product };
+    } catch (err) {
+      console.log("sr3: ",err.message)
+      return { code: 500, message: '데이터 가져오기 실패3' };
+    }
+  };
+
+  getProductsListByCustomerId = async (host, customerId) => {
+    try {
+      const customerOrders = await this.ordersRepository.getOrderListByCustomerId(customerId);
+      let customerProducts = []
+      for(let i = 0; i < customerOrders.length; i++) {
+        let orderId = customerOrders[i].id
+        let products = await this.subOrdersRepository.getSubOrderListByOrderId(orderId)
+        for(let j = 0; j < products.length; j++){
+          products[j].imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${products[j].imagePath}`;
+          customerProducts.push(products[j])
+        }
+      }
+      return { code: 200, data: customerProducts };
+    } catch (err) {
+      console.log("sr4: ",err.message)
+      return { code: 500, message: '데이터 가져오기 실패4' };
+    }
+  };
+
+  createOrder = async (customer, orderProducts) => {
+    const transaction = await sequelize.transaction();
+    try {
+      const customerId = customer.id;
+      let cartList = [];
+      for (let i = 0; i < orderProducts.length; i++) {
+        cartList.push(orderProducts[i].id);
+      }
+      const productsList = [];
+      for (let i = 0; i < cartList.length; i++) {
+        const product = await this.productsRepository.getProduct(cartList[i]);
+        productsList.push(product);
+      }
+      let totalPrice = 0;
+      productsList.map(function (product) {
+        return (totalPrice += product.price);
+      });
+      const order = await this.ordersRepository.createOrder(transaction ,customerId);
+      const orderId = order.dataValues.id;
+
+      for (let i = 0; i < cartList.length; i++) {
+        const productId = parseInt(cartList[i]);
+        await this.subOrdersRepository.createSubOrder(transaction ,orderId, productId);
+      }
+      await this.customersRepository.customerPayment(transaction ,customerId, totalPrice);
+
+      await transaction.commit();
+      return { code: 201, message: '결제 완료' };
+    } catch (err) {
+      await transaction.rollback();
+      console.log("sr5: ",err.message)
+      return { code: 500, message: '결제 실패' };
+    }
+  };
+
   createProduct = async (productInfo) => {
     try {
       await this.productsRepository.createProduct(productInfo);
@@ -82,9 +168,9 @@ class ProductsService {
       await this.productsRepository.updateProduct(productInfo);
       return { code: 200, message: '상품 수정 완료' };
     } catch (err) {
-      return { 
-        code: err.code ? err.code : 500, 
-        message: err.code ? err.message : '상품 수정 실패' 
+      return {
+        code: err.code ? err.code : 500,
+        message: err.code ? err.message : '상품 수정 실패',
       };
     }
   };

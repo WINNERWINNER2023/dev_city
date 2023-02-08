@@ -26,6 +26,28 @@ class CustomersRepository {
       attributes: [[sequelize.fn('COUNT', sequelize.col('*')), 'countAll']],
     });
   };
+
+  getCustomer = async (customerId) => {
+    return await this.model.findOne({
+      raw : true,
+      where: { customerId }
+    })
+  }
+
+  customerPayment = async (transaction ,customerId, totalPrice) => {
+    const customerInfo = await this.model.findOne({
+      where: { id: customerId }
+    },
+    { transaction });
+
+    if(!customerInfo){
+      throw new Error("사용자 정보가 존재하지 않습니다.");
+    }
+    customerInfo.coin -= totalPrice;
+    if(customerInfo.coin < 0){
+      throw new Error("사용자의 코인이 부족합니다.")
+    }
+  };
 };
 
 module.exports = CustomersRepository;

@@ -1,7 +1,7 @@
 'use strict';
 
 require('dotenv').config();
-const { Op } = require('sequelize');
+const { Op, or } = require('sequelize');
 const { Sequelize } = require('../sequelize/models');
 const { sequelize } = require('../sequelize/models/index');
 
@@ -20,18 +20,27 @@ class ProductsRepository {
       limit: 3,
     });
   };
-  getProductsList = async () => {
+
+  getProductsList = async (pageCount) => {
     return await this.model.findAll({
       raw: true,
       where: { count: { [Op.gt]: 0 } },
+      offset: pageCount,
+      limit: 3,
     });
   };
+
   getProduct = async (productId) => {
     return await this.model.findOne({
-      rew: true,
+      raw: true,
       where: { id: productId },
     });
   };
+
+ 
+
+
+  
 
   createProduct = async (productInfo) => {
     await this.model.create({
