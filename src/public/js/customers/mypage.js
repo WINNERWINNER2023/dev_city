@@ -1,4 +1,3 @@
-// 조성훈님 출처코드 변경사항 getProduct -> getCustomer
 const findOneCustomer = async () => {
   fetch('/api/customers', {
     method: 'GET',
@@ -139,7 +138,6 @@ const deleteCustomer = async () => {
         alert(res.message);
       }
 
-      // if (code === 204) {
       if (code === 200) {
         location.href = `/customers/mypage`;
       } else if (code === 307) {

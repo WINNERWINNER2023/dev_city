@@ -1,5 +1,3 @@
-// 조성훈님 출처코드 변경사항 account -> email / admins -> customers / simpleAdminInfo -> simpleCustomerInfo
-
 const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 

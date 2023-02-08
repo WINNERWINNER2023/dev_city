@@ -1,7 +1,6 @@
 const logout = () => {
   deleteCookie('accessToken');
   deleteCookie('refreshToken');
-  localStorage.removeItem('simpleCustomerInfo');
   location.reload();
 };
 

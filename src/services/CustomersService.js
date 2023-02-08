@@ -17,19 +17,18 @@ class CustomersService {
   pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
   sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
 
-  validateEmail = process.env.VALIDATE_EMAIL;
-  validatePassword = process.env.VALIDATE_PASSWORD;
-  validatePhone = process.env.VALIDATE_PHONE;
-
   createCustomer = async (email, nickname, password, phone) => {
+    const validateEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i; // 이메일 형식;
+    const validatePassword = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{5,10}/gs; // 숫자, 영어 대소문자, 특수문자 각 1글자 이상 포함, 5~10글자, 글자 중간 공백 불가;
+    const validatePhone = /^\d{2,3}-\d{3,4}-\d{4}$/; // 2~3자리 숫자 - 3~4자리 숫자 - 4자리 숫자;
     try {
-      if (!this.validateEmail.test(email)) {
+      if (!validateEmail.test(email)) {
         return { code: 401, message: '이메일이 작성 형식과 맞지 않습니다.' };
       }
-      if (!this.validatePassword.test(password)) {
+      if (!validatePassword.test(password)) {
         return { code: 401, message: '비밀번호가 작성 형식과 맞지 않습니다.' };
       }
-      if (!this.validatePhone.test(phone)) {
+      if (!validatePhone.test(phone)) {
         return { code: 401, message: '연락처가 작성 형식과 맞지 않습니다.' };
       }
       const duplicateCustomerEmail = await this.findCustomerByEmail(email);
@@ -53,11 +52,11 @@ class CustomersService {
     try {
       const customer = await this.findCustomerByEmail(email);
       if (!customer) {
-        return { code: 401, message: '입력한 이메일 계정이 존재하지 않습니다.' };
+        return { code: 401, message: '입력한 이메일의 계정을 찾을 수 없습니다.' };
       }
       const isEqual = await comparePasswordForLogin(password, customer.password);
       if (!isEqual) {
-        return { code: 401, message: '입력한 비밀번호 계정이 존재하지 않습니다.' };
+        return { code: 401, message: '입력한 비밀번호의 계정을 찾을 수 없습니다.' };
       }
       const accessToken = await createAccessToken(customer.id);
       const refreshToken = await createRefreshToken();
@@ -65,16 +64,25 @@ class CustomersService {
         throw new Error('token 생성 실패');
       }
       await this.redisUtil.set(refreshToken, customer.id);
-      return { code: 200, accessToken, refreshToken, message: '로그인이 정상적으로 완료되었습니다.' };
+      return {
+        code: 200,
+        simpleCustomerInfo: {
+          id: customer.id,
+          email: customer.email,
+        },
+        accessToken,
+        refreshToken,
+        message: '로그인이 정상적으로 완료되었습니다.',
+      };
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
 
-  findOneCustomer = async (id) => {
+  findOneCustomer = async (customerId) => {
     try {
-      return await this.customersRepository.findOneCustomer(id);
+      return await this.customersRepository.findOneCustomer(customerId);
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
@@ -100,14 +108,17 @@ class CustomersService {
   };
 
   changeCustomer = async (email, nickname, password, phone) => {
+    const validateEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i; // 이메일 형식;
+    const validatePassword = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{5,10}/gs; // 숫자, 영어 대소문자, 특수문자 각 1글자 이상 포함, 5~10글자, 글자 중간 공백 불가;
+    const validatePhone = /^\d{2,3}-\d{3,4}-\d{4}$/; // 2~3자리 숫자 - 3~4자리 숫자 - 4자리 숫자;
     try {
-      if (!this.validateEmail.test(email)) {
+      if (!validateEmail.test(email)) {
         return { code: 401, message: '이메일이 작성 형식과 맞지 않습니다.' };
       }
-      if (!this.validatePassword.test(password)) {
+      if (!validatePassword.test(password)) {
         return { code: 401, message: '비밀번호가 작성 형식과 맞지 않습니다.' };
       }
-      if (!this.validatePhone.test(phone)) {
+      if (!validatePhone.test(phone)) {
         return { code: 401, message: '연락처가 작성 형식과 맞지 않습니다.' };
       }
       const duplicateCustomerEmail = await this.findCustomerByEmail(email);
@@ -120,27 +131,27 @@ class CustomersService {
       }
       password = await encryptPassword(password);
       await this.customersRepository.changeCustomer(email, nickname, password, phone);
-      return { code: 201, message: '회원 정보를 수정했습니다.' };
+      return { code: 200, message: '회원 정보를 수정했습니다.' };
     } catch (error) {
       console.log(error.message);
       return { code: 401, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
 
-  addCustomerCoin = async (id) => {
+  addCustomerCoin = async (customerId) => {
     try {
-      await this.customersRepository.addCustomerCoin(id);
-      return { code: 201, message: '코인 충전을 완료했습니다.' };
+      await this.customersRepository.addCustomerCoin(customerId);
+      return { code: 200, message: '코인 충전을 완료했습니다.' };
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
     }
   };
 
-  deleteCustomer = async (id) => {
+  deleteCustomer = async (customerId) => {
     try {
-      await this.customersRepository.deleteCustomer(id);
-      return { code: 201, message: '회원 탈퇴가 완료되었습니다.' };
+      await this.customersRepository.deleteCustomer(customerId);
+      return { code: 204, message: '회원 탈퇴가 완료되었습니다.' };
     } catch (error) {
       console.log(error.message);
       return { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
