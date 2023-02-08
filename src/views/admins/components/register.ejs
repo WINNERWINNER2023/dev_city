@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="/public/css/admins/main.css" />
+<script src="/public/js/admins/register.js" defer></script>
+
+<div class="align-self-center admin-form">
+  <h3>관리자 등록</h3>
+
+  <!-- 입력 폼 -->
+  <div>
+    <div class="form-floating mb-2">
+      <input type="text" class="form-control" id="account" placeholder="account" onKeyPress="if( event.keyCode==13 ){enter();}" />
+      <label for="account">접속명</label>
+    </div>
+    <div class="form-floating mb-2">
+      <input
+        onkeyup="checkPassword()"
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="password"
+        onKeyPress="if( event.keyCode==13 ){enter();}"
+      />
+      <label for="password">비밀번호</label>
+    </div>
+    <div class="form-floating mb-2">
+      <input
+        onkeyup="checkPassword()"
+        type="password"
+        class="form-control"
+        id="confirmPassword"
+        placeholder="confirmPassword"
+        onKeyPress="if( event.keyCode==13 ){enter();}"
+      />
+      <label for="confirmPassword">비밀번호 확인</label>
+    </div>
+  </div>
+  <!-- 입력 폼 끝 -->
+
+  <div class="d-grid gap-2 mb-2">
+    <button onclick="register()" class="btn btn-primary" type="button">관리자 등록</button>
+  </div>
+
+  <div class="d-grid gap-2 mb-2">
+    <button onclick="location.href='/admins/login'" class="btn btn-outline-dark" type="button">관리자 접속</button>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<script src="/public/js/admins/header.js" defer></script>
+
+<!-- 버튼 모음 시작 -->
+<button onclick="logout()" type="button" class="btn btn-outline-secondary" style="float: right;">로그아웃</button>
+<!-- 버튼 모음 끝 -->
+
+<!-- 메뉴 시작 -->
+<ul class="nav nav-tabs card-header-tabs">
+  <li class="nav-item">
+    <a class="nav-link" onclick="goMenu('products')">상품관리</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" onclick="goMenu('customers')">고객관리</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" onclick="goMenu('orders')">주문관리</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" onclick="goMenu('subOrders')">상세주문관리</a>
+  </li>
+</ul>
+<!-- 메뉴 끝 -->
+
+<script>
+  const menu = '<%= locals.components.split('/')[0] %>';
+  const nav = document.querySelectorAll('.nav-link');
+  switch(menu) {
+    case 'products': 
+      nav[0].classList.add('active');
+      break;
+    case 'customers': 
+      nav[1].classList.add('active');
+      break;
+    case 'orders': 
+      nav[2].classList.add('active');
+      break;
+    case 'subOrders': 
+      nav[3].classList.add('active');
+      break;
+  };
+</script>

@@ -3,13 +3,22 @@
 const express = require('express');
 const router = express.Router();
 
-const SampleController = require('../controllers/SampleController');
-const sampleController = new SampleController();
-const authMiddleware = require('../middlewares/AuthMiddleware');
+const OutputRouter = require('./OutputRouter');
+const CustomersRouter = require('./CustomersRouter');
+const AdminsRouter = require('./AdminsRouter');
+const ProductsRouter = require('./ProductsRouter');
 
-router.get('/api/sample', authMiddleware, sampleController.seonghun);
+const CustomersOutputRouter = require('./CustomersOutputRouter');
+const AdminsOutputRouter = require('./AdminsOutputRouter');
 
-const outputRouter = require('./OutputRouter');
-router.use('/', outputRouter);
+router.use('/api/customers', CustomersRouter);
+router.use('/api/admins', AdminsRouter);
+router.use('/api/products', ProductsRouter);
+
+router.use('/customers', CustomersOutputRouter);
+router.use('/admins', AdminsOutputRouter);
+router.use('/', OutputRouter);
+
+router.get('/*', (_, res) => res.redirect('/'));
 
 module.exports = router;

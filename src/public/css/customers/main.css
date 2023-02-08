@@ -1,0 +1,20 @@
+.customer-bg {
+  background-color: dimgray;
+  height: 100vh;
+}
+
+.customer-form {
+  width: 24rem;
+  margin: auto;
+  padding: 3rem;
+  border-radius: 20px;
+  background-color: white;
+}
+
+.table tbody tr {
+  cursor: pointer;
+}
+
+.nav-link {
+  cursor: pointer;
+}
