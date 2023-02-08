@@ -13,14 +13,14 @@ const checkInputValue = async () => {
     return false;
   }
   return true;
-}
+};
 
 const enter = () => {
   login();
-}
+};
 
 const login = async () => {
-  if (!await checkInputValue()) {
+  if (!(await checkInputValue())) {
     return;
   }
 
@@ -54,4 +54,4 @@ const login = async () => {
     .catch((err) => {
       console.log('err: ', err);
     });
-}
+};

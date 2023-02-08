@@ -45,7 +45,7 @@ const checkInputValue = async () => {
 };
 
 const createProduct = async () => {
-  if (!await checkInputValue()) {
+  if (!(await checkInputValue())) {
     return;
   }
   const formData = new FormData();

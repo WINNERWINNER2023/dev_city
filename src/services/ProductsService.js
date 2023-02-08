@@ -1,6 +1,7 @@
 'use strict';
 
 require('dotenv').config();
+const chalk = require('chalk');
 const ProductsRepository = require('../repositories/ProductsRepository');
 const OrderRepository = require('../repositories/OrdersRepository')
 const SubOrderRepository = require('../repositories/SubOrderRepository')
@@ -15,23 +16,20 @@ class ProductsService {
   sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
 
   productsRepository = new ProductsRepository(Product);
-  ordersRepository = new OrderRepository(Order);
-  subOrdersRepository = new SubOrderRepository(SubOrder);
-  coinFlowRepository = new CoinFlowRepository(CoinFlow);
-  customersRepository = new CustomersRepository(Customer);
-
-  
+ordersRepository = new OrderRepository(Order);
+subOrdersRepository = new SubOrderRepository(SubOrder);
+coinFlowRepository = new CoinFlowRepository(CoinFlow);
+customersRepository = new CustomersRepository(Customer);
 
   getRandomProducts = async (host) => {
     try {
-      const randomProducts = await this.productsRepository.getRandomProducts();
-      for(let i = 0; i < randomProducts.length; i++) {
-        let product = randomProducts[i]
+      let products = await this.productsRepository.getRandomProducts();
+      products = products.map((product) => {
         product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
-      }
-      return { code: 200, data: randomProducts };
+        return product;
+      })
+      return { code: 200, data: products };
     } catch (err) {
-      console.log("sr1: ",err.message)
       return { code: 500, message: '데이터 가져오기 실패1' };
     }
   };
@@ -40,30 +38,28 @@ class ProductsService {
     try {
       let pageCount = 0;
       if (page > 1) {
-        pageCount = 3 * (page - 1);
+        pageCount = parseInt(process.env.PRODUCTS_PAGE_LIMIT) * (page - 1);
       }
-      const prdoductsList = await this.productsRepository.getProductsList(pageCount);
-      for(let i = 0; i < productsList.length; i++) {
-        let product = productsList[i]
-        product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
-      }
-      if (!prdoductsList.length) {
+      let products = await this.productsRepository.getProductsList(pageCount);
+      if (!products.length) {
         return { code: 200, message: '마지막 상품입니다.' };
       }
-      return { code: 200, data: prdoductsList };
+      products = products.map((product) => {
+        product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
+        return product;
+      })
+      return { code: 200, data: products };
     } catch (err) {
-      console.log("sr2: ",err.message)
       return { code: 500, message: '데이터 가져오기 실패2' };
     }
   };
 
   getProductDetails = async (host, productId) => {
     try {
-      let product = await this.productsRepository.getProduct(productId);
+      const product = await this.productsRepository.getProduct(productId);
       product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
       return { code: 200, data: product };
     } catch (err) {
-      console.log("sr3: ",err.message)
       return { code: 500, message: '데이터 가져오기 실패3' };
     }
   };
@@ -111,6 +107,10 @@ class ProductsService {
         const productId = parseInt(cartList[i]);
         await this.subOrdersRepository.createSubOrder(transaction ,orderId, productId);
       }
+      for (let i = 0; i < productsList.length; i++) {
+        const productId = parseInt(productsList[i].id);
+        await this.productsRepository.descountProduct(transaction, productId);
+      }
       await this.customersRepository.customerPayment(transaction ,customerId, totalPrice);
 
       await transaction.commit();
@@ -131,9 +131,9 @@ class ProductsService {
     }
   };
 
-  adminGetProducts = async (host, page) => {
+  adminGetProducts = async (host, page, filter, keyword) => {
     try {
-      const products = (await this.productsRepository.adminGetProducts(page)).map((product) => {
+      const products = (await this.productsRepository.adminGetProducts(page, filter, keyword)).map((product) => {
         product.imagePath = `${host}/${process.env.UPLOADS_PATH}/products/${product.imagePath}`;
         return product;
       });
@@ -141,9 +141,13 @@ class ProductsService {
         return { code: 404, message: '해당하는 상품 목록 없음' };
       }
 
-      const productsCountAll = await this.productsRepository.adminGetProductsCountAll();
+      const productsCountAll = await this.productsRepository.adminGetProductsCountAll(filter, keyword);
       const paginationUtil = new PaginationUtil(page, productsCountAll.countAll, this.pageLimit, this.sectionLimit);
-      return { code: 200, data: products, pagination: paginationUtil.render() };
+      return {
+        code: 200,
+        data: products,
+        pagination: paginationUtil.render(),
+      };
     } catch (err) {
       return { code: 500, message: '상품 목록 조회 실패' };
     }

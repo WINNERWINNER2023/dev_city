@@ -6,9 +6,10 @@ class PaginationUtil {
     this.totalPage = parseInt(countAll / pageLimit) + (countAll % pageLimit != 0 ? 1 : 0);
 
     this.startPage = parseInt((this.page - 1) / sectionLimit) * sectionLimit;
-    if (this.startPage % sectionLimit === 0) {
-      this.startPage += 1;
-    }
+    // if (this.startPage % sectionLimit === 0) {  // 어떤 경우에 === 0이 안되는지 파악하고 사용
+    //   this.startPage += 1;
+    // }
+    this.startPage += 1;
 
     this.endPage = this.startPage + sectionLimit - 1;
     if (this.endPage > this.totalPage) {

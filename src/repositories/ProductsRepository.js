@@ -1,7 +1,7 @@
 'use strict';
 
 require('dotenv').config();
-const { Op, or } = require('sequelize');
+const { Op, or, Transaction } = require('sequelize');
 const { Sequelize } = require('../sequelize/models');
 const { sequelize } = require('../sequelize/models/index');
 
@@ -25,8 +25,9 @@ class ProductsRepository {
     return await this.model.findAll({
       raw: true,
       where: { count: { [Op.gt]: 0 } },
+      order: [['id', 'DESC']],
       offset: pageCount,
-      limit: 3,
+      limit: parseInt(process.env.PRODUCTS_PAGE_LIMIT),
     });
   };
 
@@ -37,10 +38,20 @@ class ProductsRepository {
     });
   };
 
- 
-
-
-  
+  descountProduct = async (transaction, productId) => {
+    const productInfo = await this.model.findOne({
+      where: { id: productId }
+    },
+    { transaction });
+    if (!productInfo){
+      throw new Error("상품이 존재하지 않습니다.")
+    }
+    productInfo.count -= 1;
+    if (productInfo.count < 0){
+      throw new Error("이미 품절된 상품입니다.")
+    }
+    await productInfo.save({ transaction })
+  };
 
   createProduct = async (productInfo) => {
     await this.model.create({
@@ -54,13 +65,19 @@ class ProductsRepository {
     });
   };
 
-  adminGetProducts = async (page) => {
-    return await this.model.findAll({
+  adminGetProducts = async (page, filter, keyword) => {
+    const obj = {
       raw: true,
       order: [['id', 'DESC']],
       offset: (page - 1) * this.pageLimit,
       limit: this.pageLimit,
-    });
+    };
+    switch (filter) {
+      case 'name':
+        obj.where = { name: { [Op.like]: `%${keyword}%` } };
+        break;
+    }
+    return await this.model.findAll(obj);
   };
 
   adminGetProductsCountAll = async () => {
@@ -68,6 +85,19 @@ class ProductsRepository {
       raw: true,
       attributes: [[sequelize.fn('COUNT', sequelize.col('*')), 'countAll']],
     });
+  };
+
+  adminGetProductsCountAll = async (filter, keyword) => {
+    const obj = {
+      raw: true,
+      attributes: [[sequelize.fn('COUNT', sequelize.col('*')), 'countAll']],
+    };
+    switch (filter) {
+      case 'name':
+        obj.where = { name: { [Op.like]: `%${keyword}%` } };
+        break;
+    }
+    return await this.model.findOne(obj);
   };
 
   adminGetProduct = async (productId) => {

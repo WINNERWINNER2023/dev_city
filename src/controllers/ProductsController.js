@@ -6,27 +6,25 @@ class ProductsController {
   productsService = new ProductsService();
 
   getRandomProducts = async (req, res) => {
-    const randomProducts = await this.productsService.getRandomProducts(`${req.protocol}://${req.get('Host')}`);
-    return res.status(randomProducts.code).json(randomProducts.data);
+    const response = await this.productsService.getRandomProducts(`${req.protocol}://${req.get('Host')}`);
+    return res.status(response.code).json(response.code === 200 ? { data: response.data } : { message: response.message });
   };
 
   getProductsList = async (req, res) => {
-    const { page } = req.params;
+    const page = req.query.page || 1;
     const products = await this.productsService.getProductsList(`${req.protocol}://${req.get('Host')}`, page);
-    return res.status(products.code).json(products.data);
+    return res.status(products.code).json({ data: products.data });
   };
 
   getProductDetails = async (req, res) => {
     const { productId } = req.params;
-    const product = await this.productsService.getProductDetails(`${req.protocol}://${req.get('Host')}`, Number(productId));
-    if (product.code === 500) {
-      return res.status(product.code).json(product.message);
-    }
+    const product = await this.productsService.getProductDetails(`${req.protocol}://${req.get('Host')}`, parseInt(productId));
     return res.status(product.code).json(product.data);
   };
 
   getOrderedProductsByCustomerId = async (req, res) => {
-    // const customerId = req.body.id // thunder client 실험용
+    // const { customerInfo } = req.body
+    // const customerId = customerInfo.id
     const customerId = 1;
     const customerProducts = await this.productsService.getProductsListByCustomerId(`${req.protocol}://${req.get('Host')}`,customerId);
     if (customerProducts.code === 500) {
@@ -65,10 +63,18 @@ class ProductsController {
 
   adminGetProducts = async (req, res) => {
     const page = parseInt(req.query.p || 1);
-    const response = await this.productsService.adminGetProducts(`${req.protocol}://${req.get('Host')}`, page);
-    return res
-      .status(response.code)
-      .json(response.code === 200 ? { data: response.data, pagination: response.pagination } : { message: response.message });
+    const { filter, keyword } = req.query;
+    const response = await this.productsService.adminGetProducts(`${req.protocol}://${req.get('Host')}`, page, filter, keyword);
+
+    return res.status(response.code).json(
+      response.code === 200
+        ? {
+            data: response.data,
+            pagination: response.pagination,
+            search: { filter, keyword },
+          }
+        : { message: response.message }
+    );
   };
 
   adminGetProduct = async (req, res) => {

@@ -9,7 +9,7 @@ const mockAdminsRepository = {
 const mockRedisUtil = {
   set: jest.fn(),
   get: jest.fn(),
-}
+};
 const adminsService = new AdminsService();
 adminsService.adminsRepository = mockAdminsRepository;
 adminsService.redisUtil = mockRedisUtil;
@@ -128,10 +128,10 @@ describe('AdminsService Unit Test', () => {
     const adminInfo = { ...mockAdminInfo };
 
     const afterPassword = await encryptPassword(adminInfo.password);
-    const findOneByAccountResult = { 
-      id: 1, 
-      account: 'account', 
-      password: afterPassword 
+    const findOneByAccountResult = {
+      id: 1,
+      account: 'account',
+      password: afterPassword,
     };
     mockAdminsRepository.findOneByAccount = jest.fn(() => {
       return findOneByAccountResult;
@@ -141,15 +141,15 @@ describe('AdminsService Unit Test', () => {
 
     const response = await adminsService.login(adminInfo.account, adminInfo.password);
 
-    expect(response).toEqual({ 
-      code: 200, 
+    expect(response).toEqual({
+      code: 200,
       simpleAdminInfo: {
         id: findOneByAccountResult.id,
         account: findOneByAccountResult.account,
-      }, 
-      accessToken: expect.anything(), 
-      refreshToken: expect.anything(), 
-      message: '로그인 성공' 
+      },
+      accessToken: expect.anything(),
+      refreshToken: expect.anything(),
+      message: '로그인 성공',
     });
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledTimes(1);
     expect(mockAdminsRepository.findOneByAccount).toHaveBeenCalledWith(adminInfo.account);

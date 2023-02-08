@@ -4,6 +4,7 @@ window.onload = () => {
 
 const loadCart = () => {
   const cart = JSON.parse(localStorage.getItem('cart'));
+  console.log(cart);
   if (!cart || cart.length === 0) {
     document.querySelector('#cartList').innerHTML = '';
     const temp = `
@@ -21,7 +22,7 @@ const loadCart = () => {
         <div class="card border-secondary border-2 mb-1">
           <div class="row g-0">
             <div class="col-md-2 p-1">
-              <img src="https://placeimg.com/100/100/any" class="img-fluid rounded-start">
+              <img src="${item.imagePath}" class="img-fluid rounded-start" style="width: 100%;">
             </div>
             <div class="col-md-8">
               <div class="card-body">

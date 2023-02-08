@@ -5,40 +5,39 @@ window.onload = () => {
 const getProduct = async (productId) => {
   fetch('/api/admins/products/' + productId, {
     method: 'GET',
-  })
-    .then(async (res) => {
-      const code = res.status;
+  }).then(async (res) => {
+    const code = res.status;
 
-      res = await res.json();
-      if (res.message) {
-        alert(res.message);
-      }
+    res = await res.json();
+    if (res.message) {
+      alert(res.message);
+    }
 
-      if (code === 200) {
-        const product = res.data;
-        document.querySelector('#name').value = product.name;
-        document.querySelector('#contents').value = product.contents;
-        document.querySelector('#price').value = product.price;
-        let useableDate = new Date(product.startUse).toLocaleDateString().split('.');
+    if (code === 200) {
+      const product = res.data;
+      document.querySelector('#name').value = product.name;
+      document.querySelector('#contents').value = product.contents;
+      document.querySelector('#price').value = product.price;
+      let useableDate = new Date(product.startUse).toLocaleDateString().split('.');
 
-        // input type date에 넣기 위해 format 변경
-        let year = useableDate[0].trim();
-        let month = useableDate[1].trim();
-        month = month.length === 1 ? '0' + month : month;
-        let day = useableDate[2].trim();
-        day = day.length === 1 ? '0' + day : day;
-        useableDate = `${year}-${month}-${day}`;
+      // input type date에 넣기 위해 format 변경
+      let year = useableDate[0].trim();
+      let month = useableDate[1].trim();
+      month = month.length === 1 ? '0' + month : month;
+      let day = useableDate[2].trim();
+      day = day.length === 1 ? '0' + day : day;
+      useableDate = `${year}-${month}-${day}`;
 
-        document.querySelector('#useableDate').value = useableDate;
-        document.querySelector('#imageThumnail').src = product.imagePath;
-      } else if (code === 307) {
-        document.cookie = `accessToken=${res.accessToken}; path=/;`;
-        getProduct(productId);
-      } else if (code === 401) {
-        alert(res.message);
-        location.href = '/admins/login';
-      }
-    });
+      document.querySelector('#useableDate').value = useableDate;
+      document.querySelector('#imageThumnail').src = product.imagePath;
+    } else if (code === 307) {
+      document.cookie = `accessToken=${res.accessToken}; path=/;`;
+      getProduct(productId);
+    } else if (code === 401) {
+      alert(res.message);
+      location.href = '/admins/login';
+    }
+  });
 };
 
 const category = document.querySelector('#category');
@@ -82,8 +81,8 @@ const checkInputValue = async () => {
   return true;
 };
 
-const updateProduct = async () =>{
-  if (!await checkInputValue()) {
+const updateProduct = async () => {
+  if (!(await checkInputValue())) {
     return;
   }
   const formData = new FormData();
@@ -123,7 +122,7 @@ const updateProduct = async () =>{
     });
 };
 
-const deleteProduct = async () =>{
+const deleteProduct = async () => {
   await fetch(`/api/admins/products/${productId}`, {
     method: 'DELETE',
   })

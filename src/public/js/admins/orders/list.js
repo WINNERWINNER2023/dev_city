@@ -5,62 +5,57 @@ window.onload = () => {
 const getOrders = async (p) => {
   fetch('/api/admins/orders?p=' + p, {
     method: 'GET',
-  })
-    .then(async (res) => {
-      const code = res.status;
+  }).then(async (res) => {
+    const code = res.status;
 
-      res = await res.json();
-      if (res.message) {
-        // alert(res.message);
-        console.log(res.message);
-      }
+    res = await res.json();
+    if (res.message) {
+      // alert(res.message);
+      console.log(res.message);
+    }
 
-      document.querySelector('#orders').innerHTML = '';
-      if (code === 200) {
-
-        const orders = res.data;
-        setPagination(res.pagination, 'getOrders'); // 페이지네이션
-        orders.forEach((order) => {
-          const temp = `
+    document.querySelector('#orders').innerHTML = '';
+    if (code === 200) {
+      const orders = res.data;
+      setPagination(res.pagination, 'getOrders'); // 페이지네이션
+      orders.forEach((order) => {
+        const temp = `
             <tr>
-              <th scope="row">${order.subOrderId}</th>
-              <td>${order.orderId}</td>
-              <td>${order.status}</td>
+              <th scope="row">${order.orderId}</th>
               <td>${order.customerId}</td>
-              <td>${order.productName}</td>
-              <td>${new Date(order.startUse).toLocaleDateString()}</td>
-              <td>${order.price}</td>
-              <td>${order.count}</td>
-              <td>${new Date(order.orderedAt).toLocaleString()}</td>
+              <td>${order.nickname}</td>
+              <td>${order.totalPrice}</td>
+              <td>${order.status}</td>
+              <td>${new Date(order.createdAt).toLocaleString()}</td>
             </tr>
           `;
-          document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
-        });
+        document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
+      });
 
-        // 테이블 tr 마우스 오버 시 하이라이트 효과
-        document.querySelectorAll("#orders tr").forEach(el => {
-          el.addEventListener("mouseenter", (e) => {
-            e.currentTarget.classList.add("table-active");
-          });
-          el.addEventListener("mouseleave", (e) => {
-            e.currentTarget.classList.remove("table-active");
-          });
+      // 테이블 tr 마우스 오버 시 하이라이트 효과
+      document.querySelectorAll('#orders tr').forEach((el) => {
+        el.addEventListener('mouseenter', (e) => {
+          e.currentTarget.classList.add('table-active');
         });
-      } else if (code === 404) {
-        const temp = `
+        el.addEventListener('mouseleave', (e) => {
+          e.currentTarget.classList.remove('table-active');
+        });
+      });
+    } else if (code === 404) {
+      const temp = `
           <tr>
-            <td colspan="9">주문 정보가 없습니다.</td>
+            <td colspan="6">주문 정보가 없습니다.</td>
           </tr>
         `;
-        document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
-      } else if (code === 307) {
-        document.cookie = `accessToken=${res.accessToken}; path=/;`;
-        getOrders(p);
-      } else if (code === 401) {
-        alert(res.message);
-        location.href = '/admins/login';
-      }
-    });
+      document.querySelector('#orders').insertAdjacentHTML('beforeend', temp);
+    } else if (code === 307) {
+      document.cookie = `accessToken=${res.accessToken}; path=/;`;
+      getOrders(p);
+    } else if (code === 401) {
+      alert(res.message);
+      location.href = '/admins/login';
+    }
+  });
 };
 
 const setPagination = (obj, getListFnName) => {

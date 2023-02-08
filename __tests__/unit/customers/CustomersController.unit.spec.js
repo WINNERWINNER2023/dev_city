@@ -1,6 +1,12 @@
 const CustomersController = require('../../../src/controllers/CustomersController');
 
 const mockCustomersService = {
+  registerCustomer: jest.fn(),
+  findOneCustomer: jest.fn(),
+  changeCustomer: jest.fn(),
+  addCustomerCoin: jest.fn(),
+  deleteCustomer: jest.fn(),
+  loginCustomer: jest.fn(),
   adminGetCustomers: jest.fn(),
 };
 
@@ -15,6 +21,17 @@ const mockResponse = {
 
 const customersController = new CustomersController();
 customersController.customersService = mockCustomersService;
+
+const mockCustomerId = 1;
+const mockErrorResult = { code: 500, message: 'Service - 요청이 올바르지 않습니다.' };
+const customerReturnValue = [
+  {
+    email: 'test100@gmail.com',
+    nickname: 'Test100',
+    password: 'Test100@',
+    phone: '010-1234-5678',
+  },
+];
 
 describe('CustomersController Unit Test', () => {
   beforeEach(() => {

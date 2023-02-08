@@ -44,9 +44,9 @@ const getAccessTokenPayload = async (accessToken) => {
 };
 
 module.exports = {
-  createAccessToken, 
-  createRefreshToken, 
-  validateAccessToken, 
-  validateRefreshToken, 
-  getAccessTokenPayload
+  createAccessToken,
+  createRefreshToken,
+  validateAccessToken,
+  validateRefreshToken,
+  getAccessTokenPayload,
 };
