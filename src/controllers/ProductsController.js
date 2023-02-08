@@ -23,9 +23,8 @@ class ProductsController {
   };
 
   getOrderedProductsByCustomerId = async (req, res) => {
-    // const { customerInfo } = req.body
-    // const customerId = customerInfo.id
-    const customerId = 1;
+    const { customerInfo } = req.body
+    const customerId = customerInfo.id
     const customerProducts = await this.productsService.getProductsListByCustomerId(`${req.protocol}://${req.get('Host')}`,customerId);
     if (customerProducts.code === 500) {
       return res.status(customerProducts.code).json(customerProducts.message);
@@ -34,11 +33,7 @@ class ProductsController {
   };
 
   createOrder = async (req, res) => {
-    // const customer = req.customerInfo;
-    const customer = {
-      id: 1,
-      account: 'test1',
-    };
+    const customer = req.customerInfo;
     const orderProducts = req.body.cart;
     const createOrder = await this.productsService.createOrder(customer, orderProducts);
 

@@ -14,12 +14,11 @@ const PaginationUtil = require('../utils/PaginationUtil');
 class ProductsService {
   pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
   sectionLimit = parseInt(process.env.ADMINS_SECTION_LIMIT);
-
   productsRepository = new ProductsRepository(Product);
-ordersRepository = new OrderRepository(Order);
-subOrdersRepository = new SubOrderRepository(SubOrder);
-coinFlowRepository = new CoinFlowRepository(CoinFlow);
-customersRepository = new CustomersRepository(Customer);
+  ordersRepository = new OrderRepository(Order);
+  subOrdersRepository = new SubOrderRepository(SubOrder);
+  coinFlowRepository = new CoinFlowRepository(CoinFlow);
+  customersRepository = new CustomersRepository(Customer);
 
   getRandomProducts = async (host) => {
     try {
