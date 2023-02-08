@@ -17,7 +17,8 @@ const getCustomers = async (p) => {
     document.querySelector('#customers').innerHTML = '';
     if (code === 200) {
       const customers = res.data;
-      setPagination(res.pagination, 'getCustomers'); // 페이지네이션
+      // 페이지네이션
+      setPagination(res.pagination, 'getCustomers'); 
       customers.forEach((product) => {
         const temp = `
             <tr>

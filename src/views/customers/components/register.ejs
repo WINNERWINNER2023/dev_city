@@ -1,10 +1,8 @@
-<!-- 조성훈님 출처코드 변경사항 admins -> customers / admin -> customer / account -> email / register() -> registerCustomer -->
-
 <link rel="stylesheet" href="/public/css/customers/main.css" />
 <script src="/public/js/customers/register.js" defer></script>
 
 <div class="align-self-center customer-form">
-  <h3>회원가입</h3>
+  <h3 align="center">회원가입</h3>
 
   <!-- 입력 폼 -->
   <div>
@@ -13,8 +11,13 @@
       <label for="email">이메일</label>
     </div>
     <div class="form-floating mb-2">
-      <div class="form-floating mb-2">
-        <input type="text" class="form-control" id="nickname" placeholder="nickname" onKeyPress="if( event.keyCode==14 ){enter();}" />
+        <input
+          type="text"
+          class="form-control"
+          id="nickname"
+          placeholder="nickname"
+          onKeyPress="if( event.keyCode==14 ){enter();}"
+        />
         <label for="nickname">닉네임</label>
       </div>
       <div class="form-floating mb-2">
@@ -26,7 +29,7 @@
           placeholder="password"
           onKeyPress="if( event.keyCode==13 ){enter();}"
         />
-        <label for="password">비밀번호</label>
+        <label for="password">비밀번호(숫자/영문/특수문자 포함)</label>
       </div>
       <div class="form-floating mb-2">
         <input
@@ -42,7 +45,7 @@
     </div>
     <div class="form-floating mb-2">
       <input type="text" class="form-control" id="phone" placeholder="phone" onKeyPress="if( event.keyCode==15 ){enter();}" />
-      <label for="phone">연락처( - 포함하여 작성)</label>
+      <label for="phone">연락처( - 포함)</label>
     </div>
     <div class="form-floating mb-2">
       <!-- 입력 폼 끝 -->
