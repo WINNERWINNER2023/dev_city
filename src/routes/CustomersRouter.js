@@ -8,12 +8,13 @@ const customersController = new CustomersController();
 
 const customersAuthMiddleware = require('../middlewares/customersAuthMiddleware');
 
+router.get('/', customersAuthMiddleware, customersController.findOneCustomer);
 router.post('/', customersController.registerCustomer);
+router.put('/', customersAuthMiddleware, customersController.changeCustomer);
+router.delete('/', customersAuthMiddleware, customersController.deleteCustomer);
+
 router.post('/login', customersController.loginCustomer);
 
-router.get('/', customersAuthMiddleware, customersController.findOneCustomer);
-router.put('/', customersAuthMiddleware, customersController.changeCustomer);
 router.put('/coin', customersAuthMiddleware, customersController.addCustomerCoin);
-router.delete('/', customersAuthMiddleware, customersController.deleteCustomer);
 
 module.exports = router;
