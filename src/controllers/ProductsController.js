@@ -49,8 +49,8 @@ class ProductsController {
       startUse,
       endUse,
       imagePath,
-      price: price,
-      count: count,
+      price,
+      count,
     };
     const response = await this.productsService.createProduct(productInfo);
     return res.status(response.code).json({ message: response.message });
