@@ -12,8 +12,8 @@ const CustomersOutputRouter = require('./CustomersOutputRouter');
 const AdminsOutputRouter = require('./AdminsOutputRouter');
 
 router.use('/api/customers', CustomersRouter);
-router.use('/api/admins', AdminsRouter);
 router.use('/api/products', ProductsRouter);
+router.use('/api/admins', AdminsRouter);
 
 router.use('/customers', CustomersOutputRouter);
 router.use('/admins', AdminsOutputRouter);

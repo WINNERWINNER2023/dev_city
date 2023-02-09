@@ -28,13 +28,6 @@ router.post(
   productsController.createProduct
 );
 
-router.get('/products/:productId', productsController.adminGetProduct);
-router.put(
-  '/products/:productId',
-  uploadUtil.multer({ storage: uploadUtil.storage }).array('files'),
-  productsController.updateProduct
-);
-router.delete('/products/:productId', productsController.deleteProduct);
 router.get('/products/:productId', adminsAuthMiddleware, productsController.adminGetProduct);
 router.put(
   '/products/:productId',
@@ -43,6 +36,7 @@ router.put(
   productsController.updateProduct
 );
 router.delete('/products/:productId', adminsAuthMiddleware, productsController.deleteProduct);
+
 router.get('/customers', adminsAuthMiddleware, customersController.adminGetCustomers);
 router.get('/orders', adminsAuthMiddleware, ordersController.adminGetOrders);
 router.get('/subOrders', adminsAuthMiddleware, ordersController.adminGetSubOrders);

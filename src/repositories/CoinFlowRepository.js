@@ -1,9 +1,6 @@
 'use strict';
 
 require('dotenv').config();
-const { Op, or } = require('sequelize');
-const { Sequelize } = require('../sequelize/models');
-const { sequelize } = require('../sequelize/models/index');
 
 class CoinFlowRepository {
   pageLimit = parseInt(process.env.ADMINS_PAGE_LIMIT);
