@@ -1,7 +1,7 @@
 'use strict';
 
 require('dotenv').config();
-const { Op, or, Transaction } = require('sequelize');
+const { Op } = require('sequelize');
 const { Sequelize } = require('../sequelize/models');
 const { sequelize } = require('../sequelize/models/index');
 
